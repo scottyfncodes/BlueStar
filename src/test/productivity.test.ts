@@ -42,12 +42,22 @@ describe("Ellen's observed baseline flows into the model", () => {
   });
 
   it("labels the productivity assumptions as Ellen's, not industry benchmarks", () => {
-    for (const id of ['AS-002', 'AS-006', 'AS-007', 'AS-013', 'AS-014', 'AS-015']) {
+    for (const id of ['AS-002', 'AS-006', 'AS-007', 'AS-013', 'AS-014']) {
       const a = assumptionsById.get(id)!;
       expect(a.kind, `${id} kind`).toBe('USER_PROVIDED');
       expect(a.source, `${id} source`).toBe("Ellen's current observed workload");
       expect(a.evidenceIds, `${id} evidence`).toContain('EV-025');
     }
+  });
+
+  it('marks documentation concurrency as a MODELLING assumption, not observed behaviour', () => {
+    // Ellen said "most", not "all". The 100% figure is a modelling convenience
+    // and must not inherit the authority of her first-hand report.
+    const a = assumptionsById.get('AS-015')!;
+    expect(a.kind).toBe('ASSUMPTION');
+    expect(a.confidence).toBe('Unverified');
+    expect(a.source).toMatch(/MODELLING ASSUMPTION/);
+    expect(a.evidenceIds).toContain('EV-025');
   });
 
   it('records the baseline as first-hand, not external research', () => {

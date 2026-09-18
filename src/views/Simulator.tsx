@@ -3,7 +3,8 @@ import { Card, Stat, Callout, Table, money, num, pct } from '../components/ui';
 import {
   annualModel, visitEconomics, capacityCheck, viabilityCheck,
   utilisationScenarios, travelScenarios, visitCycle, scheduleFeasibility,
-  capacityVolume, revenueBreakdown, type ScenarioInputs,
+  capacityVolume, revenueBreakdown, documentationSensitivity, concurrencyThreshold,
+  CONCURRENCY_LEVELS, type ScenarioInputs,
 } from '../model/economics';
 import { defaultScenario, SALARY_TEST_POINTS, ELLEN_BASELINE } from '../model/defaults';
 
@@ -35,6 +36,9 @@ export function Simulator() {
   const feas = scheduleFeasibility(s);
   const volume = capacityVolume(s);
   const revenue = revenueBreakdown(s);
+  const baselineVisits = ELLEN_BASELINE.visitsPerDay;
+  const sensitivity = documentationSensitivity(s, CONCURRENCY_LEVELS, baselineVisits);
+  const threshold = concurrencyThreshold(s, baselineVisits);
   const capacity = capacityCheck(s);
   const viability = viabilityCheck(s);
 
@@ -79,9 +83,9 @@ export function Simulator() {
           onChange={(v) => set({ documentationMinutesPerVisit: v })} format={(v) => `${v} min`}
           source="AS-007 · Ellen's current observed workload" />
 
-        <Slider label="Documentation done DURING the visit" value={s.documentationConcurrency} min={0} max={1} step={0.05}
+        <Slider label="Documentation concurrency" value={s.documentationConcurrency} min={0} max={1} step={0.01}
           onChange={(v) => set({ documentationConcurrency: v })} format={(v) => pct(v * 100)}
-          source="AS-015 · Ellen's current observed workload · at 100% the cycle is 60 min; drop it and the day stops closing" />
+          source="AS-015 · MODELLING ASSUMPTION · share of documentation absorbed into the existing workflow rather than adding schedule time" />
 
         <Slider label="Workday length" value={s.workdayHours} min={4} max={12} step={0.5}
           onChange={(v) => set({ workdayHours: v })} format={(v) => `${num(v, 1)} h`}
@@ -114,11 +118,96 @@ export function Simulator() {
         </div>
       </Card>
 
+      <Card title="Documentation Sensitivity">
+        <div className="pills">
+          <span className="pill accent">USER_PROVIDED: {baselineVisits} visits/day, 45m visit, 15m travel, 5m documentation</span>
+          <span className="pill unknown">MODELLING ASSUMPTION: concurrency currently {pct(s.documentationConcurrency * 100)}</span>
+          <span className="pill neutral">SENSITIVITY SCENARIO: the rows below</span>
+        </div>
+
+        <p className="small muted">
+          Documentation concurrency is the share of documentation time absorbed into the existing
+          clinical and travel workflow rather than becoming additional schedule time. It is not a
+          claim that notes are written while treating a child. The rows below are hypothetical test
+          levels — none of them except the current assumption represents observed behaviour.
+        </p>
+
+        <Callout tone="bad" title="Where the 8-visit day breaks">
+          {threshold === null ? (
+            <>At these inputs the {baselineVisits}-visit day behaves the same across the whole concurrency range,
+            so there is no crossing point to report.</>
+          ) : (
+            <>
+              The {baselineVisits}-visit day closes <strong style={{ display: 'inline', fontWeight: 600 }}>only at
+              {' '}{pct(threshold.threshold * 100, 2)}</strong> concurrency.{' '}
+              {num(baselineVisits, 0)} × {num(visitCycle({ ...s, documentationConcurrency: 1 }).cycleMinutes, 0)} min
+              = {num(baselineVisits * 60, 0)} min against a {num(s.workdayHours * 60, 0)}-minute day — an exact fit
+              with zero slack. The moment any documentation spills outside the workflow the ceiling drops to 7
+              visits/day, and it stays at 7 all the way down to 0%. This is a cliff, not a gradual slope.
+            </>
+          )}
+        </Callout>
+
+        <Table head={
+          <tr>
+            <th>Concurrency</th><th className="num">Cycle</th><th className="num">Max visits/day</th>
+            <th>{baselineVisits}-visit day</th><th className="num">Time vs available</th><th className="num">Overage</th>
+          </tr>
+        }>
+          {sensitivity.map((r) => (
+            <tr key={r.label} style={r.concurrency === s.documentationConcurrency ? { background: 'rgba(77,163,255,0.10)' } : undefined}>
+              <td><strong>{r.label}</strong>
+                <div className="muted" style={{ fontSize: 10.5 }}>+{num(r.additionalDocumentationMinutes, 2)}m/visit</div></td>
+              <td className="num">{num(r.cycleMinutes, 2)}m</td>
+              <td className="num">{r.maxVisitsPerDay}</td>
+              <td><span className={`pill ${r.baselineDayCloses ? 'good' : 'bad'}`}>{r.baselineDayCloses ? 'YES' : 'NO'}</span></td>
+              <td className="num">{num(r.baselineMinutesRequired, 0)} / {num(r.workdayMinutes, 0)}m</td>
+              <td className="num">{r.baselineOverageMinutes > 0 ? `+${num(r.baselineOverageMinutes, 0)}m` : '—'}</td>
+            </tr>
+          ))}
+        </Table>
+
+        <h3 style={{ marginTop: 16 }}>Break-even versus capacity</h3>
+        <Table head={
+          <tr>
+            <th>Concurrency</th><th className="num">Max visits/day</th><th className="num">Break-even visits/day</th>
+            <th>Relationship</th><th className="num">Collected revenue</th>
+          </tr>
+        }>
+          {sensitivity.map((r) => (
+            <tr key={r.label}>
+              <td><strong>{r.label}</strong></td>
+              <td className="num">{r.maxVisitsPerDay}</td>
+              <td className="num">{num(r.breakEvenVisitsPerDay, 2)}</td>
+              <td className="muted" style={{ fontSize: 11.5 }}>{r.capacityVsBreakEven}</td>
+              <td className="num">{money(r.collectedRevenue)}</td>
+            </tr>
+          ))}
+        </Table>
+        <p className="small muted">
+          Break-even does not move with concurrency — it is set by cost and contribution per visit, not
+          by how long the day runs. What changes is the headroom above it.
+        </p>
+
+        <div className="btn-row" style={{ marginTop: 12, marginBottom: 0 }}>
+          {CONCURRENCY_LEVELS.map((c) => (
+            <button key={c}
+              className={`btn${Math.abs(s.documentationConcurrency - c) < 1e-9 ? ' active' : ''}`}
+              onClick={() => set({ documentationConcurrency: c })}>
+              Test {Math.round(c * 100)}%
+            </button>
+          ))}
+        </div>
+      </Card>
+
       <Card title="Weekly clinician time split (per clinician)">
         <div className="grid">
           <Stat label="Patient-facing" value={`${num(volume.patientFacingHoursPerWeek, 1)} h`} note="Billable" />
           <Stat label="Travel" value={`${num(volume.travelHoursPerWeek, 1)} h`} note="Unbillable" />
-          <Stat label="Documentation" value={`${num(volume.documentationHoursPerWeek, 1)} h`} note="Mostly inside the visit" />
+          <Stat label="Documentation" value={`${num(volume.documentationHoursPerWeek, 1)} h`}
+            note={cycle.additionalDocumentationMinutes === 0
+              ? 'Fully absorbed into the workflow'
+              : `${num(cycle.additionalDocumentationMinutes, 2)}m/visit adds to the schedule`} />
         </div>
       </Card>
 

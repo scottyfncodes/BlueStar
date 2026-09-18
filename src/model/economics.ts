@@ -574,3 +574,137 @@ export function revenueBreakdown(i: ScenarioInputs): RevenueBreakdown {
     operatingMargin: remaining === null ? null : remaining - overhead,
   };
 }
+
+// ---------------------------------------------------------------------------
+// Documentation concurrency sensitivity
+// ---------------------------------------------------------------------------
+
+/**
+ * Documentation concurrency is the share of documentation time that can be
+ * absorbed into the existing clinical and travel workflow rather than becoming
+ * ADDITIONAL schedule time. It is not a claim that notes are literally typed
+ * while treating a child — only that the minutes do not extend the working day.
+ */
+export const CONCURRENCY_LEVELS = [1, 0.75, 0.5, 0.25, 0] as const;
+
+export type CapacityVsBreakEven =
+  | 'Capacity exceeds break-even requirement'
+  | 'Exactly at capacity'
+  | 'Not feasible'
+  | 'Unknown';
+
+export interface ConcurrencyScenario {
+  concurrency: number;
+  label: string;
+  /** Minutes of documentation that spill outside the workflow and extend the day. */
+  additionalDocumentationMinutes: number;
+  cycleMinutes: number;
+  maxVisitsPerDay: number;
+  workdayMinutes: number;
+
+  // --- diagnostic for the observed baseline visits/day ---
+  baselineVisitsPerDay: number;
+  baselineMinutesRequired: number;
+  baselineOverageMinutes: number;
+  baselineDayCloses: boolean;
+
+  // --- interaction with the financial model ---
+  breakEvenVisitsPerDay: number | null;
+  breakEvenIsAchievable: boolean | null;
+  capacityVsBreakEven: CapacityVsBreakEven;
+
+  // --- downstream consequence, through the normal clamped path ---
+  effectiveVisitsPerDay: number;
+  completedVisitsPerYear: number;
+  collectedRevenue: number;
+}
+
+/**
+ * Sensitivity of the whole model to documentation concurrency.
+ *
+ * Every row is produced by running the SAME pipeline the rest of the app uses
+ * — visitCycle -> scheduleFeasibility -> capacityVolume -> annualModel — with
+ * only the concurrency input varied. There is deliberately no second, simpler
+ * formula here: a shortcut would be able to disagree with the real model.
+ *
+ * @param baselineVisitsPerDay the visits/day to diagnose (Ellen's observed 8).
+ */
+export function documentationSensitivity(
+  base: ScenarioInputs,
+  levels: readonly number[] = CONCURRENCY_LEVELS,
+  baselineVisitsPerDay: number = base.visitsPerDay,
+): ConcurrencyScenario[] {
+  return levels.map((concurrency) => {
+    const inputs: ScenarioInputs = { ...base, documentationConcurrency: concurrency };
+    const cycle = visitCycle(inputs);
+    const feas = scheduleFeasibility(inputs);
+    const viability = viabilityCheck(inputs);
+    const volume = capacityVolume(inputs);
+    const model = annualModel(inputs);
+
+    const baselineMinutesRequired = baselineVisitsPerDay * cycle.cycleMinutes;
+    const overage = baselineMinutesRequired - feas.workdayMinutes;
+
+    const breakEven = viability.breakEvenVisitsPerDay;
+    let capacityVsBreakEven: CapacityVsBreakEven = 'Unknown';
+    if (breakEven !== null) {
+      if (breakEven > feas.maxVisitsPerDay) capacityVsBreakEven = 'Not feasible';
+      else if (Math.abs(breakEven - feas.maxVisitsPerDay) < 1e-9) capacityVsBreakEven = 'Exactly at capacity';
+      else capacityVsBreakEven = 'Capacity exceeds break-even requirement';
+    }
+
+    return {
+      concurrency,
+      label: `${Math.round(concurrency * 100)}%`,
+      additionalDocumentationMinutes: cycle.additionalDocumentationMinutes,
+      cycleMinutes: cycle.cycleMinutes,
+      maxVisitsPerDay: feas.maxVisitsPerDay,
+      workdayMinutes: feas.workdayMinutes,
+
+      baselineVisitsPerDay,
+      baselineMinutesRequired,
+      baselineOverageMinutes: Math.max(0, overage),
+      baselineDayCloses: baselineMinutesRequired <= feas.workdayMinutes,
+
+      breakEvenVisitsPerDay: breakEven,
+      breakEvenIsAchievable: viability.breakEvenIsAchievable,
+      capacityVsBreakEven,
+
+      effectiveVisitsPerDay: feas.effectiveVisitsPerDay,
+      completedVisitsPerYear: volume.completedVisitsPerYear,
+      collectedRevenue: model.collectedRevenue,
+    };
+  });
+}
+
+/**
+ * The highest concurrency at which the baseline visits/day STOPS fitting the
+ * workday, found by binary search against the real model rather than by
+ * rearranging the formula by hand.
+ *
+ * Returns null when the day closes at every level (nothing to find) or fails
+ * at every level (no threshold within range).
+ */
+export function concurrencyThreshold(
+  base: ScenarioInputs,
+  baselineVisitsPerDay: number = base.visitsPerDay,
+): { threshold: number; closesAtFullConcurrency: boolean; closesAtZeroConcurrency: boolean } | null {
+  const closes = (c: number) => {
+    const inputs: ScenarioInputs = { ...base, documentationConcurrency: c };
+    return baselineVisitsPerDay * visitCycle(inputs).cycleMinutes <= scheduleFeasibility(inputs).workdayMinutes;
+  };
+
+  const atFull = closes(1);
+  const atZero = closes(0);
+  if (atFull === atZero) return null;
+
+  // Monotonic in concurrency, so bisect for the crossing point.
+  let lo = 0;
+  let hi = 1;
+  for (let k = 0; k < 60; k++) {
+    const mid = (lo + hi) / 2;
+    if (closes(mid)) hi = mid;
+    else lo = mid;
+  }
+  return { threshold: hi, closesAtFullConcurrency: atFull, closesAtZeroConcurrency: atZero };
+}
