@@ -30,7 +30,7 @@ describe('evidence integrity', () => {
 
   it('every record declares how it was retrieved', () => {
     for (const e of evidence) {
-      expect(['direct-read', 'search-summary', 'not-accessed']).toContain(e.retrieval);
+      expect(['direct-read', 'search-summary', 'not-accessed', 'user-reported']).toContain(e.retrieval);
     }
   });
 

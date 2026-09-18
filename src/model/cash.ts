@@ -1,4 +1,4 @@
-import type { ScenarioInputs } from './economics';
+import { capacityVolume, type ScenarioInputs } from './economics';
 
 /**
  * Month-by-month cash calendar. The point of this model is to find the month
@@ -46,8 +46,8 @@ export function cashCalendar(input: CashCalendarInputs): CashCalendar {
       ? 0
       : (s.clinicianSalary * (1 + s.payrollBurdenRate + s.benefitsRate) * s.clinicianCount) / 12;
 
-  const fullMonthlyVisits =
-    ((s.visitsPerDay * s.workingDaysPerYear) / 12) * (1 - s.cancellationRate) * s.clinicianCount;
+  // Drawn from capacityVolume so the cash model can never bill an impossible schedule.
+  const fullMonthlyVisits = capacityVolume(s).visitsPerMonth * (1 - s.cancellationRate) * s.clinicianCount;
 
   // Revenue earned in a month is collected daysToCash later.
   const collectionLagMonths = Math.max(0, Math.round(s.daysToCash / 30));

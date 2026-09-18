@@ -20,11 +20,155 @@ export interface ScenarioInputs {
   /** Non-clinician overhead, monthly. */
   fixedMonthlyOverhead: number;
   clinicianCount: number;
-  /** Minutes — used for capacity reasoning, not revenue, under flat per-visit pay. */
+  /** Patient-facing minutes. Under flat per-visit pay this drives capacity, not revenue. */
   visitLengthMinutes: number;
   travelMinutesPerVisit: number;
   documentationMinutesPerVisit: number;
+  /**
+   * Length of the clinician workday. Previously hard-coded as the literal 480
+   * minutes; making it editable is what allows a longer day to be an EXPLICIT
+   * choice rather than an accident of the arithmetic.
+   */
+  workdayHours: number;
+  /**
+   * Fraction of documentation completed DURING the visit (0..1). This is the
+   * hinge of the capacity model: documentation done inside the visit consumes
+   * no extra workday time, documentation done afterwards extends the cycle.
+   */
+  documentationConcurrency: number;
   daysToCash: number;
+}
+
+// ---------------------------------------------------------------------------
+// Visit cycle — the time arithmetic everything else rests on.
+// ---------------------------------------------------------------------------
+
+export interface VisitCycle {
+  patientFacingMinutes: number;
+  travelMinutes: number;
+  /** Documentation minutes that fall OUTSIDE the visit and so extend the day. */
+  additionalDocumentationMinutes: number;
+  /** Documentation absorbed into the patient-facing block. */
+  concurrentDocumentationMinutes: number;
+  /** Total workday minutes consumed by one completed visit. */
+  cycleMinutes: number;
+}
+
+/**
+ * One visit's demand on the clinician's day.
+ *
+ * Ellen's observed baseline is the worked example: 45 minutes patient-facing +
+ * 15 minutes travel = a 60-minute cycle, with her ~5 minutes of documentation
+ * absorbed into the visit rather than added to it. That concurrency is exactly
+ * why 8 visits close inside an 8-hour day; if the same documentation moved to
+ * the evening the cycle would be 65 minutes and the day would run to 8.7 hours.
+ */
+export function visitCycle(i: ScenarioInputs): VisitCycle {
+  const concurrency = Math.min(1, Math.max(0, i.documentationConcurrency));
+  const concurrentDocumentationMinutes = i.documentationMinutesPerVisit * concurrency;
+  const additionalDocumentationMinutes = i.documentationMinutesPerVisit - concurrentDocumentationMinutes;
+
+  return {
+    patientFacingMinutes: i.visitLengthMinutes,
+    travelMinutes: i.travelMinutesPerVisit,
+    concurrentDocumentationMinutes,
+    additionalDocumentationMinutes,
+    cycleMinutes: i.visitLengthMinutes + i.travelMinutesPerVisit + additionalDocumentationMinutes,
+  };
+}
+
+export interface ScheduleFeasibility {
+  requestedVisitsPerDay: number;
+  /** Visits that actually fit the workday. Revenue is computed from THIS. */
+  effectiveVisitsPerDay: number;
+  maxVisitsPerDay: number;
+  cycleMinutes: number;
+  workdayMinutes: number;
+  minutesRequired: number;
+  feasible: boolean;
+  /** True when the requested schedule was reduced to fit the day. */
+  clamped: boolean;
+  explanation: string;
+}
+
+/**
+ * The guard that stops the model claiming impossible volume.
+ *
+ * Without this, asking for 12 one-hour cycles in an 8-hour day produces a
+ * perfectly confident revenue figure for a schedule nobody can work. Revenue
+ * is therefore computed from effectiveVisitsPerDay, never from the request,
+ * and any reduction is reported rather than applied silently. The legitimate
+ * way to raise the ceiling is to raise workdayHours — an explicit decision
+ * about someone's working life, which is what it should be.
+ */
+export function scheduleFeasibility(i: ScenarioInputs): ScheduleFeasibility {
+  const cycle = visitCycle(i);
+  const workdayMinutes = i.workdayHours * 60;
+  const maxVisitsPerDay = cycle.cycleMinutes > 0 ? Math.floor(workdayMinutes / cycle.cycleMinutes) : 0;
+  const requested = i.visitsPerDay;
+  const effective = Math.min(requested, maxVisitsPerDay);
+  const clamped = effective < requested;
+
+  return {
+    requestedVisitsPerDay: requested,
+    effectiveVisitsPerDay: effective,
+    maxVisitsPerDay,
+    cycleMinutes: cycle.cycleMinutes,
+    workdayMinutes,
+    minutesRequired: requested * cycle.cycleMinutes,
+    feasible: !clamped,
+    clamped,
+    explanation: clamped
+      ? `${requested} visits/day needs ${Math.round(requested * cycle.cycleMinutes)} minutes but the workday is ` +
+        `${workdayMinutes} minutes. Capped at ${maxVisitsPerDay} for all revenue and capacity figures. ` +
+        `To schedule more, either shorten the ${Math.round(cycle.cycleMinutes)}-minute cycle or lengthen the workday explicitly.`
+      : `${requested} visits/day fits: ${Math.round(requested * cycle.cycleMinutes)} of ${workdayMinutes} available minutes ` +
+        `at a ${Math.round(cycle.cycleMinutes)}-minute cycle.`,
+  };
+}
+
+export interface CapacityVolume {
+  visitsPerDay: number;
+  visitsPerWeek: number;
+  visitsPerMonth: number;
+  visitsPerYear: number;
+  /** Net of cancellations — what actually gets delivered and billed. */
+  completedVisitsPerYear: number;
+  patientFacingHoursPerWeek: number;
+  travelHoursPerWeek: number;
+  documentationHoursPerWeek: number;
+  /** Derived from workingDaysPerYear rather than invented separately. */
+  workingDaysPerWeek: number;
+}
+
+/**
+ * Visit volume per day / week / month / year for ONE clinician.
+ *
+ * Working days per week is derived from the existing workingDaysPerYear
+ * assumption (annual days ÷ 52) rather than introduced as a separate number.
+ * That keeps a single source of truth and means the figure is already net of
+ * PTO and holidays — which is why it sits below a nominal 5-day week.
+ */
+export function capacityVolume(i: ScenarioInputs): CapacityVolume {
+  const feas = scheduleFeasibility(i);
+  const cycle = visitCycle(i);
+  const perDay = feas.effectiveVisitsPerDay;
+
+  const workingDaysPerWeek = i.workingDaysPerYear / 52;
+  const visitsPerWeek = perDay * workingDaysPerWeek;
+  const visitsPerYear = perDay * i.workingDaysPerYear;
+
+  return {
+    visitsPerDay: perDay,
+    visitsPerWeek,
+    visitsPerMonth: visitsPerYear / 12,
+    visitsPerYear,
+    completedVisitsPerYear: visitsPerYear * (1 - i.cancellationRate),
+    patientFacingHoursPerWeek: (visitsPerWeek * cycle.patientFacingMinutes) / 60,
+    travelHoursPerWeek: (visitsPerWeek * cycle.travelMinutes) / 60,
+    documentationHoursPerWeek: (visitsPerWeek * i.documentationMinutesPerVisit) / 60,
+    workingDaysPerWeek,
+  };
 }
 
 export interface LoadedClinicianCost {
@@ -49,8 +193,9 @@ export function loadedClinicianCost(i: ScenarioInputs): LoadedClinicianCost | nu
   const benefits = salary * i.benefitsRate;
   const total = salary + payrollTaxes + benefits;
 
-  const scheduled = i.visitsPerDay * i.workingDaysPerYear;
-  const completedVisitsPerYear = scheduled * (1 - i.cancellationRate);
+  // Effective, not requested: an impossible schedule must not lower the
+  // apparent cost per visit by pretending the visits happened.
+  const completedVisitsPerYear = capacityVolume(i).completedVisitsPerYear;
 
   return {
     salary,
@@ -89,8 +234,7 @@ export function visitEconomics(i: ScenarioInputs): VisitEconomics {
   const loaded = loadedClinicianCost(i);
   const clinicianCost = loaded?.costPerCompletedVisit ?? null;
 
-  const totalMinutesConsumed =
-    i.visitLengthMinutes + i.travelMinutesPerVisit + i.documentationMinutesPerVisit;
+  const totalMinutesConsumed = visitCycle(i).cycleMinutes;
 
   const contributionMargin =
     clinicianCost === null ? null : collectedRevenue - clinicianCost - i.mileageCostPerVisit;
@@ -122,13 +266,12 @@ export function capacityCheck(i: ScenarioInputs): {
   feasibleInEightHourDay: boolean;
   maxVisitsInEightHours: number;
 } {
-  const perVisit = i.visitLengthMinutes + i.travelMinutesPerVisit + i.documentationMinutesPerVisit;
-  const minutesRequired = perVisit * i.visitsPerDay;
+  const feas = scheduleFeasibility(i);
   return {
-    minutesRequired,
-    hoursRequired: minutesRequired / 60,
-    feasibleInEightHourDay: minutesRequired <= 480,
-    maxVisitsInEightHours: perVisit > 0 ? Math.floor(480 / perVisit) : 0,
+    minutesRequired: feas.minutesRequired,
+    hoursRequired: feas.minutesRequired / 60,
+    feasibleInEightHourDay: feas.feasible,
+    maxVisitsInEightHours: feas.maxVisitsPerDay,
   };
 }
 
@@ -149,8 +292,9 @@ export interface AnnualModel {
 export function annualModel(i: ScenarioInputs): AnnualModel {
   const loaded = loadedClinicianCost(i);
 
-  const scheduledPerClinician = i.visitsPerDay * i.workingDaysPerYear;
-  const completedPerClinician = scheduledPerClinician * (1 - i.cancellationRate);
+  // Volume is drawn from capacityVolume, which has already been clamped to what
+  // fits the workday. Revenue can never be booked against an impossible schedule.
+  const completedPerClinician = capacityVolume(i).completedVisitsPerYear;
   const completedVisits = completedPerClinician * i.clinicianCount;
 
   const grossRevenue = completedVisits * i.reimbursementPerVisit;
@@ -300,5 +444,133 @@ export function viabilityCheck(i: ScenarioInputs): ViabilityCheck {
     headroomVisitsPerDay: headroom,
     verdict,
     bindingConstraint,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Staffing scenarios
+// ---------------------------------------------------------------------------
+
+export interface StaffingScenario {
+  id: string;
+  label: string;
+  clinicianCount: number;
+  disciplines: string;
+  visitsPerDay: number;
+  visitsPerWeek: number;
+  visitsPerMonth: number;
+  completedVisitsPerYear: number;
+  grossClinicalRevenue: number;
+  collectedRevenue: number;
+  clinicianCost: number | null;
+  mileageCost: number;
+  overhead: number;
+  /** What is left for the business after clinical delivery is paid for. */
+  remainingForOverheadAndMargin: number | null;
+  operatingMargin: number | null;
+  marginPercent: number | null;
+  travelHoursPerWeek: number;
+  documentationHoursPerWeek: number;
+  patientFacingHoursPerWeek: number;
+  feasible: boolean;
+}
+
+const STAFFING_LADDER: { id: string; label: string; count: number; disciplines: string }[] = [
+  { id: 'S-1', label: 'Ellen only', count: 1, disciplines: 'PT' },
+  { id: 'S-2', label: 'Ellen + 1 PT', count: 2, disciplines: 'PT' },
+  { id: 'S-3', label: 'Ellen + 2 PTs', count: 3, disciplines: 'PT' },
+  { id: 'S-4', label: '3 PTs', count: 3, disciplines: 'PT' },
+  { id: 'S-5', label: '5 PTs', count: 5, disciplines: 'PT' },
+  { id: 'S-6', label: 'PT / OT / ST expansion (6 clinicians)', count: 6, disciplines: 'PT + OT + ST' },
+];
+
+/**
+ * Staffing scenarios built from the SAME productivity assumptions as everything
+ * else, so changing the visit cycle flows straight through to every headcount.
+ *
+ * IMPORTANT: these are FULL-PRODUCTIVITY UPPER BOUNDS. Every clinician is
+ * modelled at Ellen's observed baseline, which a new hire will not match on day
+ * one. The ramp assumption (AS-016) is deliberately null rather than invented,
+ * so these figures should be read as ceilings, not forecasts.
+ */
+export function staffingScenarios(base: ScenarioInputs): StaffingScenario[] {
+  return STAFFING_LADDER.map((rung) => {
+    const inputs: ScenarioInputs = { ...base, clinicianCount: rung.count };
+    const volume = capacityVolume(inputs);
+    const feas = scheduleFeasibility(inputs);
+    const model = annualModel(inputs);
+    const loaded = loadedClinicianCost(inputs);
+
+    const clinicianCost = loaded === null ? null : loaded.total * rung.count;
+    const grossClinicalRevenue = volume.completedVisitsPerYear * rung.count * base.reimbursementPerVisit;
+    const collectedRevenue = grossClinicalRevenue * base.collectionRate;
+    const mileageCost = volume.completedVisitsPerYear * rung.count * base.mileageCostPerVisit;
+    const overhead = base.fixedMonthlyOverhead * 12;
+
+    const remaining = clinicianCost === null ? null : collectedRevenue - clinicianCost - mileageCost;
+
+    return {
+      id: rung.id,
+      label: rung.label,
+      clinicianCount: rung.count,
+      disciplines: rung.disciplines,
+      visitsPerDay: volume.visitsPerDay * rung.count,
+      visitsPerWeek: volume.visitsPerWeek * rung.count,
+      visitsPerMonth: volume.visitsPerMonth * rung.count,
+      completedVisitsPerYear: volume.completedVisitsPerYear * rung.count,
+      grossClinicalRevenue,
+      collectedRevenue,
+      clinicianCost,
+      mileageCost,
+      overhead,
+      remainingForOverheadAndMargin: remaining,
+      operatingMargin: model.operatingProfit,
+      marginPercent:
+        model.operatingProfit === null || collectedRevenue === 0
+          ? null
+          : (model.operatingProfit / collectedRevenue) * 100,
+      travelHoursPerWeek: volume.travelHoursPerWeek * rung.count,
+      documentationHoursPerWeek: volume.documentationHoursPerWeek * rung.count,
+      patientFacingHoursPerWeek: volume.patientFacingHoursPerWeek * rung.count,
+      feasible: feas.feasible,
+    };
+  });
+}
+
+/** Revenue decomposition, so "8 × rate" is never mistaken for clinician economics. */
+export interface RevenueBreakdown {
+  completedVisitsPerYear: number;
+  grossClinicalRevenue: number;
+  collectedRevenue: number;
+  collectionLoss: number;
+  clinicianCompensation: number | null;
+  mileage: number;
+  remainingForOverheadAndMargin: number | null;
+  overhead: number;
+  operatingMargin: number | null;
+}
+
+export function revenueBreakdown(i: ScenarioInputs): RevenueBreakdown {
+  const volume = capacityVolume(i);
+  const loaded = loadedClinicianCost(i);
+  const completed = volume.completedVisitsPerYear * i.clinicianCount;
+
+  const gross = completed * i.reimbursementPerVisit;
+  const collected = gross * i.collectionRate;
+  const mileage = completed * i.mileageCostPerVisit;
+  const comp = loaded === null ? null : loaded.total * i.clinicianCount;
+  const overhead = i.fixedMonthlyOverhead * 12;
+  const remaining = comp === null ? null : collected - comp - mileage;
+
+  return {
+    completedVisitsPerYear: completed,
+    grossClinicalRevenue: gross,
+    collectedRevenue: collected,
+    collectionLoss: gross - collected,
+    clinicianCompensation: comp,
+    mileage,
+    remainingForOverheadAndMargin: remaining,
+    overhead,
+    operatingMargin: remaining === null ? null : remaining - overhead,
   };
 }

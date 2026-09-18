@@ -9,7 +9,7 @@ import { assumptionValue } from '../data/assumptions';
 export function defaultScenario(): ScenarioInputs {
   return {
     reimbursementPerVisit: assumptionValue('AS-001') ?? 0,
-    visitsPerDay: assumptionValue('AS-002') ?? 5,
+    visitsPerDay: assumptionValue('AS-002') ?? 8,
     workingDaysPerYear: assumptionValue('AS-012') ?? 230,
     cancellationRate: assumptionValue('AS-005') ?? 0.15,
     collectionRate: assumptionValue('AS-008') ?? 0.93,
@@ -19,9 +19,13 @@ export function defaultScenario(): ScenarioInputs {
     mileageCostPerVisit: assumptionValue('AS-010') ?? 12,
     fixedMonthlyOverhead: 500,
     clinicianCount: 1,
-    visitLengthMinutes: 60,
-    travelMinutesPerVisit: assumptionValue('AS-006') ?? 25,
-    documentationMinutesPerVisit: assumptionValue('AS-007') ?? 15,
+    // Previously hard-coded at 60 with no assumption behind it — now sourced
+    // from Ellen's observed baseline like every other productivity input.
+    visitLengthMinutes: assumptionValue('AS-013') ?? 45,
+    travelMinutesPerVisit: assumptionValue('AS-006') ?? 15,
+    documentationMinutesPerVisit: assumptionValue('AS-007') ?? 5,
+    workdayHours: assumptionValue('AS-014') ?? 8,
+    documentationConcurrency: assumptionValue('AS-015') ?? 1,
     daysToCash: assumptionValue('AS-009') ?? 45,
   };
 }
@@ -31,6 +35,25 @@ export function defaultScenario(): ScenarioInputs {
  * as test points spanning the conflicting source range — not estimates, and not
  * a substitute for finding the real number.
  */
+/**
+ * Ellen's observed baseline, held separately so the UI can show it beside the
+ * editable model inputs. This is ONE clinician's real workload, not a target.
+ */
+export const ELLEN_BASELINE = {
+  label: "Ellen's current observed baseline",
+  caveat:
+    'A real-world starting point for modelling — not an industry productivity standard, and not a target for other clinicians.',
+  visitsPerDay: 8,
+  workdayHours: 8,
+  workdaySpan: '9:00am - 5:00pm',
+  patientFacingMinutes: 45,
+  travelMinutes: 15,
+  documentationMinutes: 5,
+  documentationTiming: 'Most documentation completed during the visit, not as end-of-day admin',
+  cycleMinutes: 60,
+  evidenceId: 'EV-025',
+} as const;
+
 export const SALARY_TEST_POINTS = [
   { label: 'Low source (Salary.com pediatric PT Denver)', value: 78825 },
   { label: 'Mid source (Salary.com home health PT Denver)', value: 113401 },

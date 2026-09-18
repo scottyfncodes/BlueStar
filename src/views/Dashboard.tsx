@@ -5,9 +5,9 @@ import { assumptions } from '../data/assumptions';
 import { evidence } from '../data/evidence';
 import { unknownUnknowns, openQuestions } from '../data/misc';
 import { costs } from '../data/costs';
-import { viabilityCheck, annualModel } from '../model/economics';
+import { viabilityCheck, annualModel, visitCycle, capacityVolume } from '../model/economics';
 import { capitalRequirement } from '../model/capital';
-import { defaultScenario, SALARY_TEST_POINTS } from '../model/defaults';
+import { defaultScenario, SALARY_TEST_POINTS, ELLEN_BASELINE } from '../model/defaults';
 
 export function Dashboard({ go }: { go: (v: string) => void }) {
   const scenario = defaultScenario();
@@ -18,6 +18,8 @@ export function Dashboard({ go }: { go: (v: string) => void }) {
   const testedViability = viabilityCheck(tested);
   const testedModel = annualModel(tested);
   const capital = capitalRequirement(costs, tested, 6);
+  const cycle = visitCycle(tested);
+  const volume = capacityVolume(tested);
 
   const phase = phases[0];
   const openDecisions = decisions.filter((d) => d.status === 'Open');
@@ -31,6 +33,14 @@ export function Dashboard({ go }: { go: (v: string) => void }) {
       <p className="lead">
         Where we are, what we know, what we don't, and what happens next.
       </p>
+
+      <Callout tone="good" title={ELLEN_BASELINE.label}>
+        <strong style={{ display: 'inline', fontWeight: 600 }}>{ELLEN_BASELINE.visitsPerDay} visits/day</strong>{' '}
+        ({ELLEN_BASELINE.workdaySpan}), ~{ELLEN_BASELINE.patientFacingMinutes}m patient-facing +{' '}
+        ~{ELLEN_BASELINE.travelMinutes}m travel = a {ELLEN_BASELINE.cycleMinutes}-minute cycle.
+        This is now the productivity baseline throughout the model, replacing four earlier guesses.
+        <div style={{ marginTop: 6, fontStyle: 'italic' }}>{ELLEN_BASELINE.caveat}</div>
+      </Callout>
 
       <Card title="WHERE WE ARE">
         <div className="grid">
@@ -83,12 +93,12 @@ export function Dashboard({ go }: { go: (v: string) => void }) {
           <Stat
             label="Max visits that fit an 8h day"
             value={String(testedViability.maxFeasibleVisitsPerDay)}
-            note={`${scenario.visitLengthMinutes}m visit + ${scenario.travelMinutesPerVisit}m travel + ${scenario.documentationMinutesPerVisit}m notes`}
+            note={`${num(cycle.patientFacingMinutes, 0)}m visit + ${num(cycle.travelMinutes, 0)}m travel = ${num(cycle.cycleMinutes, 0)}m cycle`}
           />
           <Stat
             label="Operating profit (1 clinician)"
             value={money(testedModel.operatingProfit)}
-            note="At the assumed 5 visits/day"
+            note={`At ${num(volume.visitsPerDay, 0)} visits/day`}
           />
           <Stat
             label="Working capital needed"

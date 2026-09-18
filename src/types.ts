@@ -32,7 +32,8 @@ export type FactKind =
 export type Retrieval =
   | 'direct-read' // the source document itself was opened and read
   | 'search-summary' // a search index summarised the source; text not read directly
-  | 'not-accessed'; // we know the document exists but have not reached it
+  | 'not-accessed' // we know the document exists but have not reached it
+  | 'user-reported'; // observed and reported first-hand by Scott or Ellen
 
 export type CategoryId =
   | '01-Regulatory'

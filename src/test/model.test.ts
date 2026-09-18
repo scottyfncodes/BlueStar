@@ -8,9 +8,10 @@ import { cashCalendar } from '../model/cash';
 import { defaultScenario } from '../model/defaults';
 import { costs } from '../data/costs';
 
+/** Ellen's observed baseline: 45m visit + 15m travel = 60m cycle, 8 visits in 8h. */
 const base: ScenarioInputs = {
   reimbursementPerVisit: 143.02,
-  visitsPerDay: 5,
+  visitsPerDay: 8,
   workingDaysPerYear: 230,
   cancellationRate: 0.15,
   collectionRate: 0.93,
@@ -20,9 +21,11 @@ const base: ScenarioInputs = {
   mileageCostPerVisit: 12,
   fixedMonthlyOverhead: 500,
   clinicianCount: 1,
-  visitLengthMinutes: 60,
-  travelMinutesPerVisit: 25,
-  documentationMinutesPerVisit: 15,
+  visitLengthMinutes: 45,
+  travelMinutesPerVisit: 15,
+  documentationMinutesPerVisit: 5,
+  workdayHours: 8,
+  documentationConcurrency: 1,
   daysToCash: 45,
 };
 
@@ -31,10 +34,7 @@ const base: ScenarioInputs = {
  * Note what it took to get here: a 45-minute visit, 20 minutes travel and 10
  * minutes documentation — an 85-minute envelope rather than 100.
  */
-const viableScenario: ScenarioInputs = {
-  ...base, visitsPerDay: 6, clinicianSalary: 85000,
-  visitLengthMinutes: 45, travelMinutesPerVisit: 20, documentationMinutesPerVisit: 10,
-};
+const viableScenario: ScenarioInputs = { ...base, clinicianSalary: 85000 };
 
 describe('loaded clinician cost', () => {
   it('is materially higher than salary alone', () => {
@@ -53,7 +53,7 @@ describe('loaded clinician cost', () => {
 
   it('accounts for cancellations when computing cost per completed visit', () => {
     const r = loadedClinicianCost(base)!;
-    expect(r.completedVisitsPerYear).toBeCloseTo(5 * 230 * 0.85, 6);
+    expect(r.completedVisitsPerYear).toBeCloseTo(8 * 230 * 0.85, 6);
     expect(r.costPerCompletedVisit).toBeCloseTo(r.total / r.completedVisitsPerYear, 6);
   });
 
@@ -71,15 +71,26 @@ describe('visit economics', () => {
 
   it('counts travel and documentation as consumed clinician time', () => {
     const v = visitEconomics(base);
-    expect(v.totalMinutesConsumed).toBe(100); // 60 + 25 + 15
+    // 45 patient-facing + 15 travel; the 5 minutes of documentation are
+    // absorbed into the visit rather than added to the day.
+    expect(v.totalMinutesConsumed).toBe(60);
   });
 
-  it('revenue per clinician hour is well below the headline visit rate', () => {
-    // The core insight: a $143 visit consumes 100 minutes of clinician time,
-    // so the real hourly yield is far lower than the visit rate suggests.
+  it("equals revenue per visit at Ellen's 60-minute cycle", () => {
+    // A neat consequence of the observed baseline: one visit consumes exactly
+    // one hour of workday, so the hourly yield and the per-visit yield coincide.
     const v = visitEconomics(base);
+    expect(v.totalMinutesConsumed).toBe(60);
+    expect(v.revenuePerClinicianHour).toBeCloseTo(v.collectedRevenue, 6);
+  });
+
+  it('falls below the visit rate as soon as the cycle exceeds an hour', () => {
+    // Every minute added to the cycle beyond 60 dilutes the hourly yield,
+    // because a flat per-visit rate pays nothing for the extra time.
+    const v = visitEconomics({ ...base, travelMinutesPerVisit: 35 });
+    expect(v.totalMinutesConsumed).toBe(80);
     expect(v.revenuePerClinicianHour).toBeLessThan(v.collectedRevenue);
-    expect(v.revenuePerClinicianHour).toBeCloseTo((143.02 * 0.93 / 100) * 60, 6);
+    expect(v.revenuePerClinicianHour).toBeCloseTo((143.02 * 0.93 / 80) * 60, 6);
   });
 
   it('degrades gracefully when salary is unknown', () => {
@@ -93,18 +104,18 @@ describe('visit economics', () => {
 });
 
 describe('capacity check', () => {
-  it('flags a caseload that does not fit an eight-hour day', () => {
-    // 5 visits x 100 minutes = 500 minutes > 480.
+  it("accepts Ellen's baseline: 8 x 60 minutes fills the 8-hour day exactly", () => {
     const c = capacityCheck(base);
-    expect(c.minutesRequired).toBe(500);
-    expect(c.feasibleInEightHourDay).toBe(false);
-    expect(c.maxVisitsInEightHours).toBe(4);
+    expect(c.minutesRequired).toBe(480);
+    expect(c.feasibleInEightHourDay).toBe(true);
+    expect(c.maxVisitsInEightHours).toBe(8);
   });
 
-  it('accepts a caseload that does fit', () => {
-    const c = capacityCheck({ ...base, visitsPerDay: 4 });
-    expect(c.minutesRequired).toBe(400);
-    expect(c.feasibleInEightHourDay).toBe(true);
+  it('flags a caseload that does not fit once travel grows', () => {
+    // 45m travel => 90m cycle => only 5 visits fit, so 8 is infeasible.
+    const c = capacityCheck({ ...base, travelMinutesPerVisit: 45 });
+    expect(c.feasibleInEightHourDay).toBe(false);
+    expect(c.maxVisitsInEightHours).toBe(5);
   });
 
   it('shows that cutting travel time raises the achievable caseload', () => {
@@ -117,7 +128,7 @@ describe('capacity check', () => {
 describe('annual model', () => {
   it('computes completed visits net of cancellations', () => {
     const m = annualModel(base);
-    expect(m.completedVisits).toBeCloseTo(5 * 230 * 0.85, 6);
+    expect(m.completedVisits).toBeCloseTo(8 * 230 * 0.85, 6);
   });
 
   it('scales with clinician count', () => {
@@ -160,9 +171,9 @@ describe('scenario spreads', () => {
   it('utilisation scenarios span low, typical and high', () => {
     const s = utilisationScenarios(base);
     expect(s).toHaveLength(3);
-    expect(s[0].visitsPerDay).toBe(3);
-    expect(s[1].visitsPerDay).toBe(5);
-    expect(s[2].visitsPerDay).toBe(7);
+    expect(s[0].visitsPerDay).toBe(6);
+    expect(s[1].visitsPerDay).toBe(8);
+    expect(s[2].visitsPerDay).toBe(10);
     expect(s[2].model.grossRevenue).toBeGreaterThan(s[0].model.grossRevenue);
   });
 
@@ -323,19 +334,25 @@ describe('default scenario wiring', () => {
 });
 
 describe('viability check — does break-even fit in a working day?', () => {
-  it('flags the default-style scenario as not viable', () => {
-    // A genuine finding from this model, not a contrived case: at 5 visits/day
-    // with a 100-minute time envelope, break-even needs 5.73 visits/day while
-    // only 4 fit in an 8-hour day. The required caseload is impossible.
+  it("is VIABLE at Ellen's observed baseline", () => {
+    // The headline change from the real productivity data. On the previous
+    // guessed inputs (5 visits/day, 100-minute cycle) break-even was physically
+    // unreachable. At Ellen's actual 8 visits/day on a 60-minute cycle,
+    // break-even lands near 5.7 visits/day against a ceiling of 8.
     const v = viabilityCheck(base);
-    expect(v.breakEvenIsAchievable).toBe(false);
-    expect(v.verdict).toContain('NOT VIABLE');
-    expect(v.breakEvenVisitsPerDay!).toBeGreaterThan(v.maxFeasibleVisitsPerDay);
+    expect(v.breakEvenIsAchievable).toBe(true);
+    expect(v.verdict).toContain('Viable');
+    expect(v.maxFeasibleVisitsPerDay).toBe(8);
+    expect(v.breakEvenVisitsPerDay!).toBeLessThan(v.maxFeasibleVisitsPerDay);
+    expect(v.headroomVisitsPerDay!).toBeGreaterThan(0);
   });
 
-  it('identifies time-per-visit as the binding constraint when travel dominates', () => {
-    // 40 of every 100 minutes is travel + documentation.
-    expect(viabilityCheck(base).bindingConstraint).toBe('Time per visit');
+  it('becomes NOT viable when travel time erodes the ceiling', () => {
+    // 45m travel => 90m cycle => 5 visits/day ceiling, below break-even.
+    const v = viabilityCheck({ ...base, travelMinutesPerVisit: 45 });
+    expect(v.breakEvenIsAchievable).toBe(false);
+    expect(v.verdict).toContain('NOT VIABLE');
+    expect(v.bindingConstraint).toBe('Time per visit');
   });
 
   it('becomes viable once the time envelope is compressed', () => {

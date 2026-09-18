@@ -601,6 +601,33 @@ export const evidence: Evidence[] = [
     notes:
       'No reviews, complaints, compensation data, ownership or company-size information was gathered. Parent-experience and clinician-experience research (PARTS 16–17) remains substantially undone.',
   },
+
+  // -------------------------------------------------------------------------
+  // 10 — OBSERVED OPERATIONAL BASELINE (first-hand, not external research)
+  // -------------------------------------------------------------------------
+  {
+    id: 'EV-025',
+    category: '14-Operations',
+    topic: "Ellen's current observed pediatric home-health PT workload",
+    claim:
+      'Ellen currently averages 8 patient visits per day across a 9:00am-5:00pm workday, with approximately 15 minutes average drive time between visits and approximately 5 minutes of documentation per visit. Most documentation is completed DURING the patient visit rather than as separate end-of-day administrative time. This implies an approximate 60-minute visit cycle of roughly 45 minutes patient-facing time plus 15 minutes travel.',
+    source: "Ellen — current observed workload (first-hand report)",
+    url: 'https://github.com/scottyfncodes/BlueStar',
+    document: "Ellen's current observed workload, reported by Scott",
+    publicationDate: null,
+    effectiveDate: '2026-09-18',
+    accessedDate: '2026-09-18',
+    section: null,
+    appliesTo: ['Clinical productivity', 'Visit economics', 'Capacity', 'Staffing', 'Revenue model'],
+    interpretation:
+      'This is the first hard operational input the model has had, and it replaces four guesses at once. Two things stand out. First, 8 visits/day is far above the 5/day the model previously assumed, which changes the viability picture materially. Second, documentation happening DURING the visit rather than after it is the structural reason 8 visits fit an 8-hour day: 45 + 15 = a 60-minute cycle exactly, so 8 cycles = 480 minutes. If documentation were additive the day would run to 8.7 hours and the schedule would not close.',
+    confidence: 'Strong evidence',
+    retrieval: 'user-reported',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-03-01',
+    notes:
+      'IMPORTANT SCOPE LIMIT: this is ONE experienced clinician\'s observed baseline in her current role. It is NOT an industry productivity standard, NOT a benchmark, and NOT a target to hold other clinicians to. A new or less experienced PT should not be assumed to reach it. Treat it as a well-grounded starting point for modelling and label it as such wherever it appears.',
+  },
 ];
 
 export const evidenceById = new Map(evidence.map((e) => [e.id, e]));
