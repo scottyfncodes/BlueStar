@@ -628,6 +628,29 @@ export const evidence: Evidence[] = [
     notes:
       'IMPORTANT SCOPE LIMIT: this is ONE experienced clinician\'s observed baseline in her current role. It is NOT an industry productivity standard, NOT a benchmark, and NOT a target to hold other clinicians to. A new or less experienced PT should not be assumed to reach it. Treat it as a well-grounded starting point for modelling and label it as such wherever it appears.',
   },
+  {
+    id: 'EV-026',
+    category: '14-Operations',
+    topic: "Ellen's observed documentation workflow",
+    claim:
+      'Ellen spends approximately 5 minutes on documentation per visit. Approximately 90% of that documentation is completed during the visit itself or during natural downtime within the workday; the remaining approximately 10% is completed at home after the workday. Her current EMR is StateWise.',
+    source: "Ellen — current observed workflow (first-hand report)",
+    url: 'https://github.com/scottyfncodes/BlueStar',
+    document: "Ellen's current observed documentation workflow, reported by Scott",
+    publicationDate: null,
+    effectiveDate: '2026-09-18',
+    accessedDate: '2026-09-18',
+    section: null,
+    appliesTo: ['Clinical productivity', 'Capacity', 'Clinician burden', 'Technology'],
+    interpretation:
+      'This resolves the knife-edge left open by the Run 6 sensitivity analysis. The earlier model had only two buckets — documentation either absorbed into the day or extending it — and 100% absorption was the only setting under which an 8-visit day closed. Ellen\'s actual split is three-way: 90% inside the workday, 10% after it, and therefore NOTHING that extends the clinical schedule. The 10% is real work and is tracked as clinician burden, but it does not consume 9-to-5 capacity and so must not reduce the visit ceiling.',
+    confidence: 'Strong evidence',
+    retrieval: 'user-reported',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-03-01',
+    notes:
+      'STATEWISE IS CONTEXT, NOT CAUSE. StateWise is recorded only as the EMR Ellen currently uses. Nothing here establishes that StateWise produces a particular documentation efficiency, and no productivity assumption in this system is derived from the choice of EMR. If Blue Star later evaluates EMRs, the 90/10 split is a description of how Ellen works today, not a benchmark any product should be expected to reproduce.',
+  },
 ];
 
 export const evidenceById = new Map(evidence.map((e) => [e.id, e]));

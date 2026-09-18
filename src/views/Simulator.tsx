@@ -62,8 +62,14 @@ export function Simulator() {
           across a {ELLEN_BASELINE.workdaySpan} day — roughly{' '}
           {ELLEN_BASELINE.patientFacingMinutes} min patient-facing +{' '}
           {ELLEN_BASELINE.travelMinutes} min travel = a {ELLEN_BASELINE.cycleMinutes}-minute cycle,
-          with ~{ELLEN_BASELINE.documentationMinutes} min of documentation.{' '}
-          {ELLEN_BASELINE.documentationTiming}.
+          with ~{ELLEN_BASELINE.documentationMinutes} min of documentation —{' '}
+          {pct(ELLEN_BASELINE.documentationInWorkdayShare * 100)} completed during visits or natural
+          workday downtime, {pct(ELLEN_BASELINE.documentationAfterHoursShare * 100)} completed at home
+          after work.
+          <div style={{ marginTop: 6 }} className="small muted">
+            Current EMR: {ELLEN_BASELINE.emr} — recorded as context for how Ellen works today.
+            No productivity figure in this model is attributed to the EMR.
+          </div>
           <div style={{ marginTop: 6, fontStyle: 'italic' }}>{ELLEN_BASELINE.caveat}</div>
         </Callout>
 
@@ -83,9 +89,13 @@ export function Simulator() {
           onChange={(v) => set({ documentationMinutesPerVisit: v })} format={(v) => `${v} min`}
           source="AS-007 · Ellen's current observed workload" />
 
-        <Slider label="Documentation concurrency" value={s.documentationConcurrency} min={0} max={1} step={0.01}
+        <Slider label="Documentation completed within the workday" value={s.documentationConcurrency} min={0} max={1} step={0.01}
           onChange={(v) => set({ documentationConcurrency: v })} format={(v) => pct(v * 100)}
-          source="AS-015 · MODELLING ASSUMPTION · share of documentation absorbed into the existing workflow rather than adding schedule time" />
+          source="AS-015 · Ellen's current observed workflow · absorbed into visits or natural downtime, so it adds no schedule time" />
+
+        <Slider label="Documentation completed after the workday" value={s.documentationAfterHoursShare} min={0} max={1} step={0.01}
+          onChange={(v) => set({ documentationAfterHoursShare: v })} format={(v) => pct(v * 100)}
+          source="AS-017 · Ellen's current observed workflow · done at home, so it is real work but not 9-to-5 capacity" />
 
         <Slider label="Workday length" value={s.workdayHours} min={4} max={12} step={0.5}
           onChange={(v) => set({ workdayHours: v })} format={(v) => `${num(v, 1)} h`}
@@ -100,9 +110,11 @@ export function Simulator() {
         <Table head={<tr><th>Component</th><th className="num">Minutes</th><th>Counts toward the day?</th></tr>}>
           <tr><td>Patient-facing time</td><td className="num">{num(cycle.patientFacingMinutes, 0)}</td><td className="muted">Yes — billable</td></tr>
           <tr><td>Travel</td><td className="num">{num(cycle.travelMinutes, 0)}</td><td className="muted">Yes — unbillable</td></tr>
-          <tr><td>Documentation during the visit</td><td className="num">{num(cycle.concurrentDocumentationMinutes, 0)}</td><td className="muted">No — absorbed into the visit</td></tr>
-          <tr><td>Documentation after the visit</td><td className="num">{num(cycle.additionalDocumentationMinutes, 0)}</td><td className="muted">Yes — extends the day</td></tr>
-          <tr style={{ fontWeight: 600 }}><td>Total cycle</td><td className="num">{num(cycle.cycleMinutes, 0)}</td><td /></tr>
+          <tr><td>Documentation within the workday</td><td className="num">{num(cycle.concurrentDocumentationMinutes, 2)}</td><td className="muted">No — absorbed into visits or downtime</td></tr>
+          <tr><td>Documentation extending the clinical day</td><td className="num">{num(cycle.additionalDocumentationMinutes, 2)}</td><td className="muted">Yes — extends the day</td></tr>
+          <tr><td>Documentation after the workday</td><td className="num">{num(cycle.afterHoursDocumentationMinutes, 2)}</td><td className="muted">No — done at home, but still real work</td></tr>
+          <tr style={{ fontWeight: 600 }}><td>Clinical cycle</td><td className="num">{num(cycle.cycleMinutes, 2)}</td><td className="muted">Drives capacity</td></tr>
+          <tr><td className="muted">Total clinician burden</td><td className="num muted">{num(cycle.totalClinicianMinutes, 2)}</td><td className="muted">Cycle + after-hours</td></tr>
         </Table>
 
         <Callout tone={feas.feasible ? 'good' : 'bad'} title={feas.feasible ? 'Schedule fits' : 'Schedule does not fit — capped'}>
@@ -120,30 +132,29 @@ export function Simulator() {
 
       <Card title="Documentation Sensitivity">
         <div className="pills">
-          <span className="pill accent">USER_PROVIDED: {baselineVisits} visits/day, 45m visit, 15m travel, 5m documentation</span>
-          <span className="pill unknown">MODELLING ASSUMPTION: concurrency currently {pct(s.documentationConcurrency * 100)}</span>
-          <span className="pill neutral">SENSITIVITY SCENARIO: the rows below</span>
+          <span className="pill accent">USER_PROVIDED — Ellen's observed workflow: 90% in-workday / 10% after-hours</span>
+          <span className="pill neutral">SENSITIVITY SCENARIO — every other row below</span>
         </div>
 
         <p className="small muted">
-          Documentation concurrency is the share of documentation time absorbed into the existing
-          clinical and travel workflow rather than becoming additional schedule time. It is not a
-          claim that notes are written while treating a child. The rows below are hypothetical test
-          levels — none of them except the current assumption represents observed behaviour.
+          The 90% row is Ellen's actual reported workflow. Every other level is a hypothetical test
+          of what would happen if less documentation were absorbed into the workday — none of them
+          represents observed behaviour. After-hours documentation is held at Ellen's observed 10%
+          throughout, so lowering the in-workday share is what pushes minutes into the clinical
+          schedule.
         </p>
 
         <Callout tone="bad" title="Where the 8-visit day breaks">
           {threshold === null ? (
-            <>At these inputs the {baselineVisits}-visit day behaves the same across the whole concurrency range,
+            <>At these inputs the {baselineVisits}-visit day behaves the same across the whole range,
             so there is no crossing point to report.</>
           ) : (
             <>
-              The {baselineVisits}-visit day closes <strong style={{ display: 'inline', fontWeight: 600 }}>only at
-              {' '}{pct(threshold.threshold * 100, 2)}</strong> concurrency.{' '}
-              {num(baselineVisits, 0)} × {num(visitCycle({ ...s, documentationConcurrency: 1 }).cycleMinutes, 0)} min
-              = {num(baselineVisits * 60, 0)} min against a {num(s.workdayHours * 60, 0)}-minute day — an exact fit
-              with zero slack. The moment any documentation spills outside the workflow the ceiling drops to 7
-              visits/day, and it stays at 7 all the way down to 0%. This is a cliff, not a gradual slope.
+              The {baselineVisits}-visit day closes down to{' '}
+              <strong style={{ display: 'inline', fontWeight: 600 }}>{pct(threshold.threshold * 100, 0)}</strong>{' '}
+              in-workday documentation — which is exactly where Ellen reports operating. It requires{' '}
+              {num(feas.cycleMinutes * baselineVisits, 0)} of {num(feas.workdayMinutes, 0)} available minutes.
+              Below that the ceiling drops to 7 visits/day and stays there: a cliff, not a gradual slope.
             </>
           )}
         </Callout>
@@ -157,6 +168,9 @@ export function Simulator() {
           {sensitivity.map((r) => (
             <tr key={r.label} style={r.concurrency === s.documentationConcurrency ? { background: 'rgba(77,163,255,0.10)' } : undefined}>
               <td><strong>{r.label}</strong>
+                {Math.abs(r.concurrency - ELLEN_BASELINE.documentationInWorkdayShare) < 1e-9 && (
+                  <div><span className="pill accent">Ellen observed</span></div>
+                )}
                 <div className="muted" style={{ fontSize: 10.5 }}>+{num(r.additionalDocumentationMinutes, 2)}m/visit</div></td>
               <td className="num">{num(r.cycleMinutes, 2)}m</td>
               <td className="num">{r.maxVisitsPerDay}</td>
@@ -206,8 +220,12 @@ export function Simulator() {
           <Stat label="Travel" value={`${num(volume.travelHoursPerWeek, 1)} h`} note="Unbillable" />
           <Stat label="Documentation" value={`${num(volume.documentationHoursPerWeek, 1)} h`}
             note={cycle.additionalDocumentationMinutes === 0
-              ? 'Fully absorbed into the workflow'
+              ? 'None extends the clinical day'
               : `${num(cycle.additionalDocumentationMinutes, 2)}m/visit adds to the schedule`} />
+          <Stat label="After-hours documentation" value={`${num(volume.afterHoursDocumentationHoursPerWeek, 2)} h`}
+            note={`~${num(volume.afterHoursDocumentationMinutesPerDay, 0)} min/day at home — real work, outside 9-to-5`} />
+          <Stat label="Total clinician burden" value={`${num(volume.totalClinicianHoursPerWeek, 1)} h`}
+            note="Scheduled clinical time plus after-hours documentation" />
         </div>
       </Card>
 

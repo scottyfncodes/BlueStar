@@ -42,22 +42,28 @@ describe("Ellen's observed baseline flows into the model", () => {
   });
 
   it("labels the productivity assumptions as Ellen's, not industry benchmarks", () => {
-    for (const id of ['AS-002', 'AS-006', 'AS-007', 'AS-013', 'AS-014']) {
+    for (const id of ['AS-002', 'AS-006', 'AS-007', 'AS-013', 'AS-014', 'AS-015', 'AS-017']) {
       const a = assumptionsById.get(id)!;
       expect(a.kind, `${id} kind`).toBe('USER_PROVIDED');
-      expect(a.source, `${id} source`).toBe("Ellen's current observed workload");
-      expect(a.evidenceIds, `${id} evidence`).toContain('EV-025');
+      expect(a.source, `${id} source`).toMatch(/^Ellen's current observed work(load|flow)$/);
+      // Must trace to a first-hand user-reported record, never external research.
+      const refs = a.evidenceIds.map((e) => evidenceById.get(e)!);
+      expect(refs.length, `${id} evidence`).toBeGreaterThan(0);
+      for (const r of refs) expect(r.retrieval, `${id} -> ${r.id}`).toBe('user-reported');
     }
   });
 
-  it('marks documentation concurrency as a MODELLING assumption, not observed behaviour', () => {
-    // Ellen said "most", not "all". The 100% figure is a modelling convenience
-    // and must not inherit the authority of her first-hand report.
-    const a = assumptionsById.get('AS-015')!;
-    expect(a.kind).toBe('ASSUMPTION');
-    expect(a.confidence).toBe('Unverified');
-    expect(a.source).toMatch(/MODELLING ASSUMPTION/);
-    expect(a.evidenceIds).toContain('EV-025');
+  it('records the documentation split as observed, not modelled', () => {
+    // Run 6 modelled 100% as a convenience; Ellen has since reported the real
+    // split, so this is first-hand observation again.
+    const inWorkday = assumptionsById.get('AS-015')!;
+    const afterHours = assumptionsById.get('AS-017')!;
+    expect(inWorkday.value).toBe(0.9);
+    expect(afterHours.value).toBe(0.1);
+    expect(inWorkday.kind).toBe('USER_PROVIDED');
+    expect(afterHours.kind).toBe('USER_PROVIDED');
+    expect(inWorkday.confidence).toBe('Strong evidence');
+    expect(inWorkday.evidenceIds).toContain('EV-026');
   });
 
   it('records the baseline as first-hand, not external research', () => {
@@ -82,29 +88,37 @@ describe('visit cycle arithmetic', () => {
     expect(c.cycleMinutes).toBe(60);
   });
 
-  it('absorbs documentation into the visit when it is done concurrently', () => {
-    // This is WHY 8 visits fit an 8-hour day.
+  it("splits Ellen's 5 minutes three ways, with nothing extending the clinical day", () => {
+    // 90% inside the workday + 10% at home = all of it, so the clinical
+    // schedule is untouched. This is WHY 8 visits fit an 8-hour day.
     const c = visitCycle(ellen);
-    expect(c.concurrentDocumentationMinutes).toBe(5);
-    expect(c.additionalDocumentationMinutes).toBe(0);
+    expect(c.concurrentDocumentationMinutes).toBeCloseTo(4.5, 6);
+    expect(c.afterHoursDocumentationMinutes).toBeCloseTo(0.5, 6);
+    expect(c.additionalDocumentationMinutes).toBeCloseTo(0, 6);
   });
 
-  it('extends the cycle when documentation moves to after the visit', () => {
-    const c = visitCycle({ ...ellen, documentationConcurrency: 0 });
-    expect(c.additionalDocumentationMinutes).toBe(5);
-    expect(c.cycleMinutes).toBe(65);
+  it('counts after-hours documentation as clinician burden, not clinical capacity', () => {
+    const c = visitCycle(ellen);
+    expect(c.cycleMinutes).toBeCloseTo(60, 6);
+    expect(c.totalClinicianMinutes).toBeCloseTo(60.5, 6);
   });
 
-  it('handles partial concurrency', () => {
-    const c = visitCycle({ ...ellen, documentationConcurrency: 0.6 });
-    expect(c.concurrentDocumentationMinutes).toBeCloseTo(3, 6);
-    expect(c.additionalDocumentationMinutes).toBeCloseTo(2, 6);
-    expect(c.cycleMinutes).toBeCloseTo(62, 6);
+  it('extends the cycle only for documentation that is neither absorbed nor after-hours', () => {
+    const c = visitCycle({ ...ellen, documentationConcurrency: 0, documentationAfterHoursShare: 0 });
+    expect(c.additionalDocumentationMinutes).toBeCloseTo(5, 6);
+    expect(c.cycleMinutes).toBeCloseTo(65, 6);
+  });
+
+  it('never lets the shares exceed the documentation time available', () => {
+    const c = visitCycle({ ...ellen, documentationConcurrency: 0.9, documentationAfterHoursShare: 0.9 });
+    const total = c.concurrentDocumentationMinutes + c.afterHoursDocumentationMinutes + c.additionalDocumentationMinutes;
+    expect(total).toBeCloseTo(ellen.documentationMinutesPerVisit, 6);
   });
 
   it('clamps concurrency to the 0..1 range', () => {
     expect(visitCycle({ ...ellen, documentationConcurrency: 5 }).additionalDocumentationMinutes).toBe(0);
-    expect(visitCycle({ ...ellen, documentationConcurrency: -3 }).additionalDocumentationMinutes).toBe(5);
+    expect(visitCycle({ ...ellen, documentationConcurrency: -3, documentationAfterHoursShare: 0 })
+      .additionalDocumentationMinutes).toBeCloseTo(5, 6);
   });
 });
 

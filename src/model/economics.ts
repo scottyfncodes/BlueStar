@@ -36,6 +36,13 @@ export interface ScenarioInputs {
    * no extra workday time, documentation done afterwards extends the cycle.
    */
   documentationConcurrency: number;
+  /**
+   * Share of documentation done AFTER the workday (at home). This is real
+   * labour, but it does not consume clinical capacity between 9 and 5, so it
+   * must not reduce the visit ceiling. Whatever is neither concurrent nor
+   * after-hours is the portion that genuinely extends the clinical day.
+   */
+  documentationAfterHoursShare: number;
   daysToCash: number;
 }
 
@@ -46,12 +53,16 @@ export interface ScenarioInputs {
 export interface VisitCycle {
   patientFacingMinutes: number;
   travelMinutes: number;
-  /** Documentation minutes that fall OUTSIDE the visit and so extend the day. */
+  /** Documentation that extends the clinical day (neither absorbed nor after-hours). */
   additionalDocumentationMinutes: number;
-  /** Documentation absorbed into the patient-facing block. */
+  /** Documentation absorbed into visits or natural downtime inside the workday. */
   concurrentDocumentationMinutes: number;
+  /** Documentation done at home after the workday — real labour, but not 9-to-5 capacity. */
+  afterHoursDocumentationMinutes: number;
   /** Total workday minutes consumed by one completed visit. */
   cycleMinutes: number;
+  /** Clinical cycle plus after-hours documentation — total burden on the clinician. */
+  totalClinicianMinutes: number;
 }
 
 /**
@@ -64,16 +75,33 @@ export interface VisitCycle {
  * the evening the cycle would be 65 minutes and the day would run to 8.7 hours.
  */
 export function visitCycle(i: ScenarioInputs): VisitCycle {
-  const concurrency = Math.min(1, Math.max(0, i.documentationConcurrency));
-  const concurrentDocumentationMinutes = i.documentationMinutesPerVisit * concurrency;
-  const additionalDocumentationMinutes = i.documentationMinutesPerVisit - concurrentDocumentationMinutes;
+  const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
+
+  // Three-way split of documentation time. Ellen's reported workflow is that
+  // 90% happens during visits or natural downtime and 10% happens at home
+  // afterwards — which together account for all of it, leaving nothing that
+  // extends the clinical day. The shares are capped so they can never exceed
+  // the documentation time actually available.
+  const concurrency = clamp01(i.documentationConcurrency);
+  const afterHoursShare = Math.min(clamp01(i.documentationAfterHoursShare), 1 - concurrency);
+  const scheduleExtendingShare = Math.max(0, 1 - concurrency - afterHoursShare);
+
+  const doc = i.documentationMinutesPerVisit;
+  const concurrentDocumentationMinutes = doc * concurrency;
+  const afterHoursDocumentationMinutes = doc * afterHoursShare;
+  const additionalDocumentationMinutes = doc * scheduleExtendingShare;
+
+  const cycleMinutes =
+    i.visitLengthMinutes + i.travelMinutesPerVisit + additionalDocumentationMinutes;
 
   return {
     patientFacingMinutes: i.visitLengthMinutes,
     travelMinutes: i.travelMinutesPerVisit,
     concurrentDocumentationMinutes,
+    afterHoursDocumentationMinutes,
     additionalDocumentationMinutes,
-    cycleMinutes: i.visitLengthMinutes + i.travelMinutesPerVisit + additionalDocumentationMinutes,
+    cycleMinutes,
+    totalClinicianMinutes: cycleMinutes + afterHoursDocumentationMinutes,
   };
 }
 
@@ -137,6 +165,11 @@ export interface CapacityVolume {
   patientFacingHoursPerWeek: number;
   travelHoursPerWeek: number;
   documentationHoursPerWeek: number;
+  /** Documentation done at home, after the workday. Not 9-to-5 capacity, but real work. */
+  afterHoursDocumentationMinutesPerDay: number;
+  afterHoursDocumentationHoursPerWeek: number;
+  /** Scheduled clinical hours plus after-hours documentation. */
+  totalClinicianHoursPerWeek: number;
   /** Derived from workingDaysPerYear rather than invented separately. */
   workingDaysPerWeek: number;
 }
@@ -167,6 +200,9 @@ export function capacityVolume(i: ScenarioInputs): CapacityVolume {
     patientFacingHoursPerWeek: (visitsPerWeek * cycle.patientFacingMinutes) / 60,
     travelHoursPerWeek: (visitsPerWeek * cycle.travelMinutes) / 60,
     documentationHoursPerWeek: (visitsPerWeek * i.documentationMinutesPerVisit) / 60,
+    afterHoursDocumentationMinutesPerDay: perDay * cycle.afterHoursDocumentationMinutes,
+    afterHoursDocumentationHoursPerWeek: (visitsPerWeek * cycle.afterHoursDocumentationMinutes) / 60,
+    totalClinicianHoursPerWeek: (visitsPerWeek * cycle.totalClinicianMinutes) / 60,
     workingDaysPerWeek,
   };
 }
@@ -585,7 +621,7 @@ export function revenueBreakdown(i: ScenarioInputs): RevenueBreakdown {
  * ADDITIONAL schedule time. It is not a claim that notes are literally typed
  * while treating a child — only that the minutes do not extend the working day.
  */
-export const CONCURRENCY_LEVELS = [1, 0.75, 0.5, 0.25, 0] as const;
+export const CONCURRENCY_LEVELS = [1, 0.9, 0.75, 0.5, 0.25, 0] as const;
 
 export type CapacityVsBreakEven =
   | 'Capacity exceeds break-even requirement'

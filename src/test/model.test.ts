@@ -25,7 +25,8 @@ const base: ScenarioInputs = {
   travelMinutesPerVisit: 15,
   documentationMinutesPerVisit: 5,
   workdayHours: 8,
-  documentationConcurrency: 1,
+  documentationConcurrency: 0.9,
+  documentationAfterHoursShare: 0.1,
   daysToCash: 45,
 };
 

@@ -25,7 +25,8 @@ export function defaultScenario(): ScenarioInputs {
     travelMinutesPerVisit: assumptionValue('AS-006') ?? 15,
     documentationMinutesPerVisit: assumptionValue('AS-007') ?? 5,
     workdayHours: assumptionValue('AS-014') ?? 8,
-    documentationConcurrency: assumptionValue('AS-015') ?? 1,
+    documentationConcurrency: assumptionValue('AS-015') ?? 0.9,
+    documentationAfterHoursShare: assumptionValue('AS-017') ?? 0.1,
     daysToCash: assumptionValue('AS-009') ?? 45,
   };
 }
@@ -49,9 +50,14 @@ export const ELLEN_BASELINE = {
   patientFacingMinutes: 45,
   travelMinutes: 15,
   documentationMinutes: 5,
-  documentationTiming: 'Most documentation completed during the visit, not as end-of-day admin',
+  documentationInWorkdayShare: 0.9,
+  documentationAfterHoursShare: 0.1,
+  documentationTiming:
+    '90% completed during visits or natural workday downtime, 10% completed at home after work',
+  /** Context only — the EMR Ellen currently uses. Not a cause of the 90/10 split. */
+  emr: 'StateWise',
   cycleMinutes: 60,
-  evidenceId: 'EV-025',
+  evidenceId: 'EV-026',
 } as const;
 
 export const SALARY_TEST_POINTS = [
