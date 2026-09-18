@@ -93,6 +93,14 @@ export function FounderRamp() {
             <td className="num">{num(comp.weightedVisitMinutes, 0)} avg</td>
           </tr>
         </Table>
+        <Callout tone="warn" title="This caseload was assigned, not chosen">
+          Ellen's employer allocated these patients to her. The visit LENGTHS and per-patient
+          FREQUENCIES are service and plan-of-care properties that would plausibly carry over to a
+          Blue Star patient of the same type. The MIX — 33% of visits EI, 44% of patients, and the
+          6/8 split between once- and twice-weekly non-EI children — is one scheduler's allocation
+          decision. It describes how Ellen works today; it does not predict what Blue Star's
+          referral sources would produce, and it is not evidence about the Denver market.
+        </Callout>
         <div className="grid" style={{ marginTop: 10 }}>
           <Stat label="EI share of VISITS" value={pct(comp.eiVisitShare * 100, 1)} note="Drives visit duration" />
           <Stat label="EI share of PATIENTS" value={pct(comp.eiPatientShare * 100, 1)} note="Drives the census split" />

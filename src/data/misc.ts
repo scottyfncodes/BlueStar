@@ -160,6 +160,15 @@ export const openQuestions: OpenQuestion[] = [
     category: '05-Insurance', priority: 'High', blocksTaskIds: ['T-015', 'T-022'],
   },
   {
+    id: 'Q-009',
+    question: "What EI / non-EI mix will Blue Star's own referral sources actually produce?",
+    whyItMatters:
+      "Ellen's current 33% EI visit share was assigned by her employer, not chosen, so it describes one company's allocation rather than the Denver market. Blue Star's mix will come from whichever referral sources it develops, and the mix is the single largest capacity lever in the model: at flat per-visit reimbursement an all-EI caseload cannot reach break-even, while a non-EI-weighted one carries roughly 25% more visits per day.",
+    askWho: 'Referral sources directly (roadmap T-006); early intervention coordinators versus pediatricians and specialty clinics',
+    estimatedCostRange: 'Free — part of the referral conversations already planned',
+    category: '12-Market', priority: 'High', blocksTaskIds: ['T-006'],
+  },
+  {
     id: 'Q-008',
     question: 'How many children under 21 are enrolled in Health First Colorado in the Denver metro, and what share have therapy-relevant diagnoses?',
     whyItMatters: 'Sizes the addressable market. Total state enrollment is not the same thing and should not be used as a proxy.',

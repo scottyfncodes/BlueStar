@@ -231,20 +231,45 @@ describe('provenance for the visit mix', () => {
     expect(evidenceById.get('EV-030')!.retrieval).toBe('user-reported');
   });
 
-  it('upgrades the mix from an estimate to a measurement', () => {
-    // It was 50/50 and "Reasonable estimate"; the caseload cohorts measure it.
+  it('measures the mix precisely but does not treat it as transferable', () => {
+    // The cohorts measure Ellen's mix exactly. But her employer ASSIGNED that
+    // caseload, so it is a description of her workload, not a market signal
+    // or a prediction of Blue Star's mix — hence it stays an estimate.
     const mix = assumptionsById.get('AS-019')!;
-    expect(mix.confidence).toBe('Strong evidence');
     expect(mix.kind).toBe('USER_PROVIDED');
     expect(mix.value!).toBeCloseTo(1 / 3, 9);
     expect(mix.whyThisValue).toMatch(/DERIVED/);
+    expect(mix.confidence).toBe('Reasonable estimate');
+    expect(mix.whyThisValue).toMatch(/ASSIGNED to Ellen by her current employer/);
+  });
+
+  it('applies the same caveat to the EI patient share', () => {
+    const p = assumptionsById.get('AS-031')!;
+    expect(p.confidence).toBe('Reasonable estimate');
+    expect(p.whyThisValue).toMatch(/assigned by Ellen's employer, not chosen/);
+  });
+
+  it('treats per-patient frequency as more transferable than the mix', () => {
+    // Frequency is plan-of-care driven; the mix is allocation driven.
+    expect(assumptionsById.get('AS-020')!.confidence).toBe('Strong evidence');
+    expect(assumptionsById.get('AS-020')!.whyThisValue).toMatch(/More transferable than the caseload MIX/);
+    // ...but the BLENDED non-EI rate depends on the assigned 6/8 split.
+    expect(assumptionsById.get('AS-021')!.confidence).toBe('Reasonable estimate');
+    expect(assumptionsById.get('AS-021')!.whyThisValue).toMatch(/BLEND is not/);
+  });
+
+  it('records the scope limit on the evidence itself', () => {
+    const e = evidenceById.get('EV-030')!;
+    expect(e.claim).toMatch(/ASSIGNED to her by her current pediatric home health employer/);
+    expect(e.interpretation).toMatch(/NOT TRANSFERABLE/);
+    expect(e.notes).toMatch(/weak evidence about what Blue Star will look like/);
   });
 
   it('keeps the visit share and the patient share as separate assumptions', () => {
     const visitShare = assumptionsById.get('AS-019')!.value!;
     const patientShare = assumptionsById.get('AS-031')!.value!;
     expect(visitShare).not.toBeCloseTo(patientShare, 3);
-    expect(assumptionsById.get('AS-031')!.whyThisValue).toMatch(/separate assumption from AS-019/);
+    expect(assumptionsById.get('AS-031')!.whyThisValue).toMatch(/Deliberately separate from AS-019/);
   });
 
   it('exposes the mix on the baseline constant with duration marked as derived', () => {

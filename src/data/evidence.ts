@@ -725,7 +725,7 @@ export const evidence: Evidence[] = [
     category: '14-Operations',
     topic: "Ellen's observed caseload composition",
     claim:
-      "Ellen's current schedule of weekly visits comprises: 6 patients seen once weekly at 30 minutes; 8 patients seen twice weekly at 30 minutes; and 11 patients seen once weekly at 60 minutes. She separately stated 23 distinct patients and 32 visits per week.",
+      "Ellen's current schedule of weekly visits comprises: 6 patients seen once weekly at 30 minutes; 8 patients seen twice weekly at 30 minutes; and 11 patients seen once weekly at 60 minutes. She separately stated 23 distinct patients and 32 visits per week. This caseload was ASSIGNED to her by her current pediatric home health employer; she did not select the patients or the mix.",
     source: 'Ellen — current observed caseload (first-hand report)',
     url: 'https://github.com/scottyfncodes/BlueStar',
     document: "Ellen's caseload composition, reported by Scott",
@@ -735,13 +735,13 @@ export const evidence: Evidence[] = [
     section: null,
     appliesTo: ['Capacity', 'Visit mix', 'Visit frequency', 'Founder ramp', 'Revenue model'],
     interpretation:
-      'This single report resolves four previously unknown or estimated inputs and corrects two. Visit frequency (AS-020, AS-021) was null and is now observed. Caseload size (AS-027) was null and is now 25. The EI share was estimated at 50% of visits and is actually 33%, which drops the weighted visit length from an assumed 45 minutes to 40 and shortens the visit cycle from 60 to 55 minutes. Most importantly it exposes a distinction the model had been eliding: EI is 33% of VISITS but 44% of PATIENTS, because EI children are seen weekly while some non-EI children are seen twice weekly. Visit duration must use the visit share; a patient census must use the patient share.',
+      'Resolves four previously unknown or estimated inputs and corrects two — but only some of it transfers to Blue Star, and the difference matters. TRANSFERABLE: visit LENGTHS (60 min EI, 30 min non-EI) are service definitions, and per-patient FREQUENCIES (EI weekly, non-EI 1x or 2x weekly) are set by plan of care, medical necessity and payer authorisation. Those would plausibly hold for a Blue Star patient of the same type. NOT TRANSFERABLE: the MIX — 33% of visits and 44% of patients being EI, the 6/8 split between once- and twice-weekly non-EI children, and the caseload size of 25. Those are allocation decisions made by Ellen\'s employer, describing one scheduler\'s assignment to one clinician. They say nothing about what referrals exist in the Denver market or what Blue Star would be able to build. It also exposes a distinction the model had been eliding: EI is 33% of VISITS but 44% of PATIENTS, so visit duration must use the visit share and a patient census must use the patient share.',
     confidence: 'Strong evidence',
     retrieval: 'user-reported',
     requiresProfessionalVerification: false,
     recheckDate: '2026-12-01',
     notes:
-      'UNRESOLVED ARITHMETIC. The itemised cohorts sum to 25 patients and 33 weekly visits, against the separately stated 23 patients and 32 visits. The model uses the cohort figures because they are itemised and internally consistent, and surfaces both gaps. The difference is small but it has not been reconciled, and either figure could be the correct one.',
+      'UNRESOLVED ARITHMETIC. The itemised cohorts sum to 25 patients and 33 weekly visits, against the separately stated 23 patients and 32 visits. The model uses the cohort figures because they are itemised and internally consistent, and surfaces both gaps. The difference is small but it has not been reconciled, and either figure could be the correct one. SCOPE: this is an assigned caseload at another company — strong evidence about how Ellen currently works, and weak evidence about what Blue Star will look like.',
   },
 ];
 
