@@ -651,6 +651,29 @@ export const evidence: Evidence[] = [
     notes:
       'STATEWISE IS CONTEXT, NOT CAUSE. StateWise is recorded only as the EMR Ellen currently uses. Nothing here establishes that StateWise produces a particular documentation efficiency, and no productivity assumption in this system is derived from the choice of EMR. If Blue Star later evaluates EMRs, the 90/10 split is a description of how Ellen works today, not a benchmark any product should be expected to reproduce.',
   },
+  {
+    id: 'EV-027',
+    category: '14-Operations',
+    topic: "Ellen's observed visit mix and visit lengths",
+    claim:
+      "Ellen's Early Intervention (EI) visits run approximately 60 minutes and all other visits run approximately 30 minutes. Her current schedule is approximately 50% EI and 50% other.",
+    source: 'Ellen — current observed visit types and schedule mix (first-hand report)',
+    url: 'https://github.com/scottyfncodes/BlueStar',
+    document: "Ellen's current observed visit mix, reported by Scott",
+    publicationDate: null,
+    effectiveDate: '2026-09-18',
+    accessedDate: '2026-09-18',
+    section: null,
+    appliesTo: ['Clinical productivity', 'Capacity', 'Revenue model', 'Referral strategy'],
+    interpretation:
+      'This replaces a standalone 45-minute patient-facing assumption with the structure that actually generates it. The 45-minute figure is now DERIVED from the mix, and that matters because reimbursement is flat per visit: a 60-minute EI visit earns exactly what a 30-minute visit earns while consuming twice the patient-facing time. The caseload mix is therefore a first-class capacity and profitability lever, not a clinical detail — and it is one of the few levers Blue Star can actually influence, through which referral sources it cultivates.',
+    confidence: 'Strong evidence',
+    retrieval: 'user-reported',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-12-01',
+    notes:
+      'The 50/50 split is APPROXIMATE and describes Ellen\'s present schedule only. It must not be treated as a permanent or universal mix: it will move as referral sources change, and the model exposes it as an editable input precisely so that movement can be tested rather than assumed away.',
+  },
 ];
 
 export const evidenceById = new Map(evidence.map((e) => [e.id, e]));

@@ -3,6 +3,7 @@ import {
   visitCycle, scheduleFeasibility, capacityVolume, staffingScenarios,
   revenueBreakdown, annualModel, loadedClinicianCost, type ScenarioInputs,
 } from '../model/economics';
+import { weightedPatientFacingMinutes } from '../model/economics';
 import { defaultScenario, ELLEN_BASELINE } from '../model/defaults';
 import { assumptionsById } from '../data/assumptions';
 import { evidenceById } from '../data/evidence';
@@ -19,10 +20,12 @@ describe("Ellen's observed baseline flows into the model", () => {
     expect(assumptionsById.get('AS-002')!.value).toBe(8);
   });
 
-  it('defaults to 45 minutes patient-facing time from AS-013', () => {
-    // Previously hard-coded at 60 with no assumption record behind it.
-    expect(defaultScenario().visitLengthMinutes).toBe(45);
-    expect(assumptionsById.get('AS-013')!.value).toBe(45);
+  it('DERIVES 45 minutes patient-facing time from the 50/50 visit mix', () => {
+    // 45 is the result of (50% x 60) + (50% x 30), never an entered input.
+    expect(weightedPatientFacingMinutes(defaultScenario())).toBe(45);
+    expect(assumptionsById.get('AS-013')!.value).toBe(60);
+    expect(assumptionsById.get('AS-018')!.value).toBe(30);
+    expect(assumptionsById.get('AS-019')!.value).toBe(0.5);
   });
 
   it('defaults to 15 minutes travel from AS-006', () => {
@@ -42,10 +45,10 @@ describe("Ellen's observed baseline flows into the model", () => {
   });
 
   it("labels the productivity assumptions as Ellen's, not industry benchmarks", () => {
-    for (const id of ['AS-002', 'AS-006', 'AS-007', 'AS-013', 'AS-014', 'AS-015', 'AS-017']) {
+    for (const id of ['AS-002', 'AS-006', 'AS-007', 'AS-013', 'AS-014', 'AS-015', 'AS-017', 'AS-018', 'AS-019']) {
       const a = assumptionsById.get(id)!;
       expect(a.kind, `${id} kind`).toBe('USER_PROVIDED');
-      expect(a.source, `${id} source`).toMatch(/^Ellen's current observed work(load|flow)$/);
+      expect(a.source, `${id} source`).toMatch(/^Ellen's current (observed|approximate)/);
       // Must trace to a first-hand user-reported record, never external research.
       const refs = a.evidenceIds.map((e) => evidenceById.get(e)!);
       expect(refs.length, `${id} evidence`).toBeGreaterThan(0);

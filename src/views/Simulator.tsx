@@ -4,7 +4,8 @@ import {
   annualModel, visitEconomics, capacityCheck, viabilityCheck,
   utilisationScenarios, travelScenarios, visitCycle, scheduleFeasibility,
   capacityVolume, revenueBreakdown, documentationSensitivity, concurrencyThreshold,
-  CONCURRENCY_LEVELS, type ScenarioInputs,
+  CONCURRENCY_LEVELS, visitMixSensitivity, weightedPatientFacingMinutes, EI_MIX_LEVELS,
+  type ScenarioInputs,
 } from '../model/economics';
 import { defaultScenario, SALARY_TEST_POINTS, ELLEN_BASELINE } from '../model/defaults';
 
@@ -39,6 +40,8 @@ export function Simulator() {
   const baselineVisits = ELLEN_BASELINE.visitsPerDay;
   const sensitivity = documentationSensitivity(s, CONCURRENCY_LEVELS, baselineVisits);
   const threshold = concurrencyThreshold(s, baselineVisits);
+  const mixRows = visitMixSensitivity(s, EI_MIX_LEVELS, baselineVisits);
+  const weighted = weightedPatientFacingMinutes(s);
   const capacity = capacityCheck(s);
   const viability = viabilityCheck(s);
 
@@ -59,8 +62,10 @@ export function Simulator() {
           <strong style={{ display: 'inline', fontWeight: 600 }}>
             {ELLEN_BASELINE.visitsPerDay} visits/day
           </strong>{' '}
-          across a {ELLEN_BASELINE.workdaySpan} day — roughly{' '}
-          {ELLEN_BASELINE.patientFacingMinutes} min patient-facing +{' '}
+          across a {ELLEN_BASELINE.workdaySpan} day. Visit mix is approximately{' '}
+          {pct(ELLEN_BASELINE.eiMixShare * 100)} Early Intervention at {ELLEN_BASELINE.eiVisitMinutes} min
+          and {pct((1 - ELLEN_BASELINE.eiMixShare) * 100)} other at {ELLEN_BASELINE.nonEiVisitMinutes} min,
+          giving a derived {ELLEN_BASELINE.patientFacingMinutes} min patient-facing average +{' '}
           {ELLEN_BASELINE.travelMinutes} min travel = a {ELLEN_BASELINE.cycleMinutes}-minute cycle,
           with ~{ELLEN_BASELINE.documentationMinutes} min of documentation —{' '}
           {pct(ELLEN_BASELINE.documentationInWorkdayShare * 100)} completed during visits or natural
@@ -77,9 +82,27 @@ export function Simulator() {
           onChange={(v) => set({ visitsPerDay: v })} format={(v) => num(v, 1)}
           source="AS-002 · Ellen's current observed workload · her baseline, not an industry standard" />
 
-        <Slider label="Patient-facing visit time" value={s.visitLengthMinutes} min={20} max={120} step={5}
-          onChange={(v) => set({ visitLengthMinutes: v })} format={(v) => `${v} min`}
-          source="AS-013 · Ellen's current observed workload · flat per-visit pay means longer visits earn no more" />
+        <Slider label="Early Intervention share of caseload" value={s.eiMixShare} min={0} max={1} step={0.01}
+          onChange={(v) => set({ eiMixShare: v })} format={(v) => `${pct(v * 100)} EI / ${pct((1 - v) * 100)} other`}
+          source="AS-019 · Ellen's current approximate schedule mix · approximate, and expected to move as referral sources change" />
+
+        <Slider label="EI visit length" value={s.eiVisitMinutes} min={30} max={120} step={5}
+          onChange={(v) => set({ eiVisitMinutes: v })} format={(v) => `${v} min`}
+          source="AS-013 · Ellen's current observed visit type" />
+
+        <Slider label="Non-EI visit length" value={s.nonEiVisitMinutes} min={15} max={90} step={5}
+          onChange={(v) => set({ nonEiVisitMinutes: v })} format={(v) => `${v} min`}
+          source="AS-018 · Ellen's current observed visit type" />
+
+        <Callout tone="accent" title="Weighted patient-facing time — DERIVED, not entered">
+          ({pct(s.eiMixShare * 100)} × {num(s.eiVisitMinutes, 0)} min) +
+          ({pct((1 - s.eiMixShare) * 100)} × {num(s.nonEiVisitMinutes, 0)} min) ={' '}
+          <strong style={{ display: 'inline', fontWeight: 600 }}>{num(weighted, 1)} min</strong>
+          <div className="small muted" style={{ marginTop: 4 }}>
+            This figure is calculated from the mix above. It is not an independent assumption, and
+            changing any of the three inputs moves it — and everything downstream of it.
+          </div>
+        </Callout>
 
         <Slider label="Travel time per visit" value={s.travelMinutesPerVisit} min={5} max={60} step={5}
           onChange={(v) => set({ travelMinutesPerVisit: v })} format={(v) => `${v} min`}
@@ -127,6 +150,49 @@ export function Simulator() {
           <Stat label="Ceiling at this cycle" value={String(feas.maxVisitsPerDay)} note={`${num(s.workdayHours, 1)}h ÷ ${num(cycle.cycleMinutes, 0)} min`} />
           <Stat label="Visits/week" value={num(volume.visitsPerWeek, 1)} note={`${num(volume.workingDaysPerWeek, 2)} working days/week`} />
           <Stat label="Visits/month" value={num(volume.visitsPerMonth, 0)} />
+        </div>
+      </Card>
+
+      <Card title="Visit Mix Sensitivity">
+        <div className="pills">
+          <span className="pill accent">USER_PROVIDED — Ellen's approximate current mix: 50% EI / 50% other</span>
+          <span className="pill neutral">SENSITIVITY SCENARIO — every other row</span>
+        </div>
+        <p className="small muted">
+          Because reimbursement is flat per visit, a 60-minute EI visit earns exactly what a
+          30-minute visit earns while consuming twice the patient-facing time. The caseload mix is
+          therefore a direct capacity lever — and one Blue Star can influence through which referral
+          sources it cultivates.
+        </p>
+        <Table head={
+          <tr>
+            <th>EI share</th><th className="num">Patient-facing</th><th className="num">Cycle</th>
+            <th className="num">Max visits/day</th><th>{baselineVisits}-visit day</th><th className="num">Collected revenue</th>
+          </tr>
+        }>
+          {mixRows.map((r) => (
+            <tr key={r.label} style={Math.abs(r.eiMixShare - s.eiMixShare) < 1e-9 ? { background: 'rgba(77,163,255,0.10)' } : undefined}>
+              <td><strong>{r.label}</strong>
+                {Math.abs(r.eiMixShare - ELLEN_BASELINE.eiMixShare) < 1e-9 && (
+                  <div><span className="pill accent">Ellen observed</span></div>
+                )}
+              </td>
+              <td className="num">{num(r.weightedPatientFacingMinutes, 1)}m</td>
+              <td className="num">{num(r.cycleMinutes, 1)}m</td>
+              <td className="num">{r.maxVisitsPerDay}</td>
+              <td><span className={`pill ${r.baselineDayCloses ? 'good' : 'bad'}`}>{r.baselineDayCloses ? 'YES' : 'NO'}</span></td>
+              <td className="num">{money(r.collectedRevenue)}</td>
+            </tr>
+          ))}
+        </Table>
+        <div className="btn-row" style={{ marginTop: 12, marginBottom: 0 }}>
+          {EI_MIX_LEVELS.map((m) => (
+            <button key={m}
+              className={`btn${Math.abs(s.eiMixShare - m) < 1e-9 ? ' active' : ''}`}
+              onClick={() => set({ eiMixShare: m })}>
+              {Math.round(m * 100)}% EI
+            </button>
+          ))}
         </div>
       </Card>
 

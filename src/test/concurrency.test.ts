@@ -107,7 +107,7 @@ describe('the concurrency threshold, computed from the model', () => {
 
   it('returns null when the day closes at every level', () => {
     // A shorter visit gives real slack, so there is no crossing to find.
-    expect(concurrencyThreshold({ ...base, visitLengthMinutes: 30 }, 8)).toBeNull();
+    expect(concurrencyThreshold({ ...base, eiMixShare: 0, nonEiVisitMinutes: 30 }, 8)).toBeNull();
   });
 
   it('moves when the workday lengthens', () => {

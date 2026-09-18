@@ -21,7 +21,9 @@ export function defaultScenario(): ScenarioInputs {
     clinicianCount: 1,
     // Previously hard-coded at 60 with no assumption behind it — now sourced
     // from Ellen's observed baseline like every other productivity input.
-    visitLengthMinutes: assumptionValue('AS-013') ?? 45,
+    eiVisitMinutes: assumptionValue('AS-013') ?? 60,
+    nonEiVisitMinutes: assumptionValue('AS-018') ?? 30,
+    eiMixShare: assumptionValue('AS-019') ?? 0.5,
     travelMinutesPerVisit: assumptionValue('AS-006') ?? 15,
     documentationMinutesPerVisit: assumptionValue('AS-007') ?? 5,
     workdayHours: assumptionValue('AS-014') ?? 8,
@@ -47,6 +49,10 @@ export const ELLEN_BASELINE = {
   visitsPerDay: 8,
   workdayHours: 8,
   workdaySpan: '9:00am - 5:00pm',
+  eiVisitMinutes: 60,
+  nonEiVisitMinutes: 30,
+  eiMixShare: 0.5,
+  /** Derived from the mix above, never entered directly. */
   patientFacingMinutes: 45,
   travelMinutes: 15,
   documentationMinutes: 5,

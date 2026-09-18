@@ -20,8 +20,16 @@ export interface ScenarioInputs {
   /** Non-clinician overhead, monthly. */
   fixedMonthlyOverhead: number;
   clinicianCount: number;
-  /** Patient-facing minutes. Under flat per-visit pay this drives capacity, not revenue. */
-  visitLengthMinutes: number;
+  /**
+   * Patient-facing time is DERIVED from the visit mix rather than entered as a
+   * single number — see weightedPatientFacingMinutes(). Early Intervention
+   * visits run longer than everything else, so the mix is itself a capacity
+   * lever, and a standalone average would hide that.
+   */
+  eiVisitMinutes: number;
+  nonEiVisitMinutes: number;
+  /** Share of visits that are Early Intervention (0..1). Non-EI is the complement. */
+  eiMixShare: number;
   travelMinutesPerVisit: number;
   documentationMinutesPerVisit: number;
   /**
@@ -74,6 +82,18 @@ export interface VisitCycle {
  * why 8 visits close inside an 8-hour day; if the same documentation moved to
  * the evening the cycle would be 65 minutes and the day would run to 8.7 hours.
  */
+/**
+ * Weighted patient-facing minutes for the current visit mix.
+ *
+ * At Ellen's approximate 50/50 split of 60-minute EI visits and 30-minute
+ * other visits this works out to 45 minutes — but 45 is the RESULT, never an
+ * input. Shift the mix and the whole capacity model moves with it.
+ */
+export function weightedPatientFacingMinutes(i: ScenarioInputs): number {
+  const eiShare = Math.min(1, Math.max(0, i.eiMixShare));
+  return i.eiVisitMinutes * eiShare + i.nonEiVisitMinutes * (1 - eiShare);
+}
+
 export function visitCycle(i: ScenarioInputs): VisitCycle {
   const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
@@ -91,11 +111,11 @@ export function visitCycle(i: ScenarioInputs): VisitCycle {
   const afterHoursDocumentationMinutes = doc * afterHoursShare;
   const additionalDocumentationMinutes = doc * scheduleExtendingShare;
 
-  const cycleMinutes =
-    i.visitLengthMinutes + i.travelMinutesPerVisit + additionalDocumentationMinutes;
+  const patientFacing = weightedPatientFacingMinutes(i);
+  const cycleMinutes = patientFacing + i.travelMinutesPerVisit + additionalDocumentationMinutes;
 
   return {
-    patientFacingMinutes: i.visitLengthMinutes,
+    patientFacingMinutes: patientFacing,
     travelMinutes: i.travelMinutesPerVisit,
     concurrentDocumentationMinutes,
     afterHoursDocumentationMinutes,
@@ -457,7 +477,7 @@ export function viabilityCheck(i: ScenarioInputs): ViabilityCheck {
   if (!achievable) {
     // Work out which lever would close the gap most directly.
     const perVisitMinutes =
-      i.visitLengthMinutes + i.travelMinutesPerVisit + i.documentationMinutesPerVisit;
+      weightedPatientFacingMinutes(i) + i.travelMinutesPerVisit + i.documentationMinutesPerVisit;
     const nonTreatmentShare =
       perVisitMinutes > 0
         ? (i.travelMinutesPerVisit + i.documentationMinutesPerVisit) / perVisitMinutes
@@ -743,4 +763,93 @@ export function concurrencyThreshold(
     else lo = mid;
   }
   return { threshold: hi, closesAtFullConcurrency: atFull, closesAtZeroConcurrency: atZero };
+}
+
+
+// ---------------------------------------------------------------------------
+// Visit mix sensitivity
+// ---------------------------------------------------------------------------
+
+/** EI share levels for the sweep. Ellen's approximate current mix is 50%. */
+export const EI_MIX_LEVELS = [0, 0.25, 0.5, 0.75, 1] as const;
+
+export interface VisitMixScenario {
+  eiMixShare: number;
+  label: string;
+  nonEiMixShare: number;
+  weightedPatientFacingMinutes: number;
+  cycleMinutes: number;
+  maxVisitsPerDay: number;
+  workdayMinutes: number;
+
+  baselineVisitsPerDay: number;
+  baselineMinutesRequired: number;
+  baselineOverageMinutes: number;
+  baselineDayCloses: boolean;
+
+  breakEvenVisitsPerDay: number | null;
+  breakEvenIsAchievable: boolean | null;
+  capacityVsBreakEven: CapacityVsBreakEven;
+
+  effectiveVisitsPerDay: number;
+  completedVisitsPerYear: number;
+  collectedRevenue: number;
+  operatingProfit: number | null;
+}
+
+/**
+ * Sensitivity of the model to the Early Intervention share of the caseload.
+ *
+ * Like the documentation sweep, every row runs the SAME pipeline the rest of
+ * the app uses, varying only the mix. This matters more than it might appear:
+ * because reimbursement is flat per visit, a longer visit earns no more but
+ * consumes more of the day, so shifting toward EI trades volume for nothing.
+ */
+export function visitMixSensitivity(
+  base: ScenarioInputs,
+  levels: readonly number[] = EI_MIX_LEVELS,
+  baselineVisitsPerDay: number = base.visitsPerDay,
+): VisitMixScenario[] {
+  return levels.map((eiMixShare) => {
+    const inputs: ScenarioInputs = { ...base, eiMixShare };
+    const cycle = visitCycle(inputs);
+    const feas = scheduleFeasibility(inputs);
+    const viability = viabilityCheck(inputs);
+    const volume = capacityVolume(inputs);
+    const model = annualModel(inputs);
+
+    const baselineMinutesRequired = baselineVisitsPerDay * cycle.cycleMinutes;
+    const breakEven = viability.breakEvenVisitsPerDay;
+
+    let capacityVsBreakEven: CapacityVsBreakEven = 'Unknown';
+    if (breakEven !== null) {
+      if (breakEven > feas.maxVisitsPerDay) capacityVsBreakEven = 'Not feasible';
+      else if (Math.abs(breakEven - feas.maxVisitsPerDay) < 1e-9) capacityVsBreakEven = 'Exactly at capacity';
+      else capacityVsBreakEven = 'Capacity exceeds break-even requirement';
+    }
+
+    return {
+      eiMixShare,
+      label: `${Math.round(eiMixShare * 100)}% EI`,
+      nonEiMixShare: 1 - eiMixShare,
+      weightedPatientFacingMinutes: cycle.patientFacingMinutes,
+      cycleMinutes: cycle.cycleMinutes,
+      maxVisitsPerDay: feas.maxVisitsPerDay,
+      workdayMinutes: feas.workdayMinutes,
+
+      baselineVisitsPerDay,
+      baselineMinutesRequired,
+      baselineOverageMinutes: Math.max(0, baselineMinutesRequired - feas.workdayMinutes),
+      baselineDayCloses: baselineMinutesRequired <= feas.workdayMinutes,
+
+      breakEvenVisitsPerDay: breakEven,
+      breakEvenIsAchievable: viability.breakEvenIsAchievable,
+      capacityVsBreakEven,
+
+      effectiveVisitsPerDay: feas.effectiveVisitsPerDay,
+      completedVisitsPerYear: volume.completedVisitsPerYear,
+      collectedRevenue: model.collectedRevenue,
+      operatingProfit: model.operatingProfit,
+    };
+  });
 }
