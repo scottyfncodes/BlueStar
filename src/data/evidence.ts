@@ -674,6 +674,29 @@ export const evidence: Evidence[] = [
     notes:
       'The 50/50 split is APPROXIMATE and describes Ellen\'s present schedule only. It must not be treated as a permanent or universal mix: it will move as referral sources change, and the model exposes it as an editable input precisely so that movement can be tested rather than assumed away.',
   },
+  {
+    id: 'EV-028',
+    category: '04-Financial',
+    topic: 'Launch compensation plan — $0 owner compensation until full-time transition',
+    claim:
+      'Scott states that Blue Star will pay Ellen no owner compensation while she continues her current home-health job, and that she will move to Blue Star full time only at a later transition point. Owner compensation before that transition is therefore $0.',
+    source: 'Scott — stated launch plan (first-hand)',
+    url: 'https://github.com/scottyfncodes/BlueStar',
+    document: 'Founder Ramp scenario definition, stated by Scott',
+    publicationDate: null,
+    effectiveDate: '2026-09-18',
+    accessedDate: '2026-09-18',
+    section: null,
+    appliesTo: ['Cash model', 'Founder ramp', 'Owner compensation', 'Transition planning'],
+    interpretation:
+      'This is the defining condition of the launch scenario and it is unusually favourable: with no owner draw, essentially all operating cash flow accumulates in the business, so Blue Star can build a reserve while household income continues from elsewhere. It also means the usual founder-salary line is absent from the early model, and any figure that looks like a clinician salary in this phase would be wrong.',
+    confidence: 'Strong evidence',
+    retrieval: 'user-reported',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-03-01',
+    notes:
+      'The compensation LEVEL after transition (AS-024) is a separate and still-unknown question. This record establishes only the $0 figure before transition, not what replaces it.',
+  },
 ];
 
 export const evidenceById = new Map(evidence.map((e) => [e.id, e]));

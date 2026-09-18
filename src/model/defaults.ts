@@ -71,3 +71,30 @@ export const SALARY_TEST_POINTS = [
   { label: 'Mid source (Salary.com home health PT Denver)', value: 113401 },
   { label: 'High source (Glassdoor pediatric PT Colorado)', value: 135278 },
 ];
+
+/**
+ * SCENARIO values for the Founder Ramp.
+ *
+ * These are NOT assumptions and NOT evidence. The matching assumption records
+ * (AS-020 to AS-025) are deliberately null because nothing establishes these
+ * numbers. They exist only so the ramp can run and be explored, and every
+ * surface that shows them must label them as scenario values.
+ */
+export const RAMP_SCENARIO_DEFAULTS = {
+  label: 'SCENARIO — not observed, not evidence',
+  startingActivePatients: 1,
+  newPatientsPerWeek: 1,
+  newPatientsPerMonth: 4,
+  eiVisitsPerPatientPerWeek: 1,
+  nonEiVisitsPerPatientPerWeek: 1,
+  monthlyDischargeRate: 0,
+  targetOwnerCompAfterTransition: 90000,
+  minimumCashReserve: 10000,
+  startingCash: 0,
+  horizonMonths: 24,
+  censusTarget: 25,
+} as const;
+
+/** The named launch scenario this feature exists to model. */
+export const FOUNDER_RAMP_SCENARIO_NAME =
+  'Founder Ramp: $0 Owner Compensation Until Full-Time';

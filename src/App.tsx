@@ -5,6 +5,7 @@ import { Roadmap } from './views/Roadmap';
 import { Simulator } from './views/Simulator';
 import { Capital } from './views/Capital';
 import { Staffing } from './views/Staffing';
+import { FounderRamp } from './views/FounderRamp';
 import { Evidence } from './views/Evidence';
 import { Assumptions } from './views/Assumptions';
 import { Paths } from './views/Paths';
@@ -19,6 +20,7 @@ const VIEWS = [
   { id: 'paths', label: 'Paths' },
   { id: 'simulator', label: 'Simulator' },
   { id: 'economics', label: 'Economics' },
+  { id: 'ramp', label: 'Founder Ramp' },
   { id: 'staffing', label: 'Staffing' },
   { id: 'capital', label: 'Capital & cash' },
   { id: 'automation', label: 'AI audit' },
@@ -66,6 +68,7 @@ export default function App() {
         {view === 'roadmap' && <Roadmap />}
         {view === 'paths' && <Paths />}
         {(view === 'simulator' || view === 'economics') && <Simulator />}
+        {view === 'ramp' && <FounderRamp />}
         {view === 'staffing' && <Staffing />}
         {view === 'capital' && <Capital />}
         {view === 'automation' && <Automation />}
