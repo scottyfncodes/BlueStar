@@ -4,6 +4,7 @@ import { RampChart } from '../components/RampChart';
 import {
   founderRamp, rampMilestones, rampSensitivity, rampNarrative, patientsAtCapacity,
   ACQUISITION_LEVELS, FREQUENCY_LEVELS, REFERRAL_FIELDS, referralSources, ELLEN_QUESTIONS,
+  deriveFrequencyFromCaseload, CASELOAD_REFERENCE_POINTS,
   type FounderRampInputs, type PatientGrowthMode,
 } from '../model/founderRamp';
 import { defaultScenario, RAMP_SCENARIO_DEFAULTS, FOUNDER_RAMP_SCENARIO_NAME, ELLEN_BASELINE } from '../model/defaults';
@@ -20,6 +21,15 @@ export function FounderRamp() {
   const [reserve, setReserve] = useState<number>(D.minimumCashReserve);
   const [override, setOverride] = useState<number | null>(null);
   const [clinicians, setClinicians] = useState(1);
+  // Frequency can be entered directly, or derived from Ellen's caseload size.
+  const [freqMode, setFreqMode] = useState<'direct' | 'caseload'>('direct');
+  const [caseload, setCaseload] = useState(30);
+  const [eiRatio, setEiRatio] = useState(1);
+
+  const scenarioForDerivation = { ...defaultScenario(), eiMixShare, clinicianSalary: 0 };
+  const derived = deriveFrequencyFromCaseload(scenarioForDerivation, caseload, eiRatio, clinicians);
+  const effectiveEiFreq = freqMode === 'caseload' && derived ? derived.eiVisitsPerPatientPerWeek : eiFreq;
+  const effectiveNonEiFreq = freqMode === 'caseload' && derived ? derived.nonEiVisitsPerPatientPerWeek : nonEiFreq;
 
   const inputs: FounderRampInputs = useMemo(() => ({
     scenario: { ...defaultScenario(), eiMixShare, clinicianSalary: 0 },
@@ -28,8 +38,8 @@ export function FounderRamp() {
     newPatientsPerWeek,
     newPatientsPerMonth: newPatientsPerWeek * (52 / 12),
     manualMonthlyAdditions: [],
-    eiVisitsPerPatientPerWeek: eiFreq,
-    nonEiVisitsPerPatientPerWeek: nonEiFreq,
+    eiVisitsPerPatientPerWeek: effectiveEiFreq,
+    nonEiVisitsPerPatientPerWeek: effectiveNonEiFreq,
     monthlyDischargeRate: discharge,
     clinicianCount: clinicians,
     ownerCompBeforeTransition: 0,
@@ -39,8 +49,8 @@ export function FounderRamp() {
     startingCash: D.startingCash,
     horizonMonths: 24,
     censusTarget: D.censusTarget,
-  }), [eiMixShare, growthMode, newPatientsPerWeek, eiFreq, nonEiFreq, discharge,
-       clinicians, targetComp, reserve, override, D]);
+  }), [eiMixShare, growthMode, newPatientsPerWeek, effectiveEiFreq, effectiveNonEiFreq,
+       discharge, clinicians, targetComp, reserve, override, D]);
 
   const ramp = founderRamp(inputs);
   const stones = rampMilestones(inputs);
@@ -121,18 +131,84 @@ export function FounderRamp() {
               onClick={() => setGrowthMode(g)}>{g === 'weekly' ? 'Weekly arrivals' : 'Monthly arrivals'}</button>
           ))}
         </div>
-        <div className="ctl">
-          <label><span>EI visits / patient / week</span><span>{num(eiFreq, 1)}</span></label>
-          <input type="range" min={0.5} max={3} step={0.5} value={eiFreq}
-            onChange={(e) => setEiFreq(Number(e.target.value))} />
-          <div className="src">AS-020 · UNKNOWN — needs Ellen</div>
+        <h3 style={{ marginTop: 16 }}>Visit frequency</h3>
+        <div className="btn-row">
+          <button className={`btn${freqMode === 'direct' ? ' active' : ''}`}
+            onClick={() => setFreqMode('direct')}>Enter frequency</button>
+          <button className={`btn${freqMode === 'caseload' ? ' active' : ''}`}
+            onClick={() => setFreqMode('caseload')}>Derive from caseload size</button>
         </div>
-        <div className="ctl">
-          <label><span>Non-EI visits / patient / week</span><span>{num(nonEiFreq, 1)}</span></label>
-          <input type="range" min={0.5} max={3} step={0.5} value={nonEiFreq}
-            onChange={(e) => setNonEiFreq(Number(e.target.value))} />
-          <div className="src">AS-021 · UNKNOWN — needs Ellen</div>
-        </div>
+
+        {freqMode === 'direct' ? (
+          <>
+            <div className="ctl">
+              <label><span>EI visits / patient / week</span><span>{num(eiFreq, 1)}</span></label>
+              <input type="range" min={0.5} max={3} step={0.5} value={eiFreq}
+                onChange={(e) => setEiFreq(Number(e.target.value))} />
+              <div className="src">AS-020 · UNKNOWN — needs Ellen</div>
+            </div>
+            <div className="ctl">
+              <label><span>Non-EI visits / patient / week</span><span>{num(nonEiFreq, 1)}</span></label>
+              <input type="range" min={0.5} max={3} step={0.5} value={nonEiFreq}
+                onChange={(e) => setNonEiFreq(Number(e.target.value))} />
+              <div className="src">AS-021 · UNKNOWN — needs Ellen</div>
+            </div>
+          </>
+        ) : (
+          <>
+            <Callout tone="accent" title="Visits/day gives the numerator. Caseload size gives the denominator.">
+              Ellen's {ELLEN_BASELINE.visitsPerDay} visits/day establishes how many visits she
+              delivers, not how many children they are spread across — 20 children seen twice a week
+              and 40 seen once a week produce an identical day. One number from Ellen closes it.
+            </Callout>
+
+            <div className="ctl">
+              <label><span>Ellen's current caseload</span><span>{caseload} children</span></label>
+              <input type="range" min={5} max={60} step={1} value={caseload}
+                onChange={(e) => setCaseload(Number(e.target.value))} />
+              <div className="src">AS-027 · UNKNOWN — one question for Ellen: how many distinct children is she carrying?</div>
+            </div>
+
+            <div className="ctl">
+              <label><span>EI seen more often than non-EI</span><span>{num(eiRatio, 2)}×</span></label>
+              <input type="range" min={0.5} max={3} step={0.25} value={eiRatio}
+                onChange={(e) => setEiRatio(Number(e.target.value))} />
+              <div className="src">SCENARIO · 1.0 means both types are seen equally often, so the patient mix equals the visit mix</div>
+            </div>
+
+            {derived && (
+              <>
+                <Table head={<tr><th>Derived</th><th className="num">Value</th></tr>}>
+                  <tr><td>Weekly visits delivered</td><td className="num">{num(derived.weeklyVisits, 1)}</td></tr>
+                  <tr><td>Blended visits / patient / week</td><td className="num"><strong>{num(derived.blendedVisitsPerPatientPerWeek, 2)}</strong></td></tr>
+                  <tr><td>EI visits / patient / week</td><td className="num">{num(derived.eiVisitsPerPatientPerWeek, 2)}</td></tr>
+                  <tr><td>Non-EI visits / patient / week</td><td className="num">{num(derived.nonEiVisitsPerPatientPerWeek, 2)}</td></tr>
+                  <tr><td>EI children / non-EI children</td><td className="num">{num(derived.eiPatients, 1)} / {num(derived.nonEiPatients, 1)}</td></tr>
+                </Table>
+                <p className="small muted">
+                  Weekly visits use the model's PTO-adjusted working week ({num(ramp.workingDaysPerWeek, 2)} days),
+                  so the derived frequency stays consistent with every other figure here. A nominal
+                  5-day week would imply a slightly higher rate for the same caseload.
+                </p>
+              </>
+            )}
+
+            <details>
+              <summary>What each caseload size would imply</summary>
+              <Table head={<tr><th className="num">Caseload</th><th className="num">Visits / patient / week</th></tr>}>
+                {CASELOAD_REFERENCE_POINTS.map((c) => {
+                  const d = deriveFrequencyFromCaseload(scenarioForDerivation, c, eiRatio, clinicians);
+                  return (
+                    <tr key={c} style={c === caseload ? { background: 'rgba(77,163,255,0.10)' } : undefined}>
+                      <td className="num">{c}</td>
+                      <td className="num">{d ? num(d.blendedVisitsPerPatientPerWeek, 2) : '—'}</td>
+                    </tr>
+                  );
+                })}
+              </Table>
+            </details>
+          </>
+        )}
         <div className="ctl">
           <label><span>EI share of caseload</span><span>{pct(eiMixShare * 100)}</span></label>
           <input type="range" min={0} max={1} step={0.05} value={eiMixShare}
@@ -280,9 +356,11 @@ export function FounderRamp() {
         <ol className="tight">
           {ELLEN_QUESTIONS.map((q) => <li key={q}>{q}</li>)}
         </ol>
-        <Callout tone="warn">
-          These are unanswered planning inputs. None of them has been filled with a guess — the
-          assumption register holds each as null so the gap stays visible.
+        <Callout tone="warn" title="The cheapest one to answer first">
+          How many distinct children are on Ellen's caseload right now (AS-027)? Dividing her weekly
+          visits by that number yields visit frequency directly, which is what turns this whole view
+          from structure into a grounded timeline. Everything else on this list is useful; this one
+          is load-bearing.
         </Callout>
       </Card>
 

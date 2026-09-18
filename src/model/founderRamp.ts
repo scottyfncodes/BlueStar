@@ -422,6 +422,7 @@ export const REFERRAL_FIELDS: { key: keyof ReferralSource; label: string }[] = [
 
 /** Open planning inputs that only Ellen can answer. */
 export const ELLEN_QUESTIONS: string[] = [
+  "How many distinct children are on Ellen's caseload right now? (AS-027 — dividing weekly visits by this yields visit frequency directly)",
   'How many visits per week does a typical EI patient receive?',
   'How many visits per week does a typical non-EI patient receive?',
   'Is the current 50/50 EI / non-EI mix actually closer to 45/55 or 55/45?',
@@ -431,3 +432,79 @@ export const ELLEN_QUESTIONS: string[] = [
   'How much cash would Ellen want Blue Star to have before transitioning?',
   'How quickly could a new referral typically become an active patient?',
 ];
+
+// ---------------------------------------------------------------------------
+// Deriving visit frequency from caseload size
+// ---------------------------------------------------------------------------
+
+export interface DerivedFrequency {
+  /** Visits/week the clinician delivers, on the model's annualised basis. */
+  weeklyVisits: number;
+  caseloadSize: number;
+  /** Blended visits per patient per week — the headline derivation. */
+  blendedVisitsPerPatientPerWeek: number;
+  eiVisitsPerPatientPerWeek: number;
+  nonEiVisitsPerPatientPerWeek: number;
+  eiPatients: number;
+  nonEiPatients: number;
+  /** fe / fn — how much more often an EI patient is seen. 1 = identical. */
+  eiFrequencyRatio: number;
+}
+
+/**
+ * Turns an observable Ellen can actually report — how many children are on her
+ * caseload — into visit frequency.
+ *
+ * Visits/day gives the NUMERATOR (how many visits happen). Caseload size gives
+ * the DENOMINATOR. Seeing 20 children twice a week and 40 children once a week
+ * produce an identical 8-visit day, so the visit count alone cannot distinguish
+ * them; the caseload count closes that gap exactly.
+ *
+ * The EI/non-EI split needs one more piece. The observed 50/50 mix is a share
+ * of VISITS, not of patients, so if EI children are seen more often than others
+ * the patient mix differs from the visit mix. `eiFrequencyRatio` carries that:
+ * at 1.0 both types are seen equally often and the patient mix equals the visit
+ * mix. Solving Pe·fe = eiVisitShare·V and Pe + Pn = C gives the split below.
+ *
+ * Basis note: weeklyVisits uses the model's annualised working days per week
+ * (already net of PTO), so the derived frequency stays consistent with every
+ * other figure in the system. A nominal 5-day week would imply a slightly
+ * higher per-week rate for the same caseload.
+ */
+export function deriveFrequencyFromCaseload(
+  scenario: ScenarioInputs,
+  caseloadSize: number,
+  eiFrequencyRatio = 1,
+  clinicianCount = 1,
+): DerivedFrequency | null {
+  if (!(caseloadSize > 0) || !(eiFrequencyRatio > 0)) return null;
+
+  const volume = capacityVolume(scenario);
+  const weeklyVisits =
+    scheduleFeasibility(scenario).maxVisitsPerDay * volume.workingDaysPerWeek * clinicianCount;
+
+  const eiVisitShare = Math.min(1, Math.max(0, scenario.eiMixShare));
+  const r = eiFrequencyRatio;
+
+  // Pe·r = Pn and Pe + Pn = C  =>  Pe = C / (1 + r)
+  const eiPatients = caseloadSize / (1 + r);
+  const nonEiPatients = caseloadSize - eiPatients;
+
+  const eiVisitsPerPatientPerWeek = eiPatients > 0 ? (eiVisitShare * weeklyVisits) / eiPatients : 0;
+  const nonEiVisitsPerPatientPerWeek =
+    nonEiPatients > 0 ? ((1 - eiVisitShare) * weeklyVisits) / nonEiPatients : 0;
+
+  return {
+    weeklyVisits,
+    caseloadSize,
+    blendedVisitsPerPatientPerWeek: weeklyVisits / caseloadSize,
+    eiVisitsPerPatientPerWeek,
+    nonEiVisitsPerPatientPerWeek,
+    eiPatients,
+    nonEiPatients,
+    eiFrequencyRatio: r,
+  };
+}
+
+/** Caseload sizes to show alongside the implied frequency, as a lookup aid. */
+export const CASELOAD_REFERENCE_POINTS = [15, 20, 25, 30, 35, 40, 45] as const;

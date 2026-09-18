@@ -468,6 +468,24 @@ export const assumptions: Assumption[] = [
     lastVerified: '2026-09-18',
     revisitDate: '2027-03-01',
   },
+  {
+    id: 'AS-027',
+    name: "Ellen's current active caseload size",
+    value: null,
+    unit: 'active patients',
+    kind: 'ASSUMPTION',
+    source: 'UNKNOWN — needs Ellen (one question)',
+    evidenceIds: ['EV-025'],
+    whyThisValue:
+      'Deliberately null, but uniquely cheap to resolve. Ellen\'s 8 visits/day establishes how many visits she delivers; it does not establish how many children those visits are spread across. Seeing 20 children twice a week and 40 children once a week produce an identical 8-visit day. Dividing weekly visits by this number yields visit frequency directly, which is what converts the Founder Ramp from structure into a grounded timeline.',
+    confidence: 'Unknown',
+    financialImpact: 'High',
+    operationalImpact: 'Critical',
+    whatWouldInvalidate:
+      'A single answer from Ellen: how many distinct children are currently on her caseload. Note this resolves AS-020 and AS-021 together only if EI and non-EI children are seen at the same frequency; if not, the ratio between them is still needed.',
+    lastVerified: '2026-09-18',
+    revisitDate: '2026-10-15',
+  },
 ];
 
 export const assumptionsById = new Map(assumptions.map((a) => [a.id, a]));

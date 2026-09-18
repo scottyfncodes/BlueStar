@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   founderRamp, patientsAtCapacity, rampMilestones, rampSensitivity, rampNarrative,
-  referralSources, ELLEN_QUESTIONS, type FounderRampInputs,
+  referralSources, ELLEN_QUESTIONS, deriveFrequencyFromCaseload, type FounderRampInputs,
 } from '../model/founderRamp';
 import {
   scheduleFeasibility, capacityVolume, annualModel, weightedPatientFacingMinutes,
@@ -398,7 +398,101 @@ describe('unknown inputs are surfaced, not filled in', () => {
   });
 
   it('lists the open questions for Ellen', () => {
-    expect(ELLEN_QUESTIONS).toHaveLength(8);
-    expect(ELLEN_QUESTIONS[0]).toMatch(/EI patient receive/);
+    expect(ELLEN_QUESTIONS).toHaveLength(9);
+    expect(ELLEN_QUESTIONS[0]).toMatch(/distinct children/);
+  });
+});
+
+describe('deriving visit frequency from caseload size', () => {
+  const scen = defaultScenario();
+
+  it('divides weekly visits by caseload for the blended rate', () => {
+    const d = deriveFrequencyFromCaseload(scen, 35.4)!;
+    expect(d.weeklyVisits).toBeCloseTo(8 * capacityVolume(scen).workingDaysPerWeek, 6);
+    expect(d.blendedVisitsPerPatientPerWeek).toBeCloseTo(d.weeklyVisits / 35.4, 6);
+    expect(d.blendedVisitsPerPatientPerWeek).toBeCloseTo(1, 2);
+  });
+
+  it('halves the frequency when the caseload doubles', () => {
+    const small = deriveFrequencyFromCaseload(scen, 20)!;
+    const big = deriveFrequencyFromCaseload(scen, 40)!;
+    expect(big.blendedVisitsPerPatientPerWeek)
+      .toBeCloseTo(small.blendedVisitsPerPatientPerWeek / 2, 6);
+  });
+
+  it('distinguishes 20 children twice a week from 40 once a week', () => {
+    // The exact ambiguity that visits/day alone cannot resolve.
+    const twenty = deriveFrequencyFromCaseload(scen, 20)!;
+    const forty = deriveFrequencyFromCaseload(scen, 40)!;
+    expect(twenty.blendedVisitsPerPatientPerWeek)
+      .toBeCloseTo(forty.blendedVisitsPerPatientPerWeek * 2, 6);
+    // ...yet both deliver exactly the same weekly visit volume.
+    expect(twenty.weeklyVisits).toBeCloseTo(forty.weeklyVisits, 9);
+  });
+
+  it('splits patients to match the visit mix when both types are seen equally', () => {
+    const d = deriveFrequencyFromCaseload(scen, 40, 1)!;
+    expect(d.eiPatients).toBeCloseTo(20, 6);
+    expect(d.nonEiPatients).toBeCloseTo(20, 6);
+    expect(d.eiVisitsPerPatientPerWeek).toBeCloseTo(d.nonEiVisitsPerPatientPerWeek, 6);
+  });
+
+  it('shifts the patient mix away from the visit mix when EI is seen more often', () => {
+    // 50% of VISITS being EI does not mean 50% of PATIENTS are EI.
+    const d = deriveFrequencyFromCaseload(scen, 40, 2)!;
+    expect(d.eiPatients).toBeCloseTo(40 / 3, 6);
+    expect(d.nonEiPatients).toBeCloseTo(80 / 3, 6);
+    expect(d.eiVisitsPerPatientPerWeek)
+      .toBeCloseTo(d.nonEiVisitsPerPatientPerWeek * 2, 6);
+  });
+
+  it('reproduces the observed visit volume from the derived split', () => {
+    for (const ratio of [1, 1.5, 2, 3]) {
+      const d = deriveFrequencyFromCaseload(scen, 40, ratio)!;
+      const total =
+        d.eiPatients * d.eiVisitsPerPatientPerWeek
+        + d.nonEiPatients * d.nonEiVisitsPerPatientPerWeek;
+      expect(total, `ratio ${ratio}`).toBeCloseTo(d.weeklyVisits, 6);
+    }
+  });
+
+  it('honours the EI visit share when splitting visits', () => {
+    const d = deriveFrequencyFromCaseload({ ...scen, eiMixShare: 0.5 }, 40, 1)!;
+    expect(d.eiPatients * d.eiVisitsPerPatientPerWeek).toBeCloseTo(d.weeklyVisits * 0.5, 6);
+  });
+
+  it('round-trips through the ramp back to the observed 8-visit day', () => {
+    // The real integration check: feed the derived frequency into the ramp at
+    // the matching census and the demand must land back on 8 visits/day.
+    const caseload = 30;
+    const d = deriveFrequencyFromCaseload(scen, caseload, 1)!;
+    const r = founderRamp({
+      ...inputs,
+      startingActivePatients: caseload,
+      newPatientsPerWeek: 0,
+      eiVisitsPerPatientPerWeek: d.eiVisitsPerPatientPerWeek,
+      nonEiVisitsPerPatientPerWeek: d.nonEiVisitsPerPatientPerWeek,
+    });
+    expect(r.months[0].demandVisitsPerDay).toBeCloseTo(8, 6);
+    expect(r.months[0].overflowVisitsPerDay).toBeCloseTo(0, 6);
+  });
+
+  it('scales with clinician count', () => {
+    const one = deriveFrequencyFromCaseload(scen, 40, 1, 1)!;
+    const two = deriveFrequencyFromCaseload(scen, 40, 1, 2)!;
+    expect(two.weeklyVisits).toBeCloseTo(one.weeklyVisits * 2, 6);
+  });
+
+  it('returns null rather than guessing on an unusable caseload', () => {
+    expect(deriveFrequencyFromCaseload(scen, 0)).toBeNull();
+    expect(deriveFrequencyFromCaseload(scen, -5)).toBeNull();
+    expect(deriveFrequencyFromCaseload(scen, 40, 0)).toBeNull();
+  });
+
+  it('keeps the caseload assumption unknown until Ellen answers', () => {
+    const a = assumptionsById.get('AS-027')!;
+    expect(a.value).toBeNull();
+    expect(a.confidence).toBe('Unknown');
+    expect(a.whyThisValue).toMatch(/does not establish how many children/);
   });
 });
