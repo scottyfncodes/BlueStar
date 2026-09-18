@@ -10,7 +10,16 @@
 export interface ScenarioInputs {
   reimbursementPerVisit: number;
   visitsPerDay: number;
+  /** TOTAL working days per year, scheduled clinical days plus makeup days. */
   workingDaysPerYear: number;
+  /** Days per week carrying the regular caseload. */
+  scheduledDaysPerWeek: number;
+  /**
+   * Days per week held for makeup visits. These recover cancellations rather
+   * than adding new caseload capacity, which is why a cancelled visit is not
+   * simply lost revenue.
+   */
+  makeupDaysPerWeek: number;
   cancellationRate: number;
   collectionRate: number;
   clinicianSalary: number | null;
@@ -175,6 +184,68 @@ export function scheduleFeasibility(i: ScenarioInputs): ScheduleFeasibility {
   };
 }
 
+export interface WeeklySchedule {
+  scheduledDaysPerWeek: number;
+  makeupDaysPerWeek: number;
+  totalWorkingDaysPerWeek: number;
+  workingWeeksPerYear: number;
+  scheduledVisitsPerWeek: number;
+  makeupCapacityPerWeek: number;
+  cancelledPerWeek: number;
+  /** Cancellations rescheduled into the makeup day. */
+  recoveredPerWeek: number;
+  completedPerWeek: number;
+  /** Cancellation loss AFTER makeup recovery — often far below the raw rate. */
+  effectiveCancellationRate: number;
+  /** Makeup capacity left over once cancellations are absorbed. */
+  spareMakeupCapacityPerWeek: number;
+}
+
+/**
+ * The weekly shape of the clinical schedule.
+ *
+ * Ellen's week is four days of regular visits plus one makeup day. That makeup
+ * day changes the economics of a cancellation: instead of losing the visit and
+ * its revenue outright, the visit is rescheduled and delivered later in the
+ * same week. So the effective cancellation rate is the portion that overflows
+ * the makeup day, not the raw rate at which visits are cancelled.
+ *
+ * Working weeks per year are derived from the existing annual working-days
+ * assumption divided across the full week, so PTO stays accounted for once.
+ */
+export function weeklySchedule(i: ScenarioInputs): WeeklySchedule {
+  const scheduledDaysPerWeek = Math.max(0, i.scheduledDaysPerWeek);
+  const makeupDaysPerWeek = Math.max(0, i.makeupDaysPerWeek);
+  const totalWorkingDaysPerWeek = scheduledDaysPerWeek + makeupDaysPerWeek;
+  const workingWeeksPerYear =
+    totalWorkingDaysPerWeek > 0 ? i.workingDaysPerYear / totalWorkingDaysPerWeek : 0;
+
+  const perDay = scheduleFeasibility(i).effectiveVisitsPerDay;
+  const scheduledVisitsPerWeek = perDay * scheduledDaysPerWeek;
+  const makeupCapacityPerWeek = perDay * makeupDaysPerWeek;
+
+  const cancelledPerWeek = scheduledVisitsPerWeek * i.cancellationRate;
+  const recoveredPerWeek = Math.min(cancelledPerWeek, makeupCapacityPerWeek);
+  const completedPerWeek = scheduledVisitsPerWeek - cancelledPerWeek + recoveredPerWeek;
+
+  return {
+    scheduledDaysPerWeek,
+    makeupDaysPerWeek,
+    totalWorkingDaysPerWeek,
+    workingWeeksPerYear,
+    scheduledVisitsPerWeek,
+    makeupCapacityPerWeek,
+    cancelledPerWeek,
+    recoveredPerWeek,
+    completedPerWeek,
+    effectiveCancellationRate:
+      scheduledVisitsPerWeek > 0
+        ? (cancelledPerWeek - recoveredPerWeek) / scheduledVisitsPerWeek
+        : 0,
+    spareMakeupCapacityPerWeek: makeupCapacityPerWeek - recoveredPerWeek,
+  };
+}
+
 export interface CapacityVolume {
   visitsPerDay: number;
   visitsPerWeek: number;
@@ -190,7 +261,7 @@ export interface CapacityVolume {
   afterHoursDocumentationHoursPerWeek: number;
   /** Scheduled clinical hours plus after-hours documentation. */
   totalClinicianHoursPerWeek: number;
-  /** Derived from workingDaysPerYear rather than invented separately. */
+  /** Scheduled clinical days per week — the days visits are spread across. */
   workingDaysPerWeek: number;
 }
 
@@ -207,16 +278,18 @@ export function capacityVolume(i: ScenarioInputs): CapacityVolume {
   const cycle = visitCycle(i);
   const perDay = feas.effectiveVisitsPerDay;
 
-  const workingDaysPerWeek = i.workingDaysPerYear / 52;
-  const visitsPerWeek = perDay * workingDaysPerWeek;
-  const visitsPerYear = perDay * i.workingDaysPerYear;
+  const week = weeklySchedule(i);
+  const workingDaysPerWeek = week.scheduledDaysPerWeek;
+  const visitsPerWeek = week.scheduledVisitsPerWeek;
+  const visitsPerYear = visitsPerWeek * week.workingWeeksPerYear;
 
   return {
     visitsPerDay: perDay,
     visitsPerWeek,
     visitsPerMonth: visitsPerYear / 12,
     visitsPerYear,
-    completedVisitsPerYear: visitsPerYear * (1 - i.cancellationRate),
+    // Net of cancellations AFTER the makeup day recovers what it can.
+    completedVisitsPerYear: week.completedPerWeek * week.workingWeeksPerYear,
     patientFacingHoursPerWeek: (visitsPerWeek * cycle.patientFacingMinutes) / 60,
     travelHoursPerWeek: (visitsPerWeek * cycle.travelMinutes) / 60,
     documentationHoursPerWeek: (visitsPerWeek * i.documentationMinutesPerVisit) / 60,
@@ -372,7 +445,12 @@ export function annualModel(i: ScenarioInputs): AnnualModel {
     const fixedCosts = overheadTotal + clinicianCostTotal;
     if (contributionPerVisit > 0) {
       breakEvenVisitsPerYear = fixedCosts / contributionPerVisit;
-      const denom = i.clinicianCount * i.workingDaysPerYear * (1 - i.cancellationRate);
+      // Effective, not requested: break-even expressed per day must not move
+      // just because someone asked for a caseload the day cannot hold.
+      const effectivePerDay = scheduleFeasibility(i).effectiveVisitsPerDay;
+      const denom = effectivePerDay > 0
+        ? (i.clinicianCount * capacityVolume(i).completedVisitsPerYear) / effectivePerDay
+        : 0;
       if (denom > 0) breakEvenVisitsPerClinicianPerDay = breakEvenVisitsPerYear / denom;
     }
   }

@@ -11,6 +11,8 @@ export function defaultScenario(): ScenarioInputs {
     reimbursementPerVisit: assumptionValue('AS-001') ?? 0,
     visitsPerDay: assumptionValue('AS-002') ?? 8,
     workingDaysPerYear: assumptionValue('AS-012') ?? 230,
+    scheduledDaysPerWeek: assumptionValue('AS-028') ?? 4,
+    makeupDaysPerWeek: assumptionValue('AS-029') ?? 1,
     cancellationRate: assumptionValue('AS-005') ?? 0.15,
     collectionRate: assumptionValue('AS-008') ?? 0.93,
     clinicianSalary: assumptionValue('AS-003'), // deliberately null — see AS-003
@@ -49,6 +51,9 @@ export const ELLEN_BASELINE = {
   visitsPerDay: 8,
   workdayHours: 8,
   workdaySpan: '9:00am - 5:00pm',
+  scheduledDaysPerWeek: 4,
+  makeupDaysPerWeek: 1,
+  scheduleNote: '4 days of regular visits + 1 makeup day for rescheduled appointments',
   eiVisitMinutes: 60,
   nonEiVisitMinutes: 30,
   eiMixShare: 0.5,

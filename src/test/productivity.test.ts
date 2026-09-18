@@ -190,33 +190,32 @@ describe('impossible schedules are refused, not priced', () => {
 });
 
 describe('visit volume per day / week / month', () => {
-  it('derives working days per week from the existing annual assumption', () => {
-    // 230 working days/year is already net of PTO and holidays, so the weekly
-    // average sits below a nominal 5-day week. Not a separately invented number.
+  it('spreads visits across the 4 scheduled clinical days, not the whole week', () => {
+    // The makeup day is the 5th; it carries rescheduled visits, not caseload.
     const v = capacityVolume(ellen);
-    expect(v.workingDaysPerWeek).toBeCloseTo(230 / 52, 6);
-    expect(v.workingDaysPerWeek).toBeLessThan(5);
+    expect(v.workingDaysPerWeek).toBe(4);
   });
 
   it('scales day to week to month to year consistently', () => {
     const v = capacityVolume(ellen);
     expect(v.visitsPerDay).toBe(8);
-    expect(v.visitsPerWeek).toBeCloseTo(8 * (230 / 52), 6);
-    expect(v.visitsPerYear).toBe(8 * 230);
-    expect(v.visitsPerMonth).toBeCloseTo((8 * 230) / 12, 6);
+    expect(v.visitsPerWeek).toBeCloseTo(32, 6);
+    expect(v.visitsPerYear).toBeCloseTo(8 * 4 * 46, 6);
+    expect(v.visitsPerMonth).toBeCloseTo((8 * 4 * 46) / 12, 6);
   });
 
   it('separates patient-facing, travel and documentation hours', () => {
     const v = capacityVolume(ellen);
-    const weeks = 230 / 52;
-    expect(v.patientFacingHoursPerWeek).toBeCloseTo((8 * weeks * 45) / 60, 6);
-    expect(v.travelHoursPerWeek).toBeCloseTo((8 * weeks * 15) / 60, 6);
-    expect(v.documentationHoursPerWeek).toBeCloseTo((8 * weeks * 5) / 60, 6);
+    expect(v.patientFacingHoursPerWeek).toBeCloseTo((32 * 45) / 60, 6);
+    expect(v.travelHoursPerWeek).toBeCloseTo((32 * 15) / 60, 6);
+    expect(v.documentationHoursPerWeek).toBeCloseTo((32 * 5) / 60, 6);
   });
 
-  it('nets out cancellations for completed visits', () => {
+  it('recovers cancellations through the makeup day', () => {
+    // 15% of 32 is 4.8 cancelled per week against 8 visits of makeup capacity,
+    // so nothing is lost and completed equals scheduled.
     const v = capacityVolume(ellen);
-    expect(v.completedVisitsPerYear).toBeCloseTo(8 * 230 * 0.85, 6);
+    expect(v.completedVisitsPerYear).toBeCloseTo(8 * 4 * 46, 6);
   });
 });
 

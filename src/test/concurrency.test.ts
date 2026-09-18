@@ -167,7 +167,7 @@ describe('downstream models respect feasible capacity at every level', () => {
   it('annual volume uses the clamped ceiling, not the requested 8', () => {
     for (const c of [0.75, 0.5, 0.25, 0]) {
       expect(capacityVolume(at(c)).visitsPerDay, `at ${c}`).toBe(7);
-      expect(annualModel(at(c)).completedVisits).toBeCloseTo(7 * 230 * 0.85, 6);
+      expect(annualModel(at(c)).completedVisits).toBeCloseTo(7 * 4 * 46, 6);
     }
   });
 

@@ -407,10 +407,10 @@ describe('deriving visit frequency from caseload size', () => {
   const scen = defaultScenario();
 
   it('divides weekly visits by caseload for the blended rate', () => {
-    const d = deriveFrequencyFromCaseload(scen, 35.4)!;
-    expect(d.weeklyVisits).toBeCloseTo(8 * capacityVolume(scen).workingDaysPerWeek, 6);
-    expect(d.blendedVisitsPerPatientPerWeek).toBeCloseTo(d.weeklyVisits / 35.4, 6);
-    expect(d.blendedVisitsPerPatientPerWeek).toBeCloseTo(1, 2);
+    // 8 visits x 4 scheduled days = 32 visits/week.
+    const d = deriveFrequencyFromCaseload(scen, 32)!;
+    expect(d.weeklyVisits).toBeCloseTo(32, 6);
+    expect(d.blendedVisitsPerPatientPerWeek).toBeCloseTo(1, 6);
   });
 
   it('halves the frequency when the caseload doubles', () => {

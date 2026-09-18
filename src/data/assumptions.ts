@@ -209,14 +209,14 @@ export const assumptions: Assumption[] = [
   },
   {
     id: 'AS-012',
-    name: 'Working days per clinician per year',
+    name: 'Total working days per clinician per year',
     value: 230,
     unit: 'days',
     kind: 'ASSUMPTION',
     source: 'Modelling assumption',
     evidenceIds: [],
     whyThisValue:
-      '260 weekdays less roughly 15 days PTO, 8 holidays and 7 days sick/CEU. Reasonable but unverified against any Blue Star policy, which does not exist yet.',
+      '260 weekdays less roughly 15 days PTO, 8 holidays and 7 days sick/CEU. This is the TOTAL of scheduled clinical days and makeup days (AS-028 + AS-029), so at a 4+1 week it implies about 46 working weeks per year. Reasonable but unverified against any Blue Star policy, which does not exist yet.',
     confidence: 'Reasonable estimate',
     financialImpact: 'High',
     operationalImpact: 'Medium',
@@ -485,6 +485,41 @@ export const assumptions: Assumption[] = [
       'A single answer from Ellen: how many distinct children are currently on her caseload. Note this resolves AS-020 and AS-021 together only if EI and non-EI children are seen at the same frequency; if not, the ratio between them is still needed.',
     lastVerified: '2026-09-18',
     revisitDate: '2026-10-15',
+  },
+  {
+    id: 'AS-028',
+    name: 'Scheduled clinical days per week',
+    value: 4,
+    unit: 'days/week',
+    kind: 'USER_PROVIDED',
+    source: "Ellen's current observed schedule",
+    evidenceIds: ['EV-029'],
+    whyThisValue:
+      "Ellen averages 8 visits/day across FOUR days of regular visits, with a fifth day held for makeup visits. The model previously spread visits across an undifferentiated working week, which overstated annual scheduled volume.",
+    confidence: 'Strong evidence',
+    financialImpact: 'Critical',
+    operationalImpact: 'Critical',
+    whatWouldInvalidate: 'A change in how the week is structured, or a clinician who works a different pattern.',
+    lastVerified: '2026-09-18',
+    revisitDate: '2027-03-01',
+  },
+  {
+    id: 'AS-029',
+    name: 'Makeup visit days per week',
+    value: 1,
+    unit: 'days/week',
+    kind: 'USER_PROVIDED',
+    source: "Ellen's current observed schedule",
+    evidenceIds: ['EV-029'],
+    whyThisValue:
+      'One day a week is held for makeup visits. This is structurally important and easy to miss: a cancelled visit is not simply lost revenue, it is rescheduled into this day. The makeup day is therefore recovery capacity for the existing caseload, NOT additional capacity for new patients — only whatever it does not absorb is spare.',
+    confidence: 'Strong evidence',
+    financialImpact: 'High',
+    operationalImpact: 'Critical',
+    whatWouldInvalidate:
+      'Cancellations rising past what one day can absorb, at which point the excess becomes real lost revenue and the effective cancellation rate stops being near zero.',
+    lastVerified: '2026-09-18',
+    revisitDate: '2027-03-01',
   },
 ];
 

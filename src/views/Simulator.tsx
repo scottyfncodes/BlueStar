@@ -3,7 +3,7 @@ import { Card, Stat, Callout, Table, money, num, pct } from '../components/ui';
 import {
   annualModel, visitEconomics, capacityCheck, viabilityCheck,
   utilisationScenarios, travelScenarios, visitCycle, scheduleFeasibility,
-  capacityVolume, revenueBreakdown, documentationSensitivity, concurrencyThreshold,
+  capacityVolume, revenueBreakdown, documentationSensitivity, concurrencyThreshold, weeklySchedule,
   CONCURRENCY_LEVELS, visitMixSensitivity, weightedPatientFacingMinutes, EI_MIX_LEVELS,
   type ScenarioInputs,
 } from '../model/economics';
@@ -37,6 +37,7 @@ export function Simulator() {
   const feas = scheduleFeasibility(s);
   const volume = capacityVolume(s);
   const revenue = revenueBreakdown(s);
+  const week = weeklySchedule(s);
   const baselineVisits = ELLEN_BASELINE.visitsPerDay;
   const sensitivity = documentationSensitivity(s, CONCURRENCY_LEVELS, baselineVisits);
   const threshold = concurrencyThreshold(s, baselineVisits);
@@ -62,7 +63,10 @@ export function Simulator() {
           <strong style={{ display: 'inline', fontWeight: 600 }}>
             {ELLEN_BASELINE.visitsPerDay} visits/day
           </strong>{' '}
-          across a {ELLEN_BASELINE.workdaySpan} day. Visit mix is approximately{' '}
+          across a {ELLEN_BASELINE.workdaySpan} day, on{' '}
+          <strong style={{ display: 'inline', fontWeight: 600 }}>
+            {ELLEN_BASELINE.scheduledDaysPerWeek} scheduled days/week plus {ELLEN_BASELINE.makeupDaysPerWeek} makeup day
+          </strong>. Visit mix is approximately{' '}
           {pct(ELLEN_BASELINE.eiMixShare * 100)} Early Intervention at {ELLEN_BASELINE.eiVisitMinutes} min
           and {pct((1 - ELLEN_BASELINE.eiMixShare) * 100)} other at {ELLEN_BASELINE.nonEiVisitMinutes} min,
           giving a derived {ELLEN_BASELINE.patientFacingMinutes} min patient-facing average +{' '}
@@ -124,9 +128,17 @@ export function Simulator() {
           onChange={(v) => set({ workdayHours: v })} format={(v) => `${num(v, 1)} h`}
           source="AS-014 · Ellen's current observed workload · the only legitimate way to raise the visit ceiling" />
 
-        <Slider label="Working days per year" value={s.workingDaysPerYear} min={180} max={260} step={1}
+        <Slider label="Scheduled clinical days / week" value={s.scheduledDaysPerWeek} min={1} max={6} step={1}
+          onChange={(v) => set({ scheduledDaysPerWeek: v })} format={(v) => `${v} days`}
+          source="AS-028 · Ellen's current observed schedule · days carrying the regular caseload" />
+
+        <Slider label="Makeup visit days / week" value={s.makeupDaysPerWeek} min={0} max={3} step={1}
+          onChange={(v) => set({ makeupDaysPerWeek: v })} format={(v) => `${v} day${v === 1 ? '' : 's'}`}
+          source="AS-029 · Ellen's current observed schedule · recovers cancellations rather than adding caseload" />
+
+        <Slider label="Total working days per year" value={s.workingDaysPerYear} min={180} max={260} step={1}
           onChange={(v) => set({ workingDaysPerYear: v })} format={(v) => `${v} days`}
-          source="AS-012 · existing assumption, net of PTO and holidays · weekly average is derived from this" />
+          source={`AS-012 · net of PTO and holidays · scheduled + makeup days, implying ${num(week.workingWeeksPerYear, 0)} working weeks/year`} />
       </Card>
 
       <Card title="Visit cycle — where the workday goes">
@@ -278,6 +290,30 @@ export function Simulator() {
             </button>
           ))}
         </div>
+      </Card>
+
+      <Card title="The makeup day changes what a cancellation costs">
+        <p className="small muted" style={{ marginTop: 0 }}>
+          A cancelled visit is not lost revenue while there is makeup capacity to reschedule it
+          into. What matters is the portion that overflows the makeup day.
+        </p>
+        <div className="grid">
+          <Stat label="Scheduled visits/week" value={num(week.scheduledVisitsPerWeek, 1)}
+            note={`${num(week.scheduledDaysPerWeek, 0)} days × ${num(s.visitsPerDay, 1)}`} />
+          <Stat label="Makeup capacity/week" value={num(week.makeupCapacityPerWeek, 1)} />
+          <Stat label="Cancelled/week" value={num(week.cancelledPerWeek, 1)}
+            note={`Raw rate ${pct(s.cancellationRate * 100)}`} />
+          <Stat label="Recovered/week" value={num(week.recoveredPerWeek, 1)} note="Rescheduled into the makeup day" />
+          <Stat label="Effective cancellation rate" value={pct(week.effectiveCancellationRate * 100, 2)}
+            note="After makeup recovery" />
+          <Stat label="Spare makeup capacity" value={num(week.spareMakeupCapacityPerWeek, 1)}
+            note="Left over once cancellations are absorbed" />
+        </div>
+        <Callout tone={week.spareMakeupCapacityPerWeek > 0 ? 'good' : 'warn'}>
+          {week.spareMakeupCapacityPerWeek > 0
+            ? `At a ${pct(s.cancellationRate * 100)} cancellation rate the makeup day absorbs every cancelled visit, leaving ${num(week.spareMakeupCapacityPerWeek, 1)} visits/week of unused makeup capacity. The assumed revenue loss from cancellations is therefore close to zero — but the buffer is finite.`
+            : `The makeup day is fully consumed. Cancellations beyond this point are real lost revenue at an effective rate of ${pct(week.effectiveCancellationRate * 100, 2)}.`}
+        </Callout>
       </Card>
 
       <Card title="Weekly clinician time split (per clinician)">

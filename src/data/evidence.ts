@@ -697,6 +697,29 @@ export const evidence: Evidence[] = [
     notes:
       'The compensation LEVEL after transition (AS-024) is a separate and still-unknown question. This record establishes only the $0 figure before transition, not what replaces it.',
   },
+  {
+    id: 'EV-029',
+    category: '14-Operations',
+    topic: "Ellen's weekly schedule structure — 4 clinical days plus a makeup day",
+    claim:
+      'Ellen averages 8 visits per day across a FOUR-day week of regular visits, with one additional day each week held as a makeup visit day for rescheduled appointments.',
+    source: 'Ellen — current observed schedule (first-hand report, correcting an earlier summary)',
+    url: 'https://github.com/scottyfncodes/BlueStar',
+    document: "Ellen's weekly schedule structure, reported by Scott",
+    publicationDate: null,
+    effectiveDate: '2026-09-18',
+    accessedDate: '2026-09-18',
+    section: null,
+    appliesTo: ['Capacity', 'Annual volume', 'Cancellation economics', 'Revenue model'],
+    interpretation:
+      'Two consequences, and the second is the interesting one. First, regular weekly volume is 8 x 4 = 32 visits, not 8 x 5 — the model previously spread visits across an undifferentiated week and overstated annual scheduled volume. Second, and more structurally: the makeup day changes what a cancellation costs. A cancelled visit is rescheduled rather than lost, so the EFFECTIVE cancellation rate is only the portion that overflows the makeup day. At the modelled cancellation rate that overflow is zero, which means the assumed revenue loss from cancellations was largely illusory. The makeup day is recovery capacity for the existing caseload, not spare capacity for growth.',
+    confidence: 'Strong evidence',
+    retrieval: 'user-reported',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-03-01',
+    notes:
+      'This corrects the earlier characterisation of an 8-visit day across a generic working week (EV-025). The 8 visits/day figure itself is unchanged; what changed is how many days per week carry that load, and what happens to cancellations.',
+  },
 ];
 
 export const evidenceById = new Map(evidence.map((e) => [e.id, e]));

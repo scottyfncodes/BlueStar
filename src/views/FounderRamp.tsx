@@ -186,9 +186,9 @@ export function FounderRamp() {
                   <tr><td>EI children / non-EI children</td><td className="num">{num(derived.eiPatients, 1)} / {num(derived.nonEiPatients, 1)}</td></tr>
                 </Table>
                 <p className="small muted">
-                  Weekly visits use the model's PTO-adjusted working week ({num(ramp.workingDaysPerWeek, 2)} days),
-                  so the derived frequency stays consistent with every other figure here. A nominal
-                  5-day week would imply a slightly higher rate for the same caseload.
+                  Weekly visits use the {num(ramp.workingDaysPerWeek, 0)} scheduled clinical days per
+                  week. The makeup day is excluded because it carries rescheduled visits from the
+                  existing caseload rather than new patients.
                 </p>
               </>
             )}

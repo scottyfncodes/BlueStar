@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   loadedClinicianCost, visitEconomics, capacityCheck, annualModel,
-  utilisationScenarios, travelScenarios, viabilityCheck, type ScenarioInputs,
+  utilisationScenarios, travelScenarios, viabilityCheck, weeklySchedule, capacityVolume,
+  type ScenarioInputs,
 } from '../model/economics';
 import { capitalRequirement, bandAssessment, CAPITAL_BANDS } from '../model/capital';
 import { cashCalendar } from '../model/cash';
@@ -13,6 +14,8 @@ const base: ScenarioInputs = {
   reimbursementPerVisit: 143.02,
   visitsPerDay: 8,
   workingDaysPerYear: 230,
+  scheduledDaysPerWeek: 4,
+  makeupDaysPerWeek: 1,
   cancellationRate: 0.15,
   collectionRate: 0.93,
   clinicianSalary: 100000,
@@ -56,7 +59,9 @@ describe('loaded clinician cost', () => {
 
   it('accounts for cancellations when computing cost per completed visit', () => {
     const r = loadedClinicianCost(base)!;
-    expect(r.completedVisitsPerYear).toBeCloseTo(8 * 230 * 0.85, 6);
+    // 4 scheduled days x 8 visits x 46 working weeks; the makeup day recovers
+    // every cancellation at this rate, so completed equals scheduled.
+    expect(r.completedVisitsPerYear).toBeCloseTo(8 * 4 * 46, 6);
     expect(r.costPerCompletedVisit).toBeCloseTo(r.total / r.completedVisitsPerYear, 6);
   });
 
@@ -131,7 +136,7 @@ describe('capacity check', () => {
 describe('annual model', () => {
   it('computes completed visits net of cancellations', () => {
     const m = annualModel(base);
-    expect(m.completedVisits).toBeCloseTo(8 * 230 * 0.85, 6);
+    expect(m.completedVisits).toBeCloseTo(8 * 4 * 46, 6);
   });
 
   it('scales with clinician count', () => {
@@ -370,5 +375,60 @@ describe('viability check — does break-even fit in a working day?', () => {
     expect(v.breakEvenIsAchievable).toBeNull();
     expect(v.bindingConstraint).toBe('Unknown');
     expect(v.verdict).toContain('AS-003');
+  });
+});
+
+describe('the 4-day week plus makeup day', () => {
+  it('spreads the caseload across 4 scheduled days, not 5', () => {
+    const w = weeklySchedule(base);
+    expect(w.scheduledDaysPerWeek).toBe(4);
+    expect(w.makeupDaysPerWeek).toBe(1);
+    expect(w.scheduledVisitsPerWeek).toBeCloseTo(32, 6);
+  });
+
+  it('derives working weeks per year from the total working days', () => {
+    // 230 total days across a 5-day week is 46 working weeks.
+    expect(weeklySchedule(base).workingWeeksPerYear).toBeCloseTo(46, 6);
+  });
+
+  it('recovers cancellations into the makeup day', () => {
+    const w = weeklySchedule(base);
+    expect(w.cancelledPerWeek).toBeCloseTo(32 * 0.15, 6);
+    expect(w.recoveredPerWeek).toBeCloseTo(w.cancelledPerWeek, 6);
+    expect(w.completedPerWeek).toBeCloseTo(32, 6);
+    expect(w.effectiveCancellationRate).toBeCloseTo(0, 9);
+  });
+
+  it('reports the makeup capacity left over', () => {
+    // 8 visits of makeup capacity less 4.8 recovered.
+    expect(weeklySchedule(base).spareMakeupCapacityPerWeek).toBeCloseTo(3.2, 6);
+  });
+
+  it('starts losing visits only once cancellations exceed the makeup day', () => {
+    // The buffer absorbs everything up to a 25% raw rate, then overflows.
+    expect(weeklySchedule({ ...base, cancellationRate: 0.25 }).effectiveCancellationRate)
+      .toBeCloseTo(0, 9);
+    const over = weeklySchedule({ ...base, cancellationRate: 0.3 });
+    expect(over.effectiveCancellationRate).toBeCloseTo(0.05, 6);
+    expect(over.spareMakeupCapacityPerWeek).toBeCloseTo(0, 9);
+  });
+
+  it('never recovers more than was cancelled', () => {
+    for (const rate of [0, 0.05, 0.15, 0.3, 0.6, 1]) {
+      const w = weeklySchedule({ ...base, cancellationRate: rate });
+      expect(w.recoveredPerWeek).toBeLessThanOrEqual(w.cancelledPerWeek + 1e-9);
+      expect(w.recoveredPerWeek).toBeLessThanOrEqual(w.makeupCapacityPerWeek + 1e-9);
+      expect(w.effectiveCancellationRate).toBeGreaterThanOrEqual(-1e-9);
+    }
+  });
+
+  it('removes the makeup buffer when the makeup day is dropped', () => {
+    const w = weeklySchedule({ ...base, makeupDaysPerWeek: 0 });
+    expect(w.recoveredPerWeek).toBe(0);
+    expect(w.effectiveCancellationRate).toBeCloseTo(0.15, 6);
+  });
+
+  it('flows through to annual completed visits', () => {
+    expect(capacityVolume(base).completedVisitsPerYear).toBeCloseTo(8 * 4 * 46, 6);
   });
 });
