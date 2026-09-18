@@ -139,6 +139,12 @@ export interface ScheduleFeasibility {
   /** Visits that actually fit the workday. Revenue is computed from THIS. */
   effectiveVisitsPerDay: number;
   maxVisitsPerDay: number;
+  /**
+   * Weekly ceiling. Days hold whole visits, but a caseload is carried over a
+   * week, so the weekly figure is the honest constraint: flooring per day
+   * discards the part-visit of slack each day leaves behind.
+   */
+  maxVisitsPerWeek: number;
   cycleMinutes: number;
   workdayMinutes: number;
   minutesRequired: number;
@@ -162,6 +168,9 @@ export function scheduleFeasibility(i: ScenarioInputs): ScheduleFeasibility {
   const cycle = visitCycle(i);
   const workdayMinutes = i.workdayHours * 60;
   const maxVisitsPerDay = cycle.cycleMinutes > 0 ? Math.floor(workdayMinutes / cycle.cycleMinutes) : 0;
+  const maxVisitsPerWeek = cycle.cycleMinutes > 0
+    ? Math.floor((workdayMinutes * Math.max(0, i.scheduledDaysPerWeek)) / cycle.cycleMinutes)
+    : 0;
   const requested = i.visitsPerDay;
   const effective = Math.min(requested, maxVisitsPerDay);
   const clamped = effective < requested;
@@ -170,6 +179,7 @@ export function scheduleFeasibility(i: ScenarioInputs): ScheduleFeasibility {
     requestedVisitsPerDay: requested,
     effectiveVisitsPerDay: effective,
     maxVisitsPerDay,
+    maxVisitsPerWeek,
     cycleMinutes: cycle.cycleMinutes,
     workdayMinutes,
     minutesRequired: requested * cycle.cycleMinutes,
@@ -849,7 +859,8 @@ export function concurrencyThreshold(
 // ---------------------------------------------------------------------------
 
 /** EI share levels for the sweep. Ellen's approximate current mix is 50%. */
-export const EI_MIX_LEVELS = [0, 0.25, 0.5, 0.75, 1] as const;
+/** Includes Ellen's observed ~33% EI visit share so the real point appears. */
+export const EI_MIX_LEVELS = [0, 0.25, 1 / 3, 0.5, 0.75, 1] as const;
 
 export interface VisitMixScenario {
   eiMixShare: number;

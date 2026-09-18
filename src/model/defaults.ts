@@ -1,5 +1,6 @@
 import type { ScenarioInputs } from './economics';
 import { assumptionValue } from '../data/assumptions';
+import { caseloadComposition } from './caseload';
 
 /**
  * The default scenario is assembled FROM the assumption register, so the
@@ -56,9 +57,12 @@ export const ELLEN_BASELINE = {
   scheduleNote: '4 days of regular visits + 1 makeup day for rescheduled appointments',
   eiVisitMinutes: 60,
   nonEiVisitMinutes: 30,
-  eiMixShare: 0.5,
-  /** Derived from the mix above, never entered directly. */
-  patientFacingMinutes: 45,
+  eiMixShare: caseloadComposition().eiVisitShare,
+  eiPatientShare: caseloadComposition().eiPatientShare,
+  /** Derived from the observed cohorts, never entered directly. */
+  patientFacingMinutes: caseloadComposition().weightedVisitMinutes,
+  caseloadSize: caseloadComposition().totalPatients,
+  visitsPerWeek: caseloadComposition().totalVisitsPerWeek,
   travelMinutes: 15,
   documentationMinutes: 5,
   documentationInWorkdayShare: 0.9,
@@ -67,7 +71,7 @@ export const ELLEN_BASELINE = {
     '90% completed during visits or natural workday downtime, 10% completed at home after work',
   /** Context only — the EMR Ellen currently uses. Not a cause of the 90/10 split. */
   emr: 'StateWise',
-  cycleMinutes: 60,
+  cycleMinutes: caseloadComposition().weightedVisitMinutes + 15,
   evidenceId: 'EV-026',
 } as const;
 

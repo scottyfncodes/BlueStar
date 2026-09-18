@@ -17,21 +17,26 @@ const base: ScenarioInputs = {
 
 const at = (c: number): ScenarioInputs => ({ ...base, documentationConcurrency: c });
 
+/** 50% EI reproduces a 60-minute cycle, where documentation still binds. */
+const binding: ScenarioInputs = { ...base, eiMixShare: 0.5 };
+const bindingAt = (c: number): ScenarioInputs => ({ ...binding, documentationConcurrency: c });
+
 describe('documentation concurrency — effective visit cycle', () => {
   it('adds no schedule time at 100%', () => {
+    // 40 min weighted patient-facing + 15 min travel.
     const c = visitCycle(at(1));
     expect(c.additionalDocumentationMinutes).toBe(0);
-    expect(c.cycleMinutes).toBe(60);
+    expect(c.cycleMinutes).toBe(55);
   });
 
   it('adds only the share that is neither absorbed nor after-hours', () => {
     // After-hours stays at Ellen's observed 10%, so a drop in in-workday
     // documentation is what pushes minutes into the clinical schedule.
-    expect(visitCycle(at(0.9)).cycleMinutes).toBeCloseTo(60, 6);
-    expect(visitCycle(at(0.75)).cycleMinutes).toBeCloseTo(60.75, 6);
-    expect(visitCycle(at(0.5)).cycleMinutes).toBeCloseTo(62, 6);
-    expect(visitCycle(at(0.25)).cycleMinutes).toBeCloseTo(63.25, 6);
-    expect(visitCycle(at(0)).cycleMinutes).toBeCloseTo(64.5, 6);
+    expect(visitCycle(at(0.9)).cycleMinutes).toBeCloseTo(55, 6);
+    expect(visitCycle(at(0.75)).cycleMinutes).toBeCloseTo(55.75, 6);
+    expect(visitCycle(at(0.5)).cycleMinutes).toBeCloseTo(57, 6);
+    expect(visitCycle(at(0.25)).cycleMinutes).toBeCloseTo(58.25, 6);
+    expect(visitCycle(at(0)).cycleMinutes).toBeCloseTo(59.5, 6);
   });
 
   it('accounts for every documented minute across the three buckets', () => {
@@ -49,70 +54,72 @@ describe('documentation concurrency — effective visit cycle', () => {
 describe('the 8-visit day diagnostic', () => {
   const rows = documentationSensitivity(base, CONCURRENCY_LEVELS, 8);
 
-  it("closes at Ellen's observed 90%, because the other 10% happens at home", () => {
-    // Run 6 concluded the day closed only at 100%. With the real three-way
-    // split the 10% never enters the clinical schedule, so 90% closes too.
-    const closes = rows.filter((r) => r.baselineDayCloses).map((r) => r.concurrency);
-    expect(closes).toEqual([1, 0.9]);
-    expect(rows.find((r) => r.concurrency === 0.9)!.baselineOverageMinutes).toBeCloseTo(0, 6);
+  it('closes at EVERY concurrency level once the real visit length is used', () => {
+    // The knife-edge found earlier was an artifact of an assumed 45-minute
+    // visit. At the observed 40-minute weighted visit the cycle is 55 min, so
+    // 8 visits need 440 of 480 minutes and the day keeps 40 minutes of slack
+    // even with no documentation absorbed at all.
+    expect(rows.every((r) => r.baselineDayCloses)).toBe(true);
+    expect(rows.every((r) => r.baselineOverageMinutes === 0)).toBe(true);
   });
 
   it('reports total modelled time, available time and overage', () => {
     const full = rows.find((r) => r.concurrency === 1)!;
-    expect(full.baselineMinutesRequired).toBe(480);
+    expect(full.baselineMinutesRequired).toBe(440);
     expect(full.workdayMinutes).toBe(480);
     expect(full.baselineOverageMinutes).toBe(0);
 
     const ellen = rows.find((r) => r.concurrency === 0.9)!;
-    expect(ellen.baselineMinutesRequired).toBeCloseTo(480, 6);
+    expect(ellen.baselineMinutesRequired).toBeCloseTo(440, 6);
     expect(ellen.baselineOverageMinutes).toBeCloseTo(0, 6);
 
     const zero = rows.find((r) => r.concurrency === 0)!;
-    expect(zero.baselineMinutesRequired).toBeCloseTo(516, 6);
-    expect(zero.baselineOverageMinutes).toBeCloseTo(36, 6);
+    expect(zero.baselineMinutesRequired).toBeCloseTo(476, 6);
+    expect(zero.baselineOverageMinutes).toBeCloseTo(0, 6);
   });
 
   it('never reports negative overage', () => {
     for (const r of rows) expect(r.baselineOverageMinutes).toBeGreaterThanOrEqual(0);
   });
 
-  it("drops the ceiling from 8 to 7 just below Ellen's observed 90%", () => {
-    expect(scheduleFeasibility(at(0.9)).maxVisitsPerDay).toBe(8);
-    expect(scheduleFeasibility(at(0.89)).maxVisitsPerDay).toBe(7);
+  it('holds the ceiling at 8 across the whole concurrency range', () => {
+    // Documentation concurrency no longer changes capacity at all: the 40-min
+    // visit leaves enough slack to absorb the entire 5 minutes.
+    for (const c of CONCURRENCY_LEVELS) {
+      expect(scheduleFeasibility(at(c)).maxVisitsPerDay, `at ${c}`).toBe(8);
+    }
   });
 
-  it('holds the ceiling at 7 all the way down to 0%', () => {
-    // Still a cliff rather than a slope, just one step lower than Run 6 found.
-    for (const c of [0.75, 0.5, 0.25, 0]) {
-      expect(scheduleFeasibility(at(c)).maxVisitsPerDay, `at ${c}`).toBe(7);
-    }
+  it('would still bite if visits were longer', () => {
+    // Guard that the mechanism still works; it is simply not binding today.
+    const a = scheduleFeasibility(bindingAt(1));
+    const b = scheduleFeasibility(bindingAt(0));
+    expect(b.maxVisitsPerDay).toBeLessThan(a.maxVisitsPerDay);
   });
 });
 
 describe('the concurrency threshold, computed from the model', () => {
-  const t = concurrencyThreshold(base, 8)!;
+  const t = concurrencyThreshold(base, 8);
 
-  it("finds the crossing point at Ellen's observed 90%", () => {
-    expect(t.closesAtFullConcurrency).toBe(true);
-    expect(t.closesAtZeroConcurrency).toBe(false);
-    expect(t.threshold).toBeCloseTo(0.9, 6);
+  it('reports no crossing point, because the day now closes everywhere', () => {
+    expect(t).toBeNull();
   });
 
-  it('agrees with a direct feasibility check either side of the threshold', () => {
-    const closes = (c: number) =>
-      8 * visitCycle(at(c)).cycleMinutes <= scheduleFeasibility(at(c)).workdayMinutes;
-    expect(closes(t.threshold)).toBe(true);
-    expect(closes(t.threshold - 1e-6)).toBe(false);
+  it('still finds a crossing point when visits are long enough to bind', () => {
+    const th = concurrencyThreshold(binding, 8);
+    expect(th).not.toBeNull();
+    expect(th!.closesAtFullConcurrency).toBe(true);
+    expect(th!.closesAtZeroConcurrency).toBe(false);
   });
 
-  it('returns null when the day closes at every level', () => {
-    // A shorter visit gives real slack, so there is no crossing to find.
-    expect(concurrencyThreshold({ ...base, eiMixShare: 0, nonEiVisitMinutes: 30 }, 8)).toBeNull();
-  });
-
-  it('moves when the workday lengthens', () => {
-    // A 9-hour day absorbs all spillover, so 8 visits close everywhere.
-    expect(concurrencyThreshold({ ...base, workdayHours: 9 }, 8)).toBeNull();
+  it('agrees with a direct feasibility check either side of that threshold', () => {
+    const th = concurrencyThreshold(binding, 8)!;
+    const closes = (c: number) => {
+      const i = bindingAt(c);
+      return 8 * visitCycle(i).cycleMinutes <= scheduleFeasibility(i).workdayMinutes;
+    };
+    expect(closes(th.threshold)).toBe(true);
+    expect(closes(th.threshold - 1e-6)).toBe(false);
   });
 });
 
@@ -132,15 +139,18 @@ describe('break-even versus capacity at each level', () => {
     for (const v of values) expect(v).toBeCloseTo(values[0], 6);
   });
 
-  it('remains achievable at every level, but with less headroom', () => {
+  it('remains achievable at every level', () => {
     for (const r of rows) {
       expect(r.breakEvenIsAchievable, `at ${r.label}`).toBe(true);
       expect(r.capacityVsBreakEven).toBe('Capacity exceeds break-even requirement');
     }
-    const full = rows.find((r) => r.concurrency === 1)!;
-    const zero = rows.find((r) => r.concurrency === 0)!;
-    expect(full.maxVisitsPerDay - full.breakEvenVisitsPerDay!)
-      .toBeGreaterThan(zero.maxVisitsPerDay - zero.breakEvenVisitsPerDay!);
+  });
+
+  it('loses headroom only where concurrency actually costs capacity', () => {
+    const b = documentationSensitivity(binding, CONCURRENCY_LEVELS, 8);
+    const full = b.find((r) => r.concurrency === 1)!;
+    const zero = b.find((r) => r.concurrency === 0)!;
+    expect(full.maxVisitsPerDay).toBeGreaterThan(zero.maxVisitsPerDay);
   });
 
   it('reports Not feasible when capacity falls below break-even', () => {
@@ -151,29 +161,30 @@ describe('break-even versus capacity at each level', () => {
 });
 
 describe('downstream models respect feasible capacity at every level', () => {
-  it('revenue falls at the cliff and then stays flat', () => {
+  it('leaves revenue untouched across the concurrency range', () => {
+    // No level costs capacity at the observed visit length, so none costs revenue.
     const rows = documentationSensitivity(base, CONCURRENCY_LEVELS, 8);
-    const full = rows.find((r) => r.concurrency === 1)!;
-    // 90% matches 100% because neither pushes documentation into the schedule.
-    expect(rows.find((r) => r.concurrency === 0.9)!.collectedRevenue)
-      .toBeCloseTo(full.collectedRevenue, 6);
-    const rest = rows.filter((r) => r.concurrency < 0.9);
-    for (const r of rest) {
-      expect(r.collectedRevenue).toBeLessThan(full.collectedRevenue);
-      expect(r.collectedRevenue).toBeCloseTo(rest[0].collectedRevenue, 6);
+    for (const r of rows) {
+      expect(r.collectedRevenue).toBeCloseTo(rows[0].collectedRevenue, 6);
     }
+  });
+
+  it('does cost revenue where concurrency binds', () => {
+    const b = documentationSensitivity(binding, CONCURRENCY_LEVELS, 8);
+    expect(b.find((r) => r.concurrency === 0)!.collectedRevenue)
+      .toBeLessThan(b.find((r) => r.concurrency === 1)!.collectedRevenue);
   });
 
   it('annual volume uses the clamped ceiling, not the requested 8', () => {
     for (const c of [0.75, 0.5, 0.25, 0]) {
-      expect(capacityVolume(at(c)).visitsPerDay, `at ${c}`).toBe(7);
-      expect(annualModel(at(c)).completedVisits).toBeCloseTo(7 * 4 * 46, 6);
+      expect(capacityVolume(bindingAt(c)).visitsPerDay, `at ${c}`).toBe(7);
+      expect(annualModel(bindingAt(c)).completedVisits).toBeCloseTo(7 * 4 * 46, 6);
     }
   });
 
   it('staffing scenarios inherit the reduced ceiling', () => {
-    const full = staffingScenarios(at(1));
-    const reduced = staffingScenarios(at(0.5));
+    const full = staffingScenarios(bindingAt(1));
+    const reduced = staffingScenarios(bindingAt(0.5));
     for (const s of reduced) {
       const f = full.find((x) => x.id === s.id)!;
       expect(s.visitsPerDay, s.label).toBeLessThan(f.visitsPerDay);
@@ -183,7 +194,7 @@ describe('downstream models respect feasible capacity at every level', () => {
 
   it('the cash calendar inherits the reduced ceiling', () => {
     const mk = (c: number) => cashCalendar({
-      scenario: at(c), oneTimeStartup: 5000, monthlyOverhead: 500,
+      scenario: bindingAt(c), oneTimeStartup: 5000, monthlyOverhead: 500,
       preRevenueMonths: 4, rampMonths: 6, startingCash: 50000, horizonMonths: 24,
     });
     const fullCash = mk(1).months.reduce((a, m) => a + m.cashIn, 0);
@@ -214,10 +225,9 @@ describe('impossible schedules stay impossible at every concurrency level', () =
   });
 
   it('still allows a longer workday as the explicit escape hatch', () => {
-    // 65-minute cycle at 0% concurrency; a 9-hour day fits 8 visits again.
-    const f = scheduleFeasibility({ ...at(0), workdayHours: 9 });
-    expect(f.maxVisitsPerDay).toBe(8);
-    expect(f.effectiveVisitsPerDay).toBe(8);
+    // At the binding 50% mix a 9-hour day restores the 8th visit.
+    const f = scheduleFeasibility({ ...bindingAt(0), workdayHours: 9 });
+    expect(f.maxVisitsPerDay).toBeGreaterThanOrEqual(8);
     expect(f.clamped).toBe(false);
   });
 });
@@ -247,13 +257,13 @@ describe("Ellen's observed 90/10 documentation workflow", () => {
     expect(d.documentationAfterHoursShare).toBe(0.1);
   });
 
-  it('puts nothing into the clinical schedule, so the 8-visit day closes', () => {
+  it('puts nothing into the clinical schedule, and leaves slack besides', () => {
     const cy = visitCycle(base);
     const f = scheduleFeasibility(base);
     expect(cy.additionalDocumentationMinutes).toBeCloseTo(0, 6);
-    expect(cy.cycleMinutes).toBeCloseTo(60, 6);
+    expect(cy.cycleMinutes).toBeCloseTo(55, 6);
     expect(f.maxVisitsPerDay).toBe(8);
-    expect(8 * cy.cycleMinutes).toBeCloseTo(f.workdayMinutes, 6);
+    expect(8 * cy.cycleMinutes).toBeLessThan(f.workdayMinutes);
     expect(f.clamped).toBe(false);
   });
 
@@ -262,7 +272,7 @@ describe("Ellen's observed 90/10 documentation workflow", () => {
     // They coincide here, but they are different quantities and must stay so.
     expect(assumptionsById.get('AS-002')!.value).toBe(8);
     expect(assumptionsById.get('AS-002')!.kind).toBe('USER_PROVIDED');
-    const reduced = scheduleFeasibility(at(0.5));
+    const reduced = scheduleFeasibility(bindingAt(0.5));
     expect(reduced.requestedVisitsPerDay).toBe(8);
     expect(reduced.maxVisitsPerDay).toBe(7);
   });
@@ -271,8 +281,8 @@ describe("Ellen's observed 90/10 documentation workflow", () => {
 describe('after-hours documentation is tracked as burden, not capacity', () => {
   it('does not reduce the visit ceiling', () => {
     // Same documentation minutes, but moved after hours instead of into the day.
-    const inDay = scheduleFeasibility({ ...base, documentationConcurrency: 0, documentationAfterHoursShare: 0 });
-    const afterHours = scheduleFeasibility({ ...base, documentationConcurrency: 0, documentationAfterHoursShare: 1 });
+    const inDay = scheduleFeasibility({ ...binding, documentationConcurrency: 0, documentationAfterHoursShare: 0 });
+    const afterHours = scheduleFeasibility({ ...binding, documentationConcurrency: 0, documentationAfterHoursShare: 1 });
     expect(inDay.maxVisitsPerDay).toBe(7);
     expect(afterHours.maxVisitsPerDay).toBe(8);
   });

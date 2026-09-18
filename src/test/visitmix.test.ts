@@ -7,15 +7,17 @@ import {
 import { cashCalendar } from '../model/cash';
 import { defaultScenario, SALARY_TEST_POINTS, ELLEN_BASELINE } from '../model/defaults';
 import { assumptionsById } from '../data/assumptions';
+import { caseloadComposition } from '../model/caseload';
 import { evidenceById } from '../data/evidence';
 
 const base: ScenarioInputs = { ...defaultScenario(), clinicianSalary: SALARY_TEST_POINTS[1].value };
 const atMix = (ei: number): ScenarioInputs => ({ ...base, eiMixShare: ei });
 
 describe('weighted patient-facing time is derived from the mix', () => {
-  it('produces 45 minutes at the observed 50/50 split', () => {
-    // 45 must be the RESULT of (0.5 x 60) + (0.5 x 30), never an input.
-    expect(weightedPatientFacingMinutes(base)).toBe(45);
+  it('produces 40 minutes at the observed ~33% EI visit share', () => {
+    // 40 must be the RESULT of (1/3 x 60) + (2/3 x 30), never an input.
+    expect(weightedPatientFacingMinutes(base)).toBeCloseTo(40, 6);
+    expect(weightedPatientFacingMinutes(atMix(0.5))).toBe(45);
   });
 
   it('produces the pure non-EI length at 0% EI', () => {
@@ -43,27 +45,27 @@ describe('weighted patient-facing time is derived from the mix', () => {
   });
 
   it('responds to a change in either visit length', () => {
-    expect(weightedPatientFacingMinutes({ ...base, eiVisitMinutes: 90 })).toBe(60);
-    expect(weightedPatientFacingMinutes({ ...base, nonEiVisitMinutes: 20 })).toBe(40);
+    expect(weightedPatientFacingMinutes({ ...base, eiVisitMinutes: 90 })).toBeCloseTo(50, 6);
+    expect(weightedPatientFacingMinutes({ ...base, nonEiVisitMinutes: 15 })).toBeCloseTo(30, 6);
   });
 
   it('feeds the visit cycle rather than a standalone assumption', () => {
-    expect(visitCycle(base).patientFacingMinutes).toBe(45);
+    expect(visitCycle(base).patientFacingMinutes).toBeCloseTo(40, 6);
     expect(visitCycle(atMix(1)).patientFacingMinutes).toBe(60);
   });
 });
 
 describe('capacity at the observed baseline', () => {
-  it('gives a 60-minute cycle and a ceiling of 8', () => {
+  it('gives a 55-minute cycle and a ceiling of 8', () => {
     const c = visitCycle(base);
     const f = scheduleFeasibility(base);
-    expect(c.cycleMinutes).toBe(60);
+    expect(c.cycleMinutes).toBeCloseTo(55, 6);
     expect(f.maxVisitsPerDay).toBe(8);
   });
 
-  it('closes the 8-visit day exactly, with no overage', () => {
+  it('closes the 8-visit day with 40 minutes to spare', () => {
     const f = scheduleFeasibility(base);
-    expect(f.minutesRequired).toBe(480);
+    expect(f.minutesRequired).toBeCloseTo(440, 6);
     expect(f.workdayMinutes).toBe(480);
     expect(f.feasible).toBe(true);
     expect(f.clamped).toBe(false);
@@ -81,19 +83,27 @@ describe('visit mix sensitivity', () => {
   const rows = visitMixSensitivity(base, EI_MIX_LEVELS, 8);
 
   it('raises the ceiling as the caseload shifts away from EI', () => {
-    const byMix = Object.fromEntries(rows.map((r) => [r.eiMixShare, r.maxVisitsPerDay]));
-    expect(byMix[0]).toBe(10);
-    expect(byMix[0.25]).toBe(9);
-    expect(byMix[0.5]).toBe(8);
-    expect(byMix[0.75]).toBe(7);
-    expect(byMix[1]).toBe(6);
+    const at = (m: number) => rows.find((r) => Math.abs(r.eiMixShare - m) < 1e-9)!.maxVisitsPerDay;
+    expect(at(0)).toBe(10);
+    expect(at(0.25)).toBe(9);
+    expect(at(1 / 3)).toBe(8);
+    expect(at(0.5)).toBe(8);
+    expect(at(0.75)).toBe(7);
+    expect(at(1)).toBe(6);
   });
 
-  it('puts the observed 50/50 mix exactly at the edge of an 8-visit day', () => {
-    // At 50% EI the day closes precisely; any further shift toward EI breaks it.
+  it('closes an 8-visit day up to and including a 50% EI share', () => {
+    // 50% is the last level that fits; beyond it the day breaks.
     const closes = rows.filter((r) => r.baselineDayCloses).map((r) => r.eiMixShare);
-    expect(closes).toEqual([0, 0.25, 0.5]);
+    expect(closes).toEqual([0, 0.25, 1 / 3, 0.5]);
     expect(rows.find((r) => r.eiMixShare === 0.5)!.baselineOverageMinutes).toBeCloseTo(0, 6);
+  });
+
+  it("leaves slack at Ellen's observed share, unlike the earlier 50/50 estimate", () => {
+    const observed = rows.find((r) => r.eiMixShare === 1 / 3)!;
+    const fiftyFifty = rows.find((r) => r.eiMixShare === 0.5)!;
+    expect(observed.cycleMinutes).toBeCloseTo(55, 6);
+    expect(observed.baselineMinutesRequired).toBeLessThan(fiftyFifty.baselineMinutesRequired);
   });
 
   it('makes an all-EI caseload unable to reach break-even', () => {
@@ -111,9 +121,8 @@ describe('visit mix sensitivity', () => {
 
   it('adds capacity headroom rather than revenue below the observed mix', () => {
     // Requested visits/day stays at 8, so a higher ceiling is slack, not income.
-    const lighter = rows.filter((r) => r.eiMixShare < 0.5);
     const baseline = rows.find((r) => r.eiMixShare === 0.5)!;
-    for (const r of lighter) {
+    for (const r of rows.filter((x) => x.eiMixShare < 1 / 3)) {
       expect(r.maxVisitsPerDay).toBeGreaterThan(baseline.maxVisitsPerDay);
       expect(r.collectedRevenue).toBeCloseTo(baseline.collectedRevenue, 6);
     }
@@ -172,8 +181,9 @@ describe('mix changes propagate through the single model path', () => {
   });
 
   it('still lets documentation concurrency propagate independently', () => {
-    const a = scheduleFeasibility(base);
-    const b = scheduleFeasibility({ ...base, documentationConcurrency: 0.5 });
+    // At a 50% EI mix the cycle is 60 min, where concurrency still binds.
+    const a = scheduleFeasibility(atMix(0.5));
+    const b = scheduleFeasibility({ ...atMix(0.5), documentationConcurrency: 0.5 });
     expect(b.maxVisitsPerDay).toBeLessThan(a.maxVisitsPerDay);
   });
 });
@@ -213,25 +223,90 @@ describe('provenance for the visit mix', () => {
     for (const id of ['AS-013', 'AS-018', 'AS-019']) {
       const a = assumptionsById.get(id)!;
       expect(a.kind, id).toBe('USER_PROVIDED');
-      expect(a.evidenceIds, id).toContain('EV-027');
+      // Visit lengths trace to EV-027; the mix is now measured in EV-030.
+      const refs = a.evidenceIds.map((e) => evidenceById.get(e)!);
+      expect(refs.some((r) => r.retrieval === 'user-reported'), id).toBe(true);
     }
     expect(evidenceById.get('EV-027')!.retrieval).toBe('user-reported');
+    expect(evidenceById.get('EV-030')!.retrieval).toBe('user-reported');
   });
 
-  it('labels the 50/50 mix as approximate rather than settled', () => {
+  it('upgrades the mix from an estimate to a measurement', () => {
+    // It was 50/50 and "Reasonable estimate"; the caseload cohorts measure it.
     const mix = assumptionsById.get('AS-019')!;
-    expect(mix.confidence).toBe('Reasonable estimate');
-    expect(mix.source).toMatch(/approximate/i);
-    expect(mix.whyThisValue).toMatch(/APPROXIMATELY/);
+    expect(mix.confidence).toBe('Strong evidence');
+    expect(mix.kind).toBe('USER_PROVIDED');
+    expect(mix.value!).toBeCloseTo(1 / 3, 9);
+    expect(mix.whyThisValue).toMatch(/DERIVED/);
   });
 
-  it('exposes the mix on the baseline constant with 45 marked as derived', () => {
-    expect(ELLEN_BASELINE.eiMixShare).toBe(0.5);
+  it('keeps the visit share and the patient share as separate assumptions', () => {
+    const visitShare = assumptionsById.get('AS-019')!.value!;
+    const patientShare = assumptionsById.get('AS-031')!.value!;
+    expect(visitShare).not.toBeCloseTo(patientShare, 3);
+    expect(assumptionsById.get('AS-031')!.whyThisValue).toMatch(/separate assumption from AS-019/);
+  });
+
+  it('exposes the mix on the baseline constant with duration marked as derived', () => {
+    expect(ELLEN_BASELINE.eiMixShare).toBeCloseTo(1 / 3, 9);
     expect(ELLEN_BASELINE.eiVisitMinutes).toBe(60);
     expect(ELLEN_BASELINE.nonEiVisitMinutes).toBe(30);
     expect(
       ELLEN_BASELINE.eiVisitMinutes * ELLEN_BASELINE.eiMixShare
         + ELLEN_BASELINE.nonEiVisitMinutes * (1 - ELLEN_BASELINE.eiMixShare),
-    ).toBe(ELLEN_BASELINE.patientFacingMinutes);
+    ).toBeCloseTo(ELLEN_BASELINE.patientFacingMinutes, 9);
+  });
+});
+
+describe('observed caseload composition', () => {
+  const c = caseloadComposition();
+
+  it('sums the cohorts Ellen reported', () => {
+    expect(c.totalPatients).toBe(25);
+    expect(c.totalVisitsPerWeek).toBe(33);
+    expect(c.totalPatientFacingMinutesPerWeek).toBe(1320);
+  });
+
+  it('derives the weighted visit length', () => {
+    expect(c.weightedVisitMinutes).toBeCloseTo(40, 9);
+  });
+
+  it('separates the EI visit share from the EI patient share', () => {
+    // 11 of 33 visits, but 11 of 25 patients. The gap exists because EI
+    // children are seen weekly and some non-EI children twice weekly.
+    expect(c.eiVisitShare).toBeCloseTo(11 / 33, 9);
+    expect(c.eiPatientShare).toBeCloseTo(11 / 25, 9);
+    expect(c.eiVisitShare).toBeLessThan(c.eiPatientShare);
+  });
+
+  it('derives per-type visit frequency', () => {
+    expect(c.eiVisitsPerPatientPerWeek).toBeCloseTo(1, 9);
+    expect(c.nonEiVisitsPerPatientPerWeek).toBeCloseTo(22 / 14, 9);
+    expect(c.nonEiVisitsPerPatientPerWeek).toBeGreaterThan(c.eiVisitsPerPatientPerWeek);
+  });
+
+  it('accounts for every patient and visit across the cohorts', () => {
+    expect(c.cohorts.reduce((a, x) => a + x.patients, 0)).toBe(c.totalPatients);
+    expect(c.cohorts.reduce((a, x) => a + x.visitsPerWeek, 0)).toBe(c.totalVisitsPerWeek);
+    expect(c.cohorts.reduce((a, x) => a + x.shareOfVisits, 0)).toBeCloseTo(1, 9);
+    expect(c.eiPatients + c.nonEiPatients).toBe(c.totalPatients);
+  });
+
+  it('reports the unreconciled gap against the stated totals', () => {
+    // Cohorts sum to 25 patients / 33 visits; Ellen stated 23 / 32.
+    expect(c.reconciles).toBe(false);
+    expect(c.patientCountGap).toBe(2);
+    expect(c.visitCountGap).toBe(1);
+  });
+
+  it('recomputes cleanly for a hypothetical caseload', () => {
+    const alt = caseloadComposition([
+      { id: 'X', label: 'All EI', patients: 10, visitsPerPatientPerWeek: 2, visitMinutes: 60, isEarlyIntervention: true },
+    ]);
+    expect(alt.totalVisitsPerWeek).toBe(20);
+    expect(alt.eiVisitShare).toBe(1);
+    expect(alt.eiPatientShare).toBe(1);
+    expect(alt.weightedVisitMinutes).toBe(60);
+    expect(alt.nonEiVisitsPerPatientPerWeek).toBe(0);
   });
 });

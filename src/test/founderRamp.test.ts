@@ -6,6 +6,7 @@ import {
 import {
   scheduleFeasibility, capacityVolume, annualModel, weightedPatientFacingMinutes,
 } from '../model/economics';
+import { caseloadComposition } from '../model/caseload';
 import { defaultScenario, RAMP_SCENARIO_DEFAULTS } from '../model/defaults';
 import { assumptionsById } from '../data/assumptions';
 
@@ -22,6 +23,7 @@ const inputs: FounderRampInputs = {
   nonEiVisitsPerPatientPerWeek: 1,
   monthlyDischargeRate: 0,
   clinicianCount: 1,
+  eiPatientShare: 0.5,
   ownerCompBeforeTransition: 0,
   targetOwnerCompAfterTransition: 90000,
   minimumCashReserve: 10000,
@@ -53,12 +55,24 @@ describe('patients produce visits via frequency, not a flat revenue figure', () 
     expect(b.months[0].demandVisitsPerWeek).toBeCloseTo(a.months[0].demandVisitsPerWeek * 2, 6);
   });
 
-  it('splits the census by the existing EI mix assumption', () => {
-    const r = founderRamp({ ...inputs, startingActivePatients: 10, newPatientsPerWeek: 0 });
+  it('splits the census by the EI PATIENT share, not the visit share', () => {
+    // The two differ whenever the groups are seen at different frequencies.
+    const r = founderRamp({
+      ...inputs, startingActivePatients: 10, newPatientsPerWeek: 0, eiPatientShare: 0.44,
+    });
     const m = r.months[0];
-    expect(m.eiMixShare).toBe(scenario.eiMixShare);
+    expect(m.eiMixShare).toBe(0.44);
     expect(m.eiPatients + m.nonEiPatients).toBeCloseTo(m.activePatients, 6);
-    expect(m.eiPatients).toBeCloseTo(10 * scenario.eiMixShare, 6);
+    expect(m.eiPatients).toBeCloseTo(4.4, 6);
+  });
+
+  it('is unaffected by the visit-share assumption when splitting the census', () => {
+    const a = founderRamp({ ...inputs, startingActivePatients: 10, newPatientsPerWeek: 0 });
+    const b = founderRamp({
+      ...inputs, startingActivePatients: 10, newPatientsPerWeek: 0,
+      scenario: { ...scenario, eiMixShare: 0.9 },
+    });
+    expect(b.months[0].eiPatients).toBeCloseTo(a.months[0].eiPatients, 6);
   });
 
   it('uses EI and non-EI frequencies separately', () => {
@@ -278,10 +292,11 @@ describe('milestones', () => {
 });
 
 describe('capacity in patients', () => {
-  it('derives the patient census a clinician can carry', () => {
+  it('derives the patient census a clinician can carry from the WEEKLY ceiling', () => {
+    // Weekly, not daily x days: a caseload is carried across the week, and
+    // flooring per day would discard the slack each day leaves behind.
     const p = patientsAtCapacity(inputs)!;
-    const vol = capacityVolume(scenario);
-    expect(p).toBeCloseTo((8 * vol.workingDaysPerWeek) / 1, 6);
+    expect(p).toBeCloseTo(scheduleFeasibility(scenario).maxVisitsPerWeek, 6);
   });
 
   it('halves when each patient is seen twice as often', () => {
@@ -327,7 +342,8 @@ describe('sensitivity matrix', () => {
 
 describe('the model reuses the authoritative chain', () => {
   it('takes visit duration from the existing visit-mix model', () => {
-    expect(weightedPatientFacingMinutes(scenario)).toBe(45);
+    // 33% of visits at 60 min + 67% at 30 min = 40 min weighted.
+    expect(weightedPatientFacingMinutes(scenario)).toBeCloseTo(40, 6);
     const allEi = founderRamp({ ...inputs, scenario: { ...scenario, eiMixShare: 1 } });
     expect(allEi.capacityVisitsPerDay).toBeLessThan(founderRamp(inputs).capacityVisitsPerDay);
   });
@@ -360,12 +376,28 @@ describe('unknown inputs are surfaced, not filled in', () => {
     expect(r.missingInputs.join(' ')).toMatch(/AS-020/);
   });
 
-  it('keeps every ramp driver null in the assumption register', () => {
-    for (const id of ['AS-020', 'AS-021', 'AS-022', 'AS-023', 'AS-024', 'AS-025']) {
+  it('keeps the still-unknown ramp drivers null in the assumption register', () => {
+    // Visit frequency and caseload size are now observed; acquisition,
+    // discharge, compensation target and cash reserve remain unknown.
+    for (const id of ['AS-022', 'AS-023', 'AS-024', 'AS-025']) {
       const a = assumptionsById.get(id)!;
       expect(a.value, id).toBeNull();
       expect(a.confidence, id).toBe('Unknown');
     }
+  });
+
+  it('records the newly observed ramp drivers as user-provided', () => {
+    const c = caseloadComposition();
+    for (const id of ['AS-020', 'AS-021', 'AS-027', 'AS-031']) {
+      const a = assumptionsById.get(id)!;
+      expect(a.value, id).not.toBeNull();
+      expect(a.kind, id).toBe('USER_PROVIDED');
+      expect(a.evidenceIds, id).toContain('EV-030');
+    }
+    expect(assumptionsById.get('AS-020')!.value).toBeCloseTo(c.eiVisitsPerPatientPerWeek, 9);
+    expect(assumptionsById.get('AS-021')!.value!).toBeCloseTo(c.nonEiVisitsPerPatientPerWeek, 9);
+    expect(assumptionsById.get('AS-027')!.value).toBe(c.totalPatients);
+    expect(assumptionsById.get('AS-031')!.value!).toBeCloseTo(c.eiPatientShare, 9);
   });
 
   it('records the $0 pre-transition compensation as user-provided', () => {
@@ -407,9 +439,10 @@ describe('deriving visit frequency from caseload size', () => {
   const scen = defaultScenario();
 
   it('divides weekly visits by caseload for the blended rate', () => {
-    // 8 visits x 4 scheduled days = 32 visits/week.
-    const d = deriveFrequencyFromCaseload(scen, 32)!;
-    expect(d.weeklyVisits).toBeCloseTo(32, 6);
+    // Weekly ceiling at the observed 55-minute cycle.
+    const cap = scheduleFeasibility(scen).maxVisitsPerWeek;
+    const d = deriveFrequencyFromCaseload(scen, cap)!;
+    expect(d.weeklyVisits).toBeCloseTo(cap, 6);
     expect(d.blendedVisitsPerPatientPerWeek).toBeCloseTo(1, 6);
   });
 
@@ -431,7 +464,7 @@ describe('deriving visit frequency from caseload size', () => {
   });
 
   it('splits patients to match the visit mix when both types are seen equally', () => {
-    const d = deriveFrequencyFromCaseload(scen, 40, 1)!;
+    const d = deriveFrequencyFromCaseload({ ...scen, eiMixShare: 0.5 }, 40, 1)!;
     expect(d.eiPatients).toBeCloseTo(20, 6);
     expect(d.nonEiPatients).toBeCloseTo(20, 6);
     expect(d.eiVisitsPerPatientPerWeek).toBeCloseTo(d.nonEiVisitsPerPatientPerWeek, 6);
@@ -439,7 +472,7 @@ describe('deriving visit frequency from caseload size', () => {
 
   it('shifts the patient mix away from the visit mix when EI is seen more often', () => {
     // 50% of VISITS being EI does not mean 50% of PATIENTS are EI.
-    const d = deriveFrequencyFromCaseload(scen, 40, 2)!;
+    const d = deriveFrequencyFromCaseload({ ...scen, eiMixShare: 0.5 }, 40, 2)!;
     expect(d.eiPatients).toBeCloseTo(40 / 3, 6);
     expect(d.nonEiPatients).toBeCloseTo(80 / 3, 6);
     expect(d.eiVisitsPerPatientPerWeek)
@@ -461,20 +494,40 @@ describe('deriving visit frequency from caseload size', () => {
     expect(d.eiPatients * d.eiVisitsPerPatientPerWeek).toBeCloseTo(d.weeklyVisits * 0.5, 6);
   });
 
-  it('round-trips through the ramp back to the observed 8-visit day', () => {
-    // The real integration check: feed the derived frequency into the ramp at
-    // the matching census and the demand must land back on 8 visits/day.
-    const caseload = 30;
-    const d = deriveFrequencyFromCaseload(scen, caseload, 1)!;
+  it("round-trips Ellen's real caseload back to her real weekly volume", () => {
+    // The integration check that matters: her observed cohorts, fed through the
+    // ramp at her observed census, must reproduce her observed weekly visits.
+    const c = caseloadComposition();
     const r = founderRamp({
       ...inputs,
-      startingActivePatients: caseload,
+      scenario: defaultScenario(),
+      startingActivePatients: c.totalPatients,
       newPatientsPerWeek: 0,
-      eiVisitsPerPatientPerWeek: d.eiVisitsPerPatientPerWeek,
-      nonEiVisitsPerPatientPerWeek: d.nonEiVisitsPerPatientPerWeek,
+      eiPatientShare: c.eiPatientShare,
+      eiVisitsPerPatientPerWeek: c.eiVisitsPerPatientPerWeek,
+      nonEiVisitsPerPatientPerWeek: c.nonEiVisitsPerPatientPerWeek,
     });
-    expect(r.months[0].demandVisitsPerDay).toBeCloseTo(8, 6);
-    expect(r.months[0].overflowVisitsPerDay).toBeCloseTo(0, 6);
+    expect(r.months[0].demandVisitsPerWeek).toBeCloseTo(c.totalVisitsPerWeek, 6);
+    // Her 33 weekly visits sit under the weekly ceiling of 34...
+    expect(c.totalVisitsPerWeek).toBeLessThanOrEqual(scheduleFeasibility(defaultScenario()).maxVisitsPerWeek);
+  });
+
+  it('shows the day-flooring artifact rather than hiding it', () => {
+    // 33 visits over 4 days is 8.25/day, which exceeds the integer daily
+    // ceiling of 8 even though the WEEK fits comfortably. Real weeks vary —
+    // some days 8, some 9 — so the weekly figure is the honest constraint.
+    const c = caseloadComposition();
+    const r = founderRamp({
+      ...inputs,
+      scenario: defaultScenario(),
+      startingActivePatients: c.totalPatients,
+      newPatientsPerWeek: 0,
+      eiPatientShare: c.eiPatientShare,
+      eiVisitsPerPatientPerWeek: c.eiVisitsPerPatientPerWeek,
+      nonEiVisitsPerPatientPerWeek: c.nonEiVisitsPerPatientPerWeek,
+    });
+    expect(r.months[0].demandVisitsPerDay).toBeCloseTo(8.25, 6);
+    expect(r.months[0].overflowVisitsPerDay).toBeCloseTo(0.25, 6);
   });
 
   it('scales with clinician count', () => {
@@ -489,10 +542,10 @@ describe('deriving visit frequency from caseload size', () => {
     expect(deriveFrequencyFromCaseload(scen, 40, 0)).toBeNull();
   });
 
-  it('keeps the caseload assumption unknown until Ellen answers', () => {
+  it('now carries the observed caseload size, with the discrepancy noted', () => {
     const a = assumptionsById.get('AS-027')!;
-    expect(a.value).toBeNull();
-    expect(a.confidence).toBe('Unknown');
-    expect(a.whyThisValue).toMatch(/does not establish how many children/);
+    expect(a.value).toBe(25);
+    expect(a.kind).toBe('USER_PROVIDED');
+    expect(a.whyThisValue).toMatch(/DISCREPANCY/);
   });
 });

@@ -37,13 +37,20 @@ export interface FounderRampInputs {
   /** Manual month-by-month additions, so real results can replace scenarios. */
   manualMonthlyAdditions: number[];
 
-  /** SCENARIO — visit frequency is unknown (AS-020 / AS-021). */
+  /** Observed from Ellen's caseload (AS-020 / AS-021). */
   eiVisitsPerPatientPerWeek: number;
   nonEiVisitsPerPatientPerWeek: number;
   /** SCENARIO — monthly discharge rate as a fraction of census (AS-023). */
   monthlyDischargeRate: number;
 
   clinicianCount: number;
+  /**
+   * EI share of PATIENTS (AS-031), NOT the EI share of visits (AS-019). A
+   * census splits by patient; only visit duration splits by visit. The two
+   * differ here because EI children are seen weekly and some non-EI children
+   * twice weekly.
+   */
+  eiPatientShare: number;
 
   ownerCompBeforeTransition: number;
   /** Annual target. UNKNOWN by default (AS-024) — distinct from clinician salary. */
@@ -109,13 +116,14 @@ export interface FounderRamp {
 /** Patients a clinician can carry, given visit frequency and the visit ceiling. */
 export function patientsAtCapacity(i: FounderRampInputs): number | null {
   const visitsPerPatientPerWeek =
-    i.eiVisitsPerPatientPerWeek * i.scenario.eiMixShare
-    + i.nonEiVisitsPerPatientPerWeek * (1 - i.scenario.eiMixShare);
+    i.eiVisitsPerPatientPerWeek * i.eiPatientShare
+    + i.nonEiVisitsPerPatientPerWeek * (1 - i.eiPatientShare);
   if (visitsPerPatientPerWeek <= 0) return null;
 
-  const volume = capacityVolume(i.scenario);
+  // Weekly ceiling, not daily x days: a caseload is carried across the week, so
+  // flooring per day would discard the part-visit of slack each day leaves.
   const capacityVisitsPerWeek =
-    scheduleFeasibility(i.scenario).maxVisitsPerDay * volume.workingDaysPerWeek * i.clinicianCount;
+    scheduleFeasibility(i.scenario).maxVisitsPerWeek * i.clinicianCount;
   return capacityVisitsPerWeek / visitsPerPatientPerWeek;
 }
 
@@ -155,7 +163,7 @@ export function founderRamp(i: FounderRampInputs): FounderRamp {
       const added = m === 1 ? 0 : newPatientsForMonth(i, m);
       active = Math.max(0, active - discharged + added);
 
-      const eiShare = Math.min(1, Math.max(0, i.scenario.eiMixShare));
+      const eiShare = Math.min(1, Math.max(0, i.eiPatientShare));
       const eiPatients = active * eiShare;
       const nonEiPatients = active * (1 - eiShare);
 
@@ -286,7 +294,7 @@ export function rampMilestones(i: FounderRampInputs): Milestone[] {
   }
 
   return levels.map(({ label, patients }) => {
-    const eiShare = Math.min(1, Math.max(0, i.scenario.eiMixShare));
+    const eiShare = Math.min(1, Math.max(0, i.eiPatientShare));
     const visitsPerWeek =
       patients * eiShare * i.eiVisitsPerPatientPerWeek
       + patients * (1 - eiShare) * i.nonEiVisitsPerPatientPerWeek;
@@ -479,9 +487,8 @@ export function deriveFrequencyFromCaseload(
 ): DerivedFrequency | null {
   if (!(caseloadSize > 0) || !(eiFrequencyRatio > 0)) return null;
 
-  const volume = capacityVolume(scenario);
   const weeklyVisits =
-    scheduleFeasibility(scenario).maxVisitsPerDay * volume.workingDaysPerWeek * clinicianCount;
+    scheduleFeasibility(scenario).maxVisitsPerWeek * clinicianCount;
 
   const eiVisitShare = Math.min(1, Math.max(0, scenario.eiMixShare));
   const r = eiFrequencyRatio;

@@ -720,6 +720,29 @@ export const evidence: Evidence[] = [
     notes:
       'This corrects the earlier characterisation of an 8-visit day across a generic working week (EV-025). The 8 visits/day figure itself is unchanged; what changed is how many days per week carry that load, and what happens to cancellations.',
   },
+  {
+    id: 'EV-030',
+    category: '14-Operations',
+    topic: "Ellen's observed caseload composition",
+    claim:
+      "Ellen's current schedule of weekly visits comprises: 6 patients seen once weekly at 30 minutes; 8 patients seen twice weekly at 30 minutes; and 11 patients seen once weekly at 60 minutes. She separately stated 23 distinct patients and 32 visits per week.",
+    source: 'Ellen — current observed caseload (first-hand report)',
+    url: 'https://github.com/scottyfncodes/BlueStar',
+    document: "Ellen's caseload composition, reported by Scott",
+    publicationDate: null,
+    effectiveDate: '2026-09-18',
+    accessedDate: '2026-09-18',
+    section: null,
+    appliesTo: ['Capacity', 'Visit mix', 'Visit frequency', 'Founder ramp', 'Revenue model'],
+    interpretation:
+      'This single report resolves four previously unknown or estimated inputs and corrects two. Visit frequency (AS-020, AS-021) was null and is now observed. Caseload size (AS-027) was null and is now 25. The EI share was estimated at 50% of visits and is actually 33%, which drops the weighted visit length from an assumed 45 minutes to 40 and shortens the visit cycle from 60 to 55 minutes. Most importantly it exposes a distinction the model had been eliding: EI is 33% of VISITS but 44% of PATIENTS, because EI children are seen weekly while some non-EI children are seen twice weekly. Visit duration must use the visit share; a patient census must use the patient share.',
+    confidence: 'Strong evidence',
+    retrieval: 'user-reported',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-12-01',
+    notes:
+      'UNRESOLVED ARITHMETIC. The itemised cohorts sum to 25 patients and 33 weekly visits, against the separately stated 23 patients and 32 visits. The model uses the cohort figures because they are itemised and internally consistent, and surfaces both gaps. The difference is small but it has not been reconciled, and either figure could be the correct one.',
+  },
 ];
 
 export const evidenceById = new Map(evidence.map((e) => [e.id, e]));

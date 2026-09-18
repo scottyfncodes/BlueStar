@@ -8,14 +8,17 @@ import {
   type FounderRampInputs, type PatientGrowthMode,
 } from '../model/founderRamp';
 import { defaultScenario, RAMP_SCENARIO_DEFAULTS, FOUNDER_RAMP_SCENARIO_NAME, ELLEN_BASELINE } from '../model/defaults';
+import { caseloadComposition } from '../model/caseload';
 
 export function FounderRamp() {
   const D = RAMP_SCENARIO_DEFAULTS;
+  const comp = caseloadComposition();
   const [eiMixShare, setEiMix] = useState(defaultScenario().eiMixShare);
+  const [eiPatientShare, setEiPatientShare] = useState(comp.eiPatientShare);
   const [growthMode, setGrowthMode] = useState<PatientGrowthMode>('weekly');
   const [newPatientsPerWeek, setAcq] = useState<number>(D.newPatientsPerWeek);
-  const [eiFreq, setEiFreq] = useState<number>(D.eiVisitsPerPatientPerWeek);
-  const [nonEiFreq, setNonEiFreq] = useState<number>(D.nonEiVisitsPerPatientPerWeek);
+  const [eiFreq, setEiFreq] = useState<number>(comp.eiVisitsPerPatientPerWeek);
+  const [nonEiFreq, setNonEiFreq] = useState<number>(comp.nonEiVisitsPerPatientPerWeek);
   const [discharge, setDischarge] = useState<number>(D.monthlyDischargeRate);
   const [targetComp, setTargetComp] = useState<number>(D.targetOwnerCompAfterTransition);
   const [reserve, setReserve] = useState<number>(D.minimumCashReserve);
@@ -42,6 +45,7 @@ export function FounderRamp() {
     nonEiVisitsPerPatientPerWeek: effectiveNonEiFreq,
     monthlyDischargeRate: discharge,
     clinicianCount: clinicians,
+    eiPatientShare,
     ownerCompBeforeTransition: 0,
     targetOwnerCompAfterTransition: targetComp,
     minimumCashReserve: reserve,
@@ -49,8 +53,8 @@ export function FounderRamp() {
     startingCash: D.startingCash,
     horizonMonths: 24,
     censusTarget: D.censusTarget,
-  }), [eiMixShare, growthMode, newPatientsPerWeek, effectiveEiFreq, effectiveNonEiFreq,
-       discharge, clinicians, targetComp, reserve, override, D]);
+  }), [eiMixShare, eiPatientShare, growthMode, newPatientsPerWeek, effectiveEiFreq,
+       effectiveNonEiFreq, discharge, clinicians, targetComp, reserve, override, D]);
 
   const ramp = founderRamp(inputs);
   const stones = rampMilestones(inputs);
@@ -65,13 +69,48 @@ export function FounderRamp() {
         transition criteria you select.
       </p>
 
-      <Callout tone="bad" title="Everything below runs on SCENARIO values, not evidence">
-        The two inputs that actually drive this timeline — how often a patient is seen (AS-020 /
-        AS-021) and how fast patients arrive (AS-022) — are <strong style={{ display: 'inline' }}>unknown</strong>.
-        So are the compensation target (AS-024) and cash reserve (AS-025). The assumption register
-        holds all of them as null. The numbers here exist so the structure can be explored and the
-        missing inputs made obvious. <strong style={{ display: 'inline' }}>This is not a forecast.</strong>
+      <Callout tone="warn" title="Visit frequency is now observed; acquisition still is not">
+        Visit frequency and caseload composition now come from Ellen's actual schedule (AS-020,
+        AS-021, AS-027, AS-031). What remains unknown is how fast patients arrive (AS-022), the
+        compensation target (AS-024) and the cash reserve (AS-025) — those are still scenario
+        controls, so the TIMELINE is a scenario even though the per-patient economics are observed.
       </Callout>
+
+      <Card title="Ellen's observed caseload">
+        <Table head={<tr><th>Cohort</th><th className="num">Patients</th><th className="num">Visits/wk</th><th className="num">Minutes</th></tr>}>
+          {comp.cohorts.map((c) => (
+            <tr key={c.id}>
+              <td>{c.label}{c.isEarlyIntervention && <div><span className="pill accent">EI</span></div>}</td>
+              <td className="num">{c.patients}</td>
+              <td className="num">{num(c.visitsPerWeek, 0)}</td>
+              <td className="num">{c.visitMinutes}</td>
+            </tr>
+          ))}
+          <tr style={{ fontWeight: 600 }}>
+            <td>Total</td>
+            <td className="num">{comp.totalPatients}</td>
+            <td className="num">{num(comp.totalVisitsPerWeek, 0)}</td>
+            <td className="num">{num(comp.weightedVisitMinutes, 0)} avg</td>
+          </tr>
+        </Table>
+        <div className="grid" style={{ marginTop: 10 }}>
+          <Stat label="EI share of VISITS" value={pct(comp.eiVisitShare * 100, 1)} note="Drives visit duration" />
+          <Stat label="EI share of PATIENTS" value={pct(comp.eiPatientShare * 100, 1)} note="Drives the census split" />
+          <Stat label="EI visits/patient/week" value={num(comp.eiVisitsPerPatientPerWeek, 2)} />
+          <Stat label="Non-EI visits/patient/week" value={num(comp.nonEiVisitsPerPatientPerWeek, 2)} />
+        </div>
+        {!comp.reconciles && (
+          <Callout tone="bad" title="These cohorts do not reconcile with the stated totals">
+            The itemised cohorts sum to <strong style={{ display: 'inline' }}>{comp.totalPatients} patients
+            and {num(comp.totalVisitsPerWeek, 0)} visits/week</strong>, against a separately stated{' '}
+            {comp.statedPatients} patients and {num(comp.statedVisitsPerWeek, 0)} visits/week — a gap of{' '}
+            {comp.patientCountGap} patient{Math.abs(comp.patientCountGap) === 1 ? '' : 's'} and{' '}
+            {comp.visitCountGap} visit{Math.abs(comp.visitCountGap) === 1 ? '' : 's'}. The model uses the
+            cohort figures because they are itemised and internally consistent, but this is unresolved
+            and either figure could be the right one.
+          </Callout>
+        )}
+      </Card>
 
       <Card title={FOUNDER_RAMP_SCENARIO_NAME}>
         <p className="small" style={{ marginTop: 0 }}>{rampNarrative(inputs)}</p>
@@ -210,10 +249,16 @@ export function FounderRamp() {
           </>
         )}
         <div className="ctl">
-          <label><span>EI share of caseload</span><span>{pct(eiMixShare * 100)}</span></label>
-          <input type="range" min={0} max={1} step={0.05} value={eiMixShare}
+          <label><span>EI share of VISITS</span><span>{pct(eiMixShare * 100)}</span></label>
+          <input type="range" min={0} max={1} step={0.01} value={eiMixShare}
             onChange={(e) => setEiMix(Number(e.target.value))} />
-          <div className="src">AS-019 · Ellen's approximate current mix · reasonable estimate, needs confirmation</div>
+          <div className="src">AS-019 · observed · drives visit duration</div>
+        </div>
+        <div className="ctl">
+          <label><span>EI share of PATIENTS</span><span>{pct(eiPatientShare * 100)}</span></label>
+          <input type="range" min={0} max={1} step={0.01} value={eiPatientShare}
+            onChange={(e) => setEiPatientShare(Number(e.target.value))} />
+          <div className="src">AS-031 · observed · drives the census split — a different number from the visit share</div>
         </div>
         <div className="ctl">
           <label><span>Monthly discharge rate</span><span>{pct(discharge * 100)}</span></label>

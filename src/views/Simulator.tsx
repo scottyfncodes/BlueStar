@@ -8,6 +8,7 @@ import {
   type ScenarioInputs,
 } from '../model/economics';
 import { defaultScenario, SALARY_TEST_POINTS, ELLEN_BASELINE } from '../model/defaults';
+import { caseloadComposition } from '../model/caseload';
 
 function Slider({
   label, value, min, max, step, onChange, format, source,
@@ -38,6 +39,7 @@ export function Simulator() {
   const volume = capacityVolume(s);
   const revenue = revenueBreakdown(s);
   const week = weeklySchedule(s);
+  const comp = caseloadComposition();
   const baselineVisits = ELLEN_BASELINE.visitsPerDay;
   const sensitivity = documentationSensitivity(s, CONCURRENCY_LEVELS, baselineVisits);
   const threshold = concurrencyThreshold(s, baselineVisits);
@@ -139,6 +141,38 @@ export function Simulator() {
         <Slider label="Total working days per year" value={s.workingDaysPerYear} min={180} max={260} step={1}
           onChange={(v) => set({ workingDaysPerYear: v })} format={(v) => `${v} days`}
           source={`AS-012 · net of PTO and holidays · scheduled + makeup days, implying ${num(week.workingWeeksPerYear, 0)} working weeks/year`} />
+      </Card>
+
+      <Card title="Ellen's observed caseload">
+        <Table head={<tr><th>Cohort</th><th className="num">Patients</th><th className="num">Visits/wk</th><th className="num">Min</th></tr>}>
+          {comp.cohorts.map((c) => (
+            <tr key={c.id}>
+              <td>{c.label}{c.isEarlyIntervention && <div><span className="pill accent">EI</span></div>}</td>
+              <td className="num">{c.patients}</td>
+              <td className="num">{num(c.visitsPerWeek, 0)}</td>
+              <td className="num">{c.visitMinutes}</td>
+            </tr>
+          ))}
+          <tr style={{ fontWeight: 600 }}>
+            <td>Total</td><td className="num">{comp.totalPatients}</td>
+            <td className="num">{num(comp.totalVisitsPerWeek, 0)}</td>
+            <td className="num">{num(comp.weightedVisitMinutes, 0)} avg</td>
+          </tr>
+        </Table>
+        <div className="grid" style={{ marginTop: 10 }}>
+          <Stat label="EI share of VISITS" value={pct(comp.eiVisitShare * 100, 1)} note="Drives visit duration" />
+          <Stat label="EI share of PATIENTS" value={pct(comp.eiPatientShare * 100, 1)} note="Drives a census split" />
+          <Stat label="EI visits/patient/wk" value={num(comp.eiVisitsPerPatientPerWeek, 2)} />
+          <Stat label="Non-EI visits/patient/wk" value={num(comp.nonEiVisitsPerPatientPerWeek, 2)} note="Seen more often, despite shorter visits" />
+        </div>
+        {!comp.reconciles && (
+          <Callout tone="bad" title="Unreconciled against the stated totals">
+            The itemised cohorts sum to {comp.totalPatients} patients and {num(comp.totalVisitsPerWeek, 0)} visits/week,
+            against a separately stated {comp.statedPatients} patients and {num(comp.statedVisitsPerWeek, 0)} visits/week
+            — a gap of {comp.patientCountGap} patients and {comp.visitCountGap} visit. The model uses the cohorts
+            because they are itemised and internally consistent, but this is unresolved.
+          </Callout>
+        )}
       </Card>
 
       <Card title="Visit cycle — where the workday goes">
