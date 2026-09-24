@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#132a4d"/>
+      <stop offset="1" stop-color="#0b1220"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#4da3ff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#4da3ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="st" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8cc8ff"/>
+      <stop offset="1" stop-color="#2f7fe6"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="205.8" fill="url(#glow)"/>
+  <circle cx="256" cy="256" r="196.0" fill="none" stroke="#4da3ff" stroke-opacity="0.45" stroke-width="5.0"/>
+  <g stroke="#4da3ff" stroke-opacity="0.6" stroke-width="5.0" stroke-linecap="round"><line x1="388.9" y1="123.1" x2="394.6" y2="117.4"/><line x1="438.0" y1="256.0" x2="452.0" y2="256.0"/><line x1="388.9" y1="388.9" x2="394.6" y2="394.6"/><line x1="256.0" y1="438.0" x2="256.0" y2="452.0"/><line x1="123.1" y1="388.9" x2="117.4" y2="394.6"/><line x1="74.0" y1="256.0" x2="60.0" y2="256.0"/><line x1="123.1" y1="123.1" x2="117.4" y2="117.4"/></g>
+  <path d="M256 38.0 L269.0 64.0 L243.0 64.0 Z" fill="#9fd0ff"/>
+  <polygon points="256.0,116.0 294.8,212.6 398.7,219.6 318.8,286.4 344.2,387.4 256.0,332.0 167.8,387.4 193.2,286.4 113.3,219.6 217.2,212.6" fill="url(#st)" stroke="#b8dcff" stroke-width="6.0" stroke-linejoin="round"/>
+</svg>
