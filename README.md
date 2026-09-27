@@ -35,13 +35,25 @@ the primary document**, not by opening the document. The URLs are correct
 primary sources, but **no figure here has been read off a source PDF**. One
 human verification pass is required before any of it drives a real decision.
 
+## Verification pass — 2026-09-27
+
+A second session re-checked the knowledge base against multiple independent
+search summaries (primary hosts were still blocked). The plain-language write-up
+is in [`docs/verification-2026-09-27.md`](docs/verification-2026-09-27.md).
+The short version: the home health agency lane requires Medicare certification,
+Medicare certification requires skilled nursing, and new home health agencies are
+under a nationwide Medicare enrollment freeze since May 13, 2026 — so the
+per-visit rate the model is built on describes a business Blue Star cannot
+currently be. The outpatient lane is open, and its revenue figure is not yet in
+the system. See decision D-001, unknowns UU-007 to UU-010, and roadmap T-008.
+
 ## Structure
 
 ```
 src/
   types.ts            Domain model — Evidence, Assumption, Decision, CostItem, …
   data/               The knowledge base (plain TypeScript, no database)
-    evidence.ts       24 records with source, URL, dates, confidence, retrieval
+    evidence.ts       43 records with source, URL, dates, confidence, retrieval
     assumptions.ts    Every number the financial model uses
     decisions.ts      Decision log — options, consequences, reversibility
     roadmap.ts        11 phases, tasks as a dependency graph
@@ -54,14 +66,14 @@ src/
     capital.ts        Five-bucket capital requirement
     cash.ts           Month-by-month cash calendar
   views/              One screen per area of the system
-  test/               80 tests — data integrity + model correctness
+  test/               269 tests — data integrity + model correctness
 ```
 
 ## Commands
 
 ```bash
 npm install
-npm test        # 80 tests
+npm test        # 269 tests
 npm run build   # typecheck + production build
 npm run dev     # local dev server
 ```
@@ -81,6 +93,7 @@ Not just that the math works, but that the knowledge base stays honest:
 
 ## Deployment
 
-Pushing to the development branch runs tests, builds, and deploys to GitHub Pages
-via `.github/workflows/deploy.yml`. Base path is `/BlueStar/`; routing is
+Pushing to the branch named in `.github/workflows/deploy.yml` runs tests, builds,
+and deploys to GitHub Pages. Other branches are not deployed until they are
+merged or added to that list. Base path is `/BlueStar/`; routing is
 hash-based so deep links work without server rewrites.

@@ -62,13 +62,17 @@ export function Dashboard({ go }: { go: (v: string) => void }) {
 
       <Callout tone="bad" title="The single most important thing to resolve">
         <strong style={{ display: 'inline', fontWeight: 600 }}>D-001 — which regulatory lane?</strong>{' '}
-        Research surfaced what looks like two legally distinct ways to deliver pediatric therapy in a
-        child's home in Colorado: as a licensed home care agency billing a flat per-visit rate, or as
-        an outpatient PT/OT provider billing timed CPT codes with the home as place of service. These
-        have different licences, timelines, capital needs and revenue mechanics. Almost every number in
-        this system depends on which one applies — and the question has not been answered by a lawyer.
+        There are two legally distinct ways to deliver pediatric therapy in a child's home in Colorado:
+        as a licensed home care agency billing a flat per-visit rate, or as an outpatient PT/OT provider
+        billing timed CPT codes with the home as place of service. The 2026-09-27 verification pass
+        changed the picture: the agency lane also needs <em>Medicare certification</em>, which needs
+        <em> skilled nursing</em> on staff, and new home health agencies are under a <em>nationwide
+        Medicare enrollment freeze</em> since May 13, 2026. So for now only the outpatient lane is open —
+        and this system holds <strong style={{ display: 'inline' }}>no revenue figure</strong> for it.
+        Every dollar shown below still assumes the $143.02 home health rate.
         <div style={{ marginTop: 8 }}>
           <button className="btn" onClick={() => go('decisions')}>Open decision D-001</button>
+          <button className="btn" style={{ marginLeft: 8 }} onClick={() => go('unknowns')}>What changed</button>
         </div>
       </Callout>
 
@@ -163,13 +167,15 @@ export function Dashboard({ go }: { go: (v: string) => void }) {
         <div className="grid">
           <Stat label="Evidence records" value={String(evidence.length)} />
           <Stat label="Need professional verification" value={String(verifyFirst.length)} note="Before driving a real decision" />
-          <Stat label="Read directly from source" value="0" unknown note="Network policy blocked colorado.gov this session" />
+          <Stat label="Read directly from source" value="0" unknown note="colorado.gov, cms.gov and legal hosts blocked in both sessions" />
           <Stat label="Critical open questions" value={String(openQuestions.filter((q) => q.priority === 'Critical').length)} />
         </div>
         <Callout tone="warn" title="Provenance warning">
           Every record in this build was reached through a search index that summarised the primary
           document — not by opening the document itself. The URLs are correct primary sources, but no
-          figure here has been read off a source PDF. One human verification pass is required before
+          figure here has been read off a source PDF. A second pass on 2026-09-27 cross-checked the key
+          figures against multiple independent summaries (see the Evidence notes), which raises
+          confidence but is still not a direct read. One human verification pass is required before
           any of it drives a real decision.
         </Callout>
         <button className="btn" onClick={() => go('evidence')}>Evidence database</button>

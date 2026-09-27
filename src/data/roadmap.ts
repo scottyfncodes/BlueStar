@@ -11,6 +11,7 @@ export const phases: Phase[] = [
       'Actual FY2026-27 fee schedule read and confirmed',
       'Real clinician compensation data from primary sources',
       'Ellen has supplied realistic caseload and cancellation figures',
+      'Outpatient per-unit rates read off the fee schedule and AS-032 filled',
     ],
   },
   {
@@ -86,7 +87,7 @@ export const tasks: RoadmapTask[] = [
     phase: 0,
     title: 'Read the FY2026-27 home health fee schedule PDF directly',
     detail:
-      'Open the actual HCPF PDF and confirm the pediatric PT, OT and ST per-visit rates. Every financial conclusion in this system rests on $143.02, which was obtained via a search summary rather than the document itself.',
+      'Open the actual HCPF PDF and confirm the pediatric PT, OT and ST per-visit rates. Every financial conclusion in this system rests on $143.02, which was obtained via a search summary rather than the document itself. A cross-check now supports it ($145.31 less the 1.6% October 2025 cut, EV-037) but does not replace reading it. Remember this rate only exists in the agency lane.',
     dependsOn: [],
     owner: 'Scott',
     status: 'Not started',
@@ -169,14 +170,43 @@ export const tasks: RoadmapTask[] = [
     id: 'T-007',
     phase: 0,
     title: 'Decide D-001 — the regulatory lane',
-    detail: 'With legal and regulator input in hand, choose the lane and record the reasoning in the decision log.',
-    dependsOn: ['T-002', 'T-003', 'T-001'],
+    detail: 'With legal and regulator input in hand, and the outpatient per-unit rates known, choose the lane and record the reasoning in the decision log. Note the agency lane cannot be applied for while the Medicare enrollment moratorium stands (EV-033).',
+    dependsOn: ['T-002', 'T-003', 'T-001', 'T-008'],
     owner: 'Scott',
     status: 'Not started',
     estimatedDurationDays: 1,
     costRefIds: [],
     evidenceIds: [],
     blockedBy: null,
+  },
+
+  {
+    id: 'T-008',
+    phase: 0,
+    title: 'Look up the outpatient PT/OT per-unit rates and price a 30- and 60-minute visit',
+    detail:
+      'Open the Health First Colorado Physician Fee Schedule (EV-043) or the HCPF code lookup and record the rate per unit for 97110, 97530, 97140, 97161-97163, 97165-97167, 92507 and 92523. Then compute collected revenue for a 30-minute (2-unit) and a 60-minute (4-unit) visit and fill AS-032. This is the revenue figure for the only lane currently open, and the system holds nothing for it.',
+    dependsOn: [],
+    owner: 'Scott',
+    status: 'Not started',
+    estimatedDurationDays: 1,
+    costRefIds: [],
+    evidenceIds: ['EV-043', 'EV-009'],
+    blockedBy: null,
+  },
+  {
+    id: 'T-009',
+    phase: 0,
+    title: 'Ask Ellen: how is she paid, and how does her employer bill EI children?',
+    detail:
+      'Two questions that reshape the model and that Ellen can answer in ten minutes. (1) Is she paid salary, hourly or per visit, and at what rate? Per-visit pay (EV-039) makes clinician cost variable. (2) Are the eleven Early Intervention children billed as home health visits or as outpatient/EI visits (EV-041)? While there, resolve the 23-vs-25 patient and 32-vs-33 visit discrepancy (AS-027).',
+    dependsOn: [],
+    owner: 'Ellen',
+    status: 'Not started',
+    estimatedDurationDays: 1,
+    costRefIds: [],
+    evidenceIds: ['EV-039', 'EV-041', 'EV-030'],
+    blockedBy: 'Requires a conversation with Ellen',
   },
 
   // ---- PHASE 1 ----
@@ -266,7 +296,7 @@ export const tasks: RoadmapTask[] = [
     phase: 2,
     title: 'Execute the licensure path selected in D-001',
     detail:
-      'If the agency lane: letter of intent, application, fees, policies and procedures, administrator designation, and initial survey. If the outpatient lane: confirm in writing that no facility license is required and file that confirmation.',
+      'If the agency lane: letter of intent, application, fees, policies and procedures, administrator designation, initial state survey — AND accreditation for Medicare deemed status, Medicare enrollment (blocked while the moratorium stands, EV-033), a skilled nursing service line (EV-032), three months of proven operating cash and ten pre-survey patients (EV-035). If the outpatient lane: confirm in writing that no facility license is required and file that confirmation.',
     dependsOn: ['T-011', 'T-007'],
     owner: 'Scott',
     status: 'Not started',

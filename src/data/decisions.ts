@@ -17,7 +17,7 @@ export const decisions: Decision[] = [
     question:
       'Does Blue Star deliver pediatric therapy in the home as (a) a CDPHE-licensed Class A home care agency billing the per-visit home health benefit, or (b) an outpatient PT/OT provider billing CPT codes with the home as place of service — or (c) both?',
     stakes:
-      'This is the highest-stakes decision in the entire plan. It determines whether a state facility license is required at all, what the startup timeline looks like, how revenue is earned (flat per-visit vs timed units), what the authorization workflow is, and what the minimum insurance limits are. Almost every number elsewhere in this system depends on it. Getting it wrong in either direction is expensive: unnecessary licensure burns months and capital, while operating unlicensed where a license is required is an existential compliance failure.',
+      'This is the highest-stakes decision in the entire plan. UPDATE 2026-09-27: the agency lane turned out to require Medicare certification, which requires skilled nursing, and is under a nationwide enrollment freeze — so for the moment only the outpatient options are open, and the revenue figure for those options is not yet known. It determines whether a state facility license is required at all, what the startup timeline looks like, how revenue is earned (flat per-visit vs timed units), what the authorization workflow is, and what the minimum insurance limits are. Almost every number elsewhere in this system depends on it. Getting it wrong in either direction is expensive: unnecessary licensure burns months and capital, while operating unlicensed where a license is required is an existential compliance failure.',
     options: [
       {
         id: 'D-001-A',
@@ -26,10 +26,15 @@ export const decisions: Decision[] = [
           'Obtain a CDPHE Class A home care agency license, enroll as a home health provider with Health First Colorado, and bill the pediatric long-term home health benefit per visit.',
         requires: [
           'CDPHE Class A license — letter of intent, application, fees, policies, survey',
+          'MEDICARE CERTIFICATION on top of the state license: accreditation survey (ACHC, CHAP or Joint Commission), Medicare enrollment, and good standing with CMS — HCPF requires all of it before a home health agency can bill Medicaid (EV-031)',
+          'SKILLED NURSING as a service line, because Medicare will not certify a therapy-only agency (EV-032) — this is a different business from the one planned',
+          'A way through the nationwide moratorium on new home health agency Medicare enrollment, in force since May 13, 2026 and extendable (EV-033)',
+          'Ten patients treated (seven active) before the certification survey, and three months of operating cash proven at application (EV-035)',
+          'A PAR justification for every child that they cannot be treated as an outpatient (EV-040)',
           'Administrator meeting state qualifications',
           'Full policy and procedure manual, personnel files, clinical records system',
           '$500,000 / $3,000,000 liability insurance minimum (EV-002)',
-          'Substantially longer pre-revenue period',
+          'Substantially longer pre-revenue period — now measured in many months at best',
         ],
         creates: [
           'Access to the pediatric LTHH benefit at roughly $143/visit (EV-007)',
@@ -38,10 +43,12 @@ export const decisions: Decision[] = [
           'A structure that scales to nursing and multi-discipline services later',
         ],
         risks: [
-          'Long licensure timeline before any revenue — the dominant capital risk',
-          'Survey and compliance exposure from day one',
+          'CLOSED FOR NOW: no new home health agency can enroll in Medicare anywhere in the United States while the moratorium stands (EV-033), and Colorado Medicaid requires Medicare enrollment (EV-031)',
+          'Requires becoming a nursing agency as well as a therapy agency (EV-032)',
+          'Long licensure and certification timeline before any revenue — the dominant capital risk',
+          'Survey and compliance exposure from day one, under federal Conditions of Participation as well as state rules',
           'Flat per-visit rate means a 45-minute visit and a 2.5-hour visit pay the same',
-          'Rates can fall — they already did this year (EV-007)',
+          'Rates can fall — they did in October 2025, on about a month\'s notice (EV-037)',
         ],
         tradeoffs: [
           'Harder and slower to start; stronger and more defensible once running',
@@ -56,14 +63,16 @@ export const decisions: Decision[] = [
           'Enroll as an outpatient PT/OT provider with Health First Colorado and deliver therapy in the child\'s home, billing timed CPT codes rather than the home health per-visit rate.',
         requires: [
           'Medicaid provider enrollment (EV-013)',
-          'Licensed therapists — no facility license apparent, BUT THIS IS UNCONFIRMED',
+          'Licensed therapists. The statute exempts an INDIVIDUAL acting alone with no employees or contractors (EV-034); whether an entity with employees is exempt is UNCONFIRMED',
+          'The outpatient per-unit rates, which this system does not yet hold (AS-032, EV-043) — revenue per visit is very likely well below the $143.02 home health rate, especially for 30-minute visits',
           'Authorization once a member passes 48 units in a rolling 12 months (EV-009)',
           'Legal confirmation that this does not constitute operating a home care agency (EV-003)',
         ],
         creates: [
           'A dramatically shorter path to first revenue',
           'Much lower startup capital requirement',
-          'Timed billing, so longer or more intensive visits earn more',
+          'Timed billing, so longer or more intensive visits earn more — which reverses the visit-mix lever: a 60-minute EI visit becomes the better-paid visit, not the capacity drain',
+          'No Medicare involvement at all, so the moratorium (EV-033) and the nursing requirement (EV-032) do not apply',
           'Freedom to test the market before committing to licensure',
         ],
         risks: [
@@ -104,8 +113,36 @@ export const decisions: Decision[] = [
         ],
         reversibility: 'Moderate',
       },
+      {
+        id: 'D-001-D',
+        name: 'Ellen alone under the statutory individual exemption, then decide',
+        whatItIs:
+          'Ellen practises as a single therapist with no employees and no contractors, relying on the express statutory exemption for an individual who acts alone (EV-034), enrolled with Health First Colorado as an outpatient PT and billing CPT codes with the home as place of service. Blue Star as an entity waits until the lane question is answered.',
+        requires: [
+          'Counsel confirming the individual exemption covers Ellen if she practises through (or alongside) an LLC — the statute says "individual", not "entity"',
+          'Health First Colorado enrollment as an individual or group outpatient PT provider (EV-013)',
+          'The outpatient per-unit rates (AS-032) so the arithmetic can be run before committing',
+          'Strict discipline: engaging ANY second clinician, even PRN, ends the exemption',
+        ],
+        creates: [
+          'The fastest lawful path to a first paid visit — no facility licence, no Medicare, no moratorium',
+          'Real data on referrals, visit mix, cancellations and outpatient revenue per visit before any structural commitment',
+          'Exactly the shape the Founder Ramp already models: one clinician, $0 owner compensation, cash accumulating',
+        ],
+        risks: [
+          'It is a solo practice, not yet a company — the exemption is lost the moment growth starts, so the lane question must still be answered before hire one',
+          'Outpatient per-unit revenue may be too low for a 30-minute-visit caseload to cover a clinician (unknown until AS-032 is filled)',
+          'The 48-unit / 12-month threshold means PARs arrive within about three months for weekly patients (EV-009)',
+          'Ellen would need to confirm her current employment agreement allows outside practice',
+        ],
+        tradeoffs: [
+          'Lowest risk and lowest cost to learn; lowest ceiling until the entity question is settled',
+          'Buys time while the moratorium runs, at the price of building nothing transferable yet',
+        ],
+        reversibility: 'Easy',
+      },
     ],
-    evidenceIds: ['EV-001', 'EV-003', 'EV-006', 'EV-007', 'EV-008', 'EV-009', 'EV-014'],
+    evidenceIds: ['EV-001', 'EV-003', 'EV-006', 'EV-007', 'EV-008', 'EV-009', 'EV-014', 'EV-031', 'EV-032', 'EV-033', 'EV-034', 'EV-035', 'EV-040', 'EV-041', 'EV-043'],
     chosenOptionId: null,
     decidedOn: null,
     rationale: null,
@@ -113,7 +150,10 @@ export const decisions: Decision[] = [
       'A definitive answer from a Colorado healthcare attorney on whether the outpatient lane requires a home care agency license',
       'A written answer from CDPHE Health Facilities to the same question',
       'The true licensure timeline — if Class A takes 3 months, Option A gets far more attractive; at 9 months, far less',
-      'Confirmation of the actual FY2026-27 per-visit rate vs. what outpatient CPT billing yields for a comparable visit',
+      'Confirmation of the actual FY2026-27 per-visit rate vs. what outpatient CPT billing yields for a comparable visit (AS-032 — currently unknown, and now the more important of the two)',
+      'The Medicare home health enrollment moratorium being lifted or extended — recheck on or after 2026-11-13 (EV-033)',
+      'Whether Blue Star is willing to become a nursing agency as well, which is what Medicare certification demands (EV-032)',
+      'Counsel\'s view on whether the individual exemption (EV-034) covers Ellen practising through an LLC',
     ],
     revisitTrigger:
       'Immediately upon receiving legal counsel on the licensure question. Do not commit capital in either direction before then.',

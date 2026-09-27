@@ -53,11 +53,11 @@ export const unknownUnknowns: UnknownUnknown[] = [
     id: 'UU-002',
     surprise: 'Colorado Medicaid pediatric therapy rates went DOWN this year.',
     whyItMatters:
-      'The pediatric PT home health rate appears to have fallen from $145.31 to $143.02 — roughly -1.6%. Business plans routinely assume reimbursement rises with inflation. Here it did the opposite, which means margin has to come from operating efficiency, and any plan that needs a rate increase to work is not a plan.',
+      'The pediatric PT home health rate fell from $145.31 to $143.02, exactly -1.6%. Business plans routinely assume reimbursement rises with inflation. Here it did the opposite, and now we know why: in September 2025 the Governor declared a revenue shortfall and HCPF took back the 1.6% increase the legislature had granted for FY2025-26, effective October 1, 2025 (EV-037). Margin has to come from operating efficiency, any plan that needs a rate increase to work is not a plan, and Colorado can cut mid-year on about a month\'s notice.',
     costImpact: 'Reduces revenue per visit and compresses margin on every future visit.',
     timelineImpact: 'None directly, but it lengthens time to break-even.',
     dependency: 'AS-001', owner: 'Scott',
-    evidenceIds: ['EV-007', 'EV-006'], status: 'Open',
+    evidenceIds: ['EV-007', 'EV-006', 'EV-037'], status: 'Understood',
   },
   {
     id: 'UU-003',
@@ -99,6 +99,46 @@ export const unknownUnknowns: UnknownUnknown[] = [
     dependency: 'AS-004', owner: 'Scott',
     evidenceIds: ['EV-018'], status: 'Understood',
   },
+  {
+    id: 'UU-007',
+    surprise: 'No new home health agency can enroll in Medicare anywhere in the country right now.',
+    whyItMatters:
+      'CMS froze Medicare enrollment of new home health agencies nationwide on May 13, 2026, for six months and extendable (EV-033). Colorado Medicaid will not enroll a home health agency that is not Medicare enrolled (EV-031). Put together: the agency lane — the one the whole $143-per-visit model is built on — is closed to Blue Star until at least mid-November 2026, and the date could slip. This is the single largest change to the plan since it was written.',
+    costImpact: 'Removes the agency lane from the near-term option set; every revenue figure that assumes $143.02 per visit is, for now, describing a business Blue Star cannot be.',
+    timelineImpact: 'At least six months, possibly more, before the agency lane can even be applied for.',
+    dependency: 'D-001', owner: 'Scott',
+    evidenceIds: ['EV-033', 'EV-031'], status: 'Open',
+  },
+  {
+    id: 'UU-008',
+    surprise: 'A home health agency must provide skilled NURSING — therapy alone does not qualify.',
+    whyItMatters:
+      'Medicare certification is a precondition for Colorado Medicaid home health enrollment (EV-031), and Medicare will only certify an agency that provides skilled nursing plus at least one other service (EV-032). So "a pediatric therapy agency billing the home health benefit" is not a thing that can exist on its own. Blue Star would have to hire and supervise nurses to earn the per-visit rate for therapy. That is a different company, and D-004 (which disciplines?) now has a nursing option it never contemplated.',
+    costImpact: 'Adds an entire nursing service line to the cost of the agency lane; also adds accreditation fees, a three-month cash reserve and pre-survey unpaid patient care (EV-035).',
+    timelineImpact: 'Agency lane timeline now includes accreditation (roughly 3-9 months by accreditor estimates) on top of state licensure.',
+    dependency: 'D-001', owner: 'Attorney + accreditor',
+    evidenceIds: ['EV-032', 'EV-031', 'EV-035'], status: 'Open',
+  },
+  {
+    id: 'UU-009',
+    surprise: 'In the outpatient lane a visit is paid by the 15-minute unit — and nobody has looked up the rate.',
+    whyItMatters:
+      'Every dollar figure in this system assumes $143.02 per visit. In the outpatient lane that number does not exist: a 30-minute visit bills 2 units and a 60-minute visit 4, at a per-unit rate published in a fee schedule this pass could not open (EV-043). Medicaid therapy unit rates elsewhere run roughly $20-$40, which would put a 30-minute visit at a fraction of the home health rate — but that is an out-of-state bracket, not a Colorado figure, and it must not be used. The point is that the single most decision-relevant number in the plan is currently blank (AS-032).',
+    costImpact: 'Unknown, and potentially the difference between viable and not viable in the only lane currently open.',
+    timelineImpact: 'None — the number can be looked up in an afternoon (roadmap T-008).',
+    dependency: 'AS-032', owner: 'Scott',
+    evidenceIds: ['EV-043', 'EV-009'], status: 'Open',
+  },
+  {
+    id: 'UU-010',
+    surprise: 'A therapist working entirely alone is expressly exempt from home care agency licensing.',
+    whyItMatters:
+      'The licensing statute exempts an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors (EV-034). That is exactly the first phase of the Founder Ramp — Ellen, alone, at $0 owner compensation. It means a lawful first paid visit may not require any facility licence at all. The catch is the word "individual": whether the exemption covers Ellen practising through Blue Star LLC, and it certainly ends the moment a second clinician is engaged, are questions for counsel. It is an on-ramp, not a destination.',
+    costImpact: 'Could remove licensure cost and timeline from the launch phase entirely.',
+    timelineImpact: 'Could compress time to first revenue to the length of Medicaid provider enrollment.',
+    dependency: 'D-001', owner: 'Attorney',
+    evidenceIds: ['EV-034', 'EV-003'], status: 'Open',
+  },
 ];
 
 export const openQuestions: OpenQuestion[] = [
@@ -107,7 +147,7 @@ export const openQuestions: OpenQuestion[] = [
     question: 'Can an entity employ licensed therapists to treat children in their homes, billing the outpatient PT/OT benefit, WITHOUT a CDPHE home care agency licence?',
     whyItMatters:
       'Governs licensure, timeline, capital requirement, insurance minimums and the revenue mechanism. Every other number depends on it. It is the single highest-value question in the plan.',
-    askWho: 'Colorado healthcare attorney, and CDPHE Health Facilities in writing',
+    askWho: 'Colorado healthcare attorney, and CDPHE Health Facilities in writing. Frame it around C.R.S. 25-27.5-103 and its exemption for an individual acting alone (EV-034): does the exemption survive an LLC, and what exactly ends it?',
     estimatedCostRange: 'UNKNOWN — attorney rates not researched',
     category: '01-Regulatory', priority: 'Critical', blocksTaskIds: ['T-007', 'T-020'],
   },
@@ -175,6 +215,33 @@ export const openQuestions: OpenQuestion[] = [
     askWho: 'HCPF county-level enrollment dashboards', estimatedCostRange: 'Free',
     category: '12-Market', priority: 'Medium', blocksTaskIds: [],
   },
+  {
+    id: 'Q-010',
+    question: 'What does Health First Colorado pay per 15-minute unit for the CPT codes a pediatric home visit would bill, and what does that make a 30-minute and a 60-minute visit worth?',
+    whyItMatters:
+      'This is the revenue figure for the only lane currently open (the agency lane is frozen, EV-033). The system holds no value for it (AS-032). Until it is filled, no profitability conclusion in this app applies to a realistic Blue Star launch.',
+    askWho: 'Nobody — read it off the Health First Colorado Physician Fee Schedule (EV-043) or the HCPF code lookup. Codes: 97110, 97530, 97140, 97161-97163, 97165-97167, 92507, 92523.',
+    estimatedCostRange: 'Free — one afternoon',
+    category: '02-Payers', priority: 'Critical', blocksTaskIds: ['T-008', 'T-007'],
+  },
+  {
+    id: 'Q-011',
+    question: 'How is Ellen paid today — salary, hourly, or per visit — and how does her employer bill the Early Intervention children on her caseload?',
+    whyItMatters:
+      'Two model-shaping facts Ellen already knows. If she is paid per visit (Denver postings advertise $65-$95 per visit, EV-039) then clinician cost is variable, not fixed, and the break-even arithmetic changes shape. If her employer bills EI children as home health visits, that confirms the $143 rate belongs to the agency lane only (EV-041).',
+    askWho: 'Ellen',
+    estimatedCostRange: 'Free',
+    category: '08-HR', priority: 'Critical', blocksTaskIds: ['T-009', 'T-004'],
+  },
+  {
+    id: 'Q-012',
+    question: 'Has HCPF mirrored the federal home health enrollment moratorium in Colorado Medicaid, and when does the federal one lift?',
+    whyItMatters:
+      'The federal freeze runs six months from May 13, 2026 and can be extended (EV-033). CMS invited states to impose their own. Either answer sets the earliest date the agency lane could be re-opened as an option.',
+    askWho: 'HCPF Provider Services; CMS moratorium page; recheck after 2026-11-13',
+    estimatedCostRange: 'Free',
+    category: '01-Regulatory', priority: 'High', blocksTaskIds: ['T-020'],
+  },
 ];
 
 export const enterpriseLevers: EnterpriseLever[] = [
@@ -221,7 +288,7 @@ export const enterpriseLevers: EnterpriseLever[] = [
   {
     id: 'EL-008', lever: 'Payer concentration',
     whyItMatters: 'A Medicaid-only business carries real policy risk — as this year\'s rate cut demonstrates.',
-    currentState: 'Plan is Medicaid-centric. Commercial payer diversification is unexplored.',
+    currentState: 'Plan is Medicaid-centric. Commercial payer diversification is unexplored. The October 2025 mid-year cut (EV-037) and the 2026 enrollment freeze (EV-033) are both examples of the policy risk this lever tracks.',
     direction: 'At risk', decisionIds: ['D-001'],
   },
 ];

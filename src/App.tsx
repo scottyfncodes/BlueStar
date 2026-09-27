@@ -58,7 +58,7 @@ export default function App() {
       <header className="hdr">
         <h1><span className="star">★</span> Blue Star Navigator</h1>
         <div className="sub">
-          Blue Star In-Home Pediatrics · Colorado · Phase 0: Learn + Validate · Built 2026-09-17
+          Blue Star In-Home Pediatrics · Colorado · Phase 0: Learn + Validate · Built 2026-09-17 · Verified 2026-09-27
         </div>
       </header>
 

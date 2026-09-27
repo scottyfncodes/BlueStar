@@ -65,7 +65,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2026-12-01',
     notes:
-      'Multiple rule versions exist in CCR (ruleVersionIds 5624, 5907, 7003, 8507, 12016). Confirm which version is currently in force — one search result flagged a part as "[Effective until 7/1/2025]", so the chapter has been amended recently.',
+      'Multiple rule versions exist in CCR (ruleVersionIds 5624, 5907, 7003, 8507, 11556, 12016). Confirm which version is currently in force — one search result flagged a part as "[Effective until 7/1/2025]", so the chapter has been amended recently. Cross-checked 2026-09-27: the LII copy of Chapter 26 states the same $500,000 / $3,000,000 Class A minimum.',
   },
   {
     id: 'EV-003',
@@ -115,7 +115,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2026-11-01',
     notes:
-      'Operational memos OM 25-033, OM 25-036 and OM 25-037 are all relevant. Read all three. Atrezzo is the Acentra/Kepro utilization-management portal.',
+      'Operational memos OM 25-033, OM 25-036 and OM 25-037 are all relevant. Read all three. Atrezzo is the Acentra/Kepro utilization-management portal. Cross-checked 2026-09-27: search summaries of OM 25-037 repeat the May 4 and June 1, 2026 dates.',
   },
   {
     id: 'EV-005',
@@ -324,7 +324,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: false,
     recheckDate: '2027-01-01',
     notes:
-      'Enrollment application fee amount was NOT established. Federal rules (42 CFR 455.460) impose an application fee on institutional providers, adjusted annually — confirm whether it applies to the chosen provider type.',
+      'Enrollment application fee amount was NOT established in the first pass; see EV-036 ($750 for 2026, institutional providers only). Confirm whether it applies to the chosen provider type.',
   },
   {
     id: 'EV-014',
@@ -442,7 +442,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2026-12-15',
     notes:
-      'Rate reportedly DECREASED for 2026 from the prior year. Confirm directly with famli.colorado.gov before running payroll. Also confirm how the under-10 headcount is counted.',
+      'Rate reportedly DECREASED for 2026 from the prior year. Confirm directly with famli.colorado.gov before running payroll. Also confirm how the under-10 headcount is counted. Cross-checked 2026-09-27 against Patriot, Paychex and Jackson Lewis summaries: all three agree on 0.88% / 0.44% / 0.44% and the under-10 employer exemption.',
   },
   {
     id: 'EV-019',
@@ -742,6 +742,308 @@ export const evidence: Evidence[] = [
     recheckDate: '2026-12-01',
     notes:
       'UNRESOLVED ARITHMETIC. The itemised cohorts sum to 25 patients and 33 weekly visits, against the separately stated 23 patients and 32 visits. The model uses the cohort figures because they are itemised and internally consistent, and surfaces both gaps. The difference is small but it has not been reconciled, and either figure could be the correct one. SCOPE: this is an assigned caseload at another company — strong evidence about how Ellen currently works, and weak evidence about what Blue Star will look like.',
+  },
+  // -------------------------------------------------------------------------
+  // 11 — VERIFICATION PASS 2026-09-27
+  // Reached through a search index again: colorado.gov, sos.state.co.us,
+  // cms.gov, ecfr.gov, irs.gov and the legal-reference hosts were still blocked
+  // at the egress proxy. Nothing below was read off a source document.
+  // -------------------------------------------------------------------------
+  {
+    id: 'EV-031',
+    category: '02-Payers',
+    topic: 'Medicaid home health enrollment requires Medicare certification',
+    claim:
+      'To enroll as a Health First Colorado home health provider an agency must (1) hold a current Class A home care agency license from CDPHE, (2) obtain Medicare certification and/or deemed status through an accepted home health accrediting body (The Joint Commission, CHAP or ACHC), (3) be enrolled as a Medicare provider, and (4) be in good standing with HCPF, CDPHE and Medicare. HCPF states that all licensed home health agencies in Colorado must be Medicare certified and follow 42 CFR 440.70 and 42 CFR Part 484.',
+    source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
+    url: 'https://hcpf.colorado.gov/hh-billing_manual',
+    document: 'Home Health Billing Manual — provider eligibility; Home Health FAQ',
+    publicationDate: null,
+    effectiveDate: null,
+    accessedDate: '2026-09-27',
+    section: 'Provider eligibility',
+    appliesTo: ['Regulatory lane', 'Licensing', 'Timeline', 'Startup capital'],
+    interpretation:
+      "The agency lane (D-001 option A) is heavier than the plan assumed. A Class A license alone does not let Blue Star bill the per-visit home health benefit: Medicare certification is a precondition, and that brings the federal Conditions of Participation, an accreditation survey, a capitalisation test and a Medicare enrollment on top of the state license. Ellen's current employer almost certainly holds all of this, which is why it can bill per visit.",
+    confidence: 'Strong evidence',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: true,
+    recheckDate: '2026-11-01',
+    notes:
+      'Two separate HCPF pages (the billing manual and the Home Health FAQ) were summarised consistently. Read the "Provider Eligibility" section of the Home Health Billing Manual directly to confirm.',
+  },
+  {
+    id: 'EV-032',
+    category: '01-Regulatory',
+    topic: 'Medicare will not certify a therapy-only home health agency',
+    claim:
+      "Under federal Medicare rules a home health agency must provide skilled nursing services AND at least one other therapeutic service (physical therapy, speech-language pathology, occupational therapy, medical social services or home health aide services) in the patient's home, and must furnish at least one of those services directly through its own employees. The statutory definition requires an agency to be 'primarily engaged in providing skilled nursing services and other therapeutic services' (Social Security Act section 1861(o)).",
+    source: 'Centers for Medicare & Medicaid Services (CMS)',
+    url: 'https://www.cms.gov/medicare/health-safety-standards/certification-compliance/home-health-agencies',
+    document: 'CMS — Home Health Agencies: certification and compliance; State Operations Manual §2180',
+    publicationDate: null,
+    effectiveDate: null,
+    accessedDate: '2026-09-27',
+    section: 'Definition of a home health agency',
+    appliesTo: ['Regulatory lane', 'Service model', 'Disciplines at launch', 'Staffing'],
+    interpretation:
+      'A therapy-only company cannot be Medicare certified, and therefore (per EV-031) cannot enroll as a Colorado Medicaid home health agency. To use the per-visit home health benefit Blue Star would have to add skilled nursing — a different business, with nurse recruitment, nursing supervision and a nursing compliance surface. This ties D-001 (lane) directly to D-004 (disciplines) in a way the plan had not recognised.',
+    confidence: 'Strong evidence',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: true,
+    recheckDate: '2027-03-01',
+    notes:
+      'Federal law, stable for decades; several state health departments restate it identically. Still confirm with the accrediting body or counsel that no therapy-only pathway exists in Colorado.',
+  },
+  {
+    id: 'EV-033',
+    category: '01-Regulatory',
+    topic: 'Nationwide moratorium on new home health agency Medicare enrollment',
+    claim:
+      'CMS imposed a nationwide temporary moratorium on Medicare enrollment of new home health agencies (and, separately, hospices) effective May 13, 2026, published in the Federal Register on May 15, 2026 (document 2026-09717). It lasts six months, may be extended in further six-month increments, blocks new HHAs, new branches and new practice locations, and does not apply to applications a Medicare Administrative Contractor received before May 13, 2026. CMS invited each state to decide whether to mirror the moratorium in Medicaid under 42 CFR 455.470.',
+    source: 'CMS / Federal Register',
+    url: 'https://www.federalregister.gov/documents/2026/05/15/2026-09717/medicare-medicaid-and-childrens-health-insurance-programs-announcement-of-nationwide-temporary',
+    document: 'Announcement of Nationwide Temporary Moratoria on Enrollment of Home Health Agencies (HHAs)',
+    publicationDate: '2026-05-15',
+    effectiveDate: '2026-05-13',
+    accessedDate: '2026-09-27',
+    section: 'Scope and duration',
+    appliesTo: ['Regulatory lane', 'Timeline', 'Strategy', 'Rate risk'],
+    interpretation:
+      'As of this build a brand-new home health agency cannot enroll in Medicare anywhere in the United States, and Colorado Medicaid requires Medicare enrollment for home health providers (EV-031). The agency lane is therefore closed to Blue Star until at least mid-November 2026, and longer if CMS extends. The outpatient PT/OT lane is untouched — it involves no Medicare HHA enrollment. Whether HCPF has imposed a matching Medicaid moratorium was not established.',
+    confidence: 'Strong evidence',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: true,
+    recheckDate: '2026-11-13',
+    notes:
+      'Consistently reported by the CMS press release, the Federal Register notice, AHA, ACHC, CHAP and several health-law firms. Recheck on or after November 13, 2026 for extension or lifting.',
+  },
+  {
+    id: 'EV-034',
+    category: '01-Regulatory',
+    topic: 'Home care agency licensing statute and its exemptions',
+    claim:
+      'C.R.S. 25-27.5-103 makes it unlawful to conduct or maintain a home care agency that provides skilled home health services without a CDPHE license. The statute exempts, among others: an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors; outpatient rehabilitation agencies and comprehensive outpatient rehabilitation facilities; community and rural health networks making public-health home visits; consumer-directed attendant programs; and licensed dialysis centres providing in-home dialysis.',
+    source: 'Colorado Revised Statutes (via Justia / colorado.public.law) and CDPHE compliance guidance',
+    url: 'https://law.justia.com/codes/colorado/title-25/health-care/article-27-5/section-25-27-5-103/',
+    document: 'C.R.S. 25-27.5-103 — Home care agency license required',
+    publicationDate: null,
+    effectiveDate: null,
+    accessedDate: '2026-09-27',
+    section: 'Exemptions',
+    appliesTo: ['Regulatory lane', 'Founder ramp', 'Entity structure', 'Hiring'],
+    interpretation:
+      "Two things. First, a single therapist working entirely alone — no employees, no contractors — appears to sit outside the licensing statute. That is the legal shape of the Founder Ramp's first phase, where Ellen is the only clinician. Second, the exemption is written for an 'individual', so whether it survives once care is delivered through an LLC, or the moment a second clinician is engaged, is exactly the question D-001 already sends to counsel. The 'outpatient rehabilitation agency' exemption refers to a Medicare-certified rehabilitation agency, a specific federal category, not to any practice that happens to bill outpatient codes.",
+    confidence: 'Strong evidence',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: true,
+    recheckDate: '2026-11-01',
+    notes:
+      'Statute text reached through search summaries and a CDPHE compliance page that quotes the individual exemption. Read the statute directly. The subsection reference (1)(b)(III) comes from the CDPHE page, not from the statute itself.',
+  },
+  {
+    id: 'EV-035',
+    category: '13-Funding',
+    topic: 'Medicare HHA capitalisation test and pre-survey patient requirement',
+    claim:
+      'Under 42 CFR 489.28 a home health agency entering Medicare must hold initial reserve operating funds sufficient to run the agency for the three months after billing privileges are granted, excluding expected Medicare receivables, at application and throughout enrollment. Separately, CMS survey guidance requires a prospective agency to have provided skilled care to at least 10 patients (at least 7 active at the time of survey) before its initial certification survey; accrediting bodies describe roughly 3-9 months from start to survey.',
+    source: 'CMS — 42 CFR 489.28; State Operations Manual, Appendix B (home health)',
+    url: 'https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-G/part-489/subpart-B/section-489.28',
+    document: '42 CFR 489.28 Special capitalization requirements for HHAs; SOM Appendix B',
+    publicationDate: null,
+    effectiveDate: null,
+    accessedDate: '2026-09-27',
+    section: 'Initial reserve operating funds; initial survey readiness',
+    appliesTo: ['Startup capital', 'Cash timing', 'Sequencing'],
+    interpretation:
+      'Two hidden requirements in the agency lane. The agency must treat patients — paid some other way, or unpaid — BEFORE it can be surveyed, and must prove three months of operating cash in the bank. Neither appears in the current capital model, which counts unknown lines as zero. This is another reason the agency lane cannot be the first phase of anything.',
+    confidence: 'Reasonable estimate',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: true,
+    recheckDate: '2026-12-01',
+    notes:
+      'The regulation text is stable and quoted consistently; the 10-patient figure is survey guidance and can be reduced to 5 in a medically underserved area. Confirm current practice with the accrediting body.',
+  },
+  {
+    id: 'EV-036',
+    category: '13-Funding',
+    topic: 'Federal provider enrollment application fee for 2026',
+    claim:
+      'The CMS provider enrollment application fee for calendar year 2026 is $750, payable by institutional providers — including home health agencies enrolling through CMS-855A or PECOS. Federal rules (42 CFR 455.460) apply the same fee to Medicaid institutional enrollment unless it has already been paid to Medicare.',
+    source: 'Federal Register — provider enrollment application fee amount for CY2026',
+    url: 'https://www.federalregister.gov/documents/2025/12/03/2025-21877/medicare-medicaid-and-childrens-health-insurance-programs-provider-enrollment-application-fee-amount',
+    document: 'Provider Enrollment Application Fee Amount for Calendar Year 2026',
+    publicationDate: '2025-12-03',
+    effectiveDate: '2026-01-01',
+    accessedDate: '2026-09-27',
+    section: 'Fee amount',
+    appliesTo: ['Startup cost', 'Enrollment'],
+    interpretation:
+      'Small but now known; it replaces the "not established" note in EV-013 for the agency lane. Individual practitioners and physician / non-physician practitioner groups are generally exempt from the federal fee, so it may not apply to an outpatient therapy group at all — confirm with HCPF enrollment for the chosen provider type.',
+    confidence: 'Strong evidence',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-01-15',
+    notes: 'Fee is adjusted annually; the 2027 figure will publish around December 2026.',
+  },
+  {
+    id: 'EV-037',
+    category: '02-Payers',
+    topic: 'Why the pediatric therapy rate fell 1.6% — the October 2025 budget cut',
+    claim:
+      'Following Executive Order D 2025 014 (August 28, 2025), which declared a state revenue shortfall, HCPF issued Special Provider Bulletin B2500528 (September 2025) reducing all fee-for-service rates that had been raised 1.6% for FY2025-26, for dates of service on or after October 1, 2025. Dental, some HCBS services and pediatric behavioral therapies were cut by more than 1.6%.',
+    source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
+    url: 'https://hcpf.colorado.gov/sites/hcpf/files/Special%20Provider%20Bulletin%20-%20Rate%20Reductions%20092025_B2500528_0.pdf',
+    document: 'Special Provider Bulletin — Rate Reductions, September 2025 (B2500528)',
+    publicationDate: '2025-09-01',
+    effectiveDate: '2025-10-01',
+    accessedDate: '2026-09-27',
+    section: 'Across-the-board reduction',
+    appliesTo: ['Visit economics', 'Rate risk', 'Revenue model'],
+    interpretation:
+      "This explains the rate movement between EV-006 and EV-007 exactly: $145.31 divided by 1.016 is $143.02. The FY2026-27 pediatric PT rate is the FY2025-26 rate with the legislature's 1.6% increase taken back, and the cut has almost certainly applied since October 1, 2025 rather than July 1, 2026. Two lessons: Colorado Medicaid rates move with the state budget, not with inflation, and they can move mid-year on about a month's notice.",
+    confidence: 'Strong evidence',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: true,
+    recheckDate: '2026-12-01',
+    notes:
+      "The arithmetic is ours, not the bulletin's. It supports the $143.02 figure without proving it; the fee schedule PDF (EV-007) still has to be read.",
+  },
+  {
+    id: 'EV-038',
+    category: '04-Financial',
+    topic: 'IRS standard mileage rate for 2026',
+    claim:
+      'The IRS business standard mileage rate is 72.5 cents per mile for January 1 – June 30, 2026 and 76 cents per mile for July 1 – December 31, 2026, after a mid-year increase attributed to fuel costs.',
+    source: 'Internal Revenue Service',
+    url: 'https://www.irs.gov/tax-professionals/standard-mileage-rates',
+    document: 'IRS newsroom: 2026 standard mileage rates and mid-year adjustment',
+    publicationDate: '2025-12-29',
+    effectiveDate: '2026-07-01',
+    accessedDate: '2026-09-27',
+    section: 'Business rate',
+    appliesTo: ['Mileage cost', 'Compensation policy'],
+    interpretation:
+      "AS-010's $12 per visit corresponds to roughly 16-17 miles round trip at these rates, which is plausible for a tight Denver-metro route but has no route data behind it. The RATE is now verified; the MILES are not. Note also that reimbursing mileage is a policy choice, not a legal requirement, though unreimbursed driving is a hidden pay cut that clinicians notice.",
+    confidence: 'Strong evidence',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-01-15',
+    notes: 'Reported identically by the IRS newsroom title, NATP, SHRM and the Journal of Accountancy.',
+  },
+  {
+    id: 'EV-039',
+    category: '08-HR',
+    topic: 'Pediatric PT compensation — 2026 aggregator data and per-visit pay',
+    claim:
+      'Aggregator data as of mid-2026: ZipRecruiter reports Denver pediatric physical therapist pay averaging $100,277 per year (most between $76,200 and $114,800) and Denver home health physical therapist pay averaging $52.86 per hour (most between $44.62 and $57.50). At least one Denver pediatric home health posting advertised pay of $65-$95 per visit depending on experience.',
+    source: 'ZipRecruiter, Glassdoor, Indeed job listings (secondary aggregators)',
+    url: 'https://www.ziprecruiter.com/Jobs/Pediatric-Physical-Therapist/-in-Denver,CO',
+    document: 'Pediatric Physical Therapist Jobs in Denver, CO; Home Health Physical Therapist Jobs in Denver, CO',
+    publicationDate: '2026-09-02',
+    effectiveDate: null,
+    accessedDate: '2026-09-27',
+    section: 'Denver metro',
+    appliesTo: ['Clinician cost', 'Compensation structure', 'Break-even'],
+    interpretation:
+      'Adds a fourth conflicting aggregator figure to the three in EV-020, so AS-003 stays null. The per-visit posting is the more useful signal: pediatric home health employers in Denver appear to pay per completed visit, which turns clinician cost from a fixed salary into a variable cost per visit — a structure the model does not yet represent, and one that changes the break-even arithmetic completely. Ellen knows how she is paid; ask her.',
+    confidence: 'Unverified',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-10-15',
+    notes:
+      'Still aggregator data. The primary source remains live Colorado postings, which must disclose pay ranges, plus Ellen.',
+  },
+  {
+    id: 'EV-040',
+    category: '02-Payers',
+    topic: 'Home health is only covered when outpatient care is not possible',
+    claim:
+      "Colorado's Medicaid home health rule (10 CCR 2505-10 § 8.520) covers home health only where the member's record shows the medically necessary service should be provided in the place of residence instead of an outpatient setting under stated guidelines — one of which is that the member, due to illness, injury or disability, is unable to travel to an outpatient setting for the needed service.",
+    source: 'Code of Colorado Regulations — 10 CCR 2505-10 § 8.520 (via LII)',
+    url: 'https://www.law.cornell.edu/regulations/colorado/10-CCR-2505-10-8.520',
+    document: '10 CCR 2505-10-8.520 Home Health Services',
+    publicationDate: null,
+    effectiveDate: '2025-06-30',
+    accessedDate: '2026-09-27',
+    section: 'Criteria for home health services',
+    appliesTo: ['Benefit design', 'Authorization workflow', 'Market size', 'Regulatory lane'],
+    interpretation:
+      "The home health lane is not simply 'therapy that happens at home'. Every PAR must justify why the child cannot be treated as an outpatient. Children with developmental delays who could attend a clinic may not qualify for the per-visit benefit at all, which would push them to the outpatient lane regardless of Blue Star's licence. This narrows the population lane A can serve and makes the justification a documentation skill in its own right.",
+    confidence: 'Reasonable estimate',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: true,
+    recheckDate: '2026-11-01',
+    notes:
+      'The search excerpt was truncated after the first guideline; the rule lists several. Read the full section before relying on it.',
+  },
+  {
+    id: 'EV-041',
+    category: '02-Payers',
+    topic: 'How Early Intervention children are billed',
+    claim:
+      "HCPF publishes a separate Early Intervention billing manual. For a child with an IFSP, Health First Colorado must be billed first for PT/OT and state Early Intervention funds pay only for services Medicaid does not cover; outpatient PT/OT claims for IFSP services carry the IFSP referrer's NPI as the ordering provider. An HCPF-hosted rate document states that EI home visits run about an hour, allow only 4-5 visits a day, and that (for speech) an EI visit paid $62.46 against $131 for a home health visit.",
+    source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
+    url: 'https://hcpf.colorado.gov/early-intervention-manual',
+    document: 'Early Intervention Billing Manual; Outpatient PT/OT Billing Manual; EI speech rate memo',
+    publicationDate: null,
+    effectiveDate: null,
+    accessedDate: '2026-09-27',
+    section: 'Payer of last resort; IFSP referrals',
+    appliesTo: ['Visit mix', 'Revenue model', 'Referral strategy', 'Regulatory lane'],
+    interpretation:
+      "Which benefit an EI child is billed under depends on the PROVIDER's lane, not on the child. A Medicare-certified home health agency can bill an EI child's visit as a home health visit; a therapy practice bills it as outpatient PT/OT with the IFSP referral. So the model's assumption that every visit pays $143.02 is really an assumption that Blue Star is a certified home health agency. Ask Ellen how her employer bills the eleven EI children on her caseload.",
+    confidence: 'Reasonable estimate',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: true,
+    recheckDate: '2026-11-01',
+    notes:
+      'The $62.46 figure comes from an undated advocacy draft hosted on the HCPF site; treat it as historical context only, not a current rate.',
+  },
+  {
+    id: 'EV-042',
+    category: '08-HR',
+    topic: 'Colorado unemployment insurance — new employer rate structure 2026',
+    claim:
+      'Colorado new employers pay an introductory unemployment insurance rate composed of a base rate, a support rate and (in 2026) a solvency surcharge, which applies because the 2025 trust fund reserve ratio (0.649%) was below the 0.7% trigger. 2026 combined rates for positive-rated employers range from 0.72% to 4.58%, charged on the first $30,600 of each employee\'s wages. The industry-specific introductory rate for health care was not surfaced.',
+    source: 'Colorado Department of Labor and Employment (CDLE)',
+    url: 'https://cdle.colorado.gov/employers/unemployment-insurance-premiums/introductory-rates',
+    document: 'Introductory Rates; Premium Rates — CDLE Unemployment Insurance',
+    publicationDate: null,
+    effectiveDate: '2026-01-01',
+    accessedDate: '2026-09-27',
+    section: 'Introductory rates',
+    appliesTo: ['Payroll', 'Fully loaded clinician cost'],
+    interpretation:
+      "Because the wage base is capped at $30,600, the whole SUTA line is bounded at roughly $220-$1,400 per employee per year even at the extremes. On a six-figure salary that moves loaded cost by about 1%, so AS-004's 11.5% burden estimate is not sensitive to the exact figure. What remains unverified here is small.",
+    confidence: 'Reasonable estimate',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-12-15',
+    notes: 'The FAMLI figures in EV-018 were cross-checked the same day against three payroll vendors and were consistent (0.88% total, 0.44% employee, employer share waived under 10 employees).',
+  },
+  {
+    id: 'EV-043',
+    category: '02-Payers',
+    topic: 'Outpatient PT/OT per-unit rates — location known, figures NOT obtained',
+    claim:
+      'Outpatient PT/OT per-unit rates are published in the Health First Colorado Physician Fee Schedule (versions effective January 1, 2026 and April 1, 2026; only codes that were reduced appear on the April schedule) and in a searchable code lookup on the HCPF provider rates page. No per-unit dollar figure for CPT 97110, 97530, 97140 or the 97161-97163 evaluation codes was obtained in this pass.',
+    source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
+    url: 'https://hcpf.colorado.gov/sites/hcpf/files/01_CO_Fee%20Schedule_Health%20First%20Colorado_04012026%20v1.0.pdf',
+    document: 'Health First Colorado Physician Fee Schedule Rates Effective April 1, 2026',
+    publicationDate: null,
+    effectiveDate: '2026-04-01',
+    accessedDate: '2026-09-27',
+    section: 'CPT 97xxx therapy codes',
+    appliesTo: ['Visit economics', 'Revenue model', 'Path comparison'],
+    interpretation:
+      'This is the number that decides whether the outpatient lane is a business or a hobby. Under it a 30-minute visit bills 2 units and a 60-minute visit 4, capped at 5 units a day (EV-009). Until it is read off the schedule, no revenue figure for lane B exists in this system, and AS-032 stays null. Do not guess it: Medicaid therapy per-unit rates vary by state by more than 2x.',
+    confidence: 'Unknown',
+    retrieval: 'not-accessed',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-10-15',
+    notes:
+      'Open the PDF or the lookup tool and record the rate per unit for 97110, 97530, 97140, 97161-97163 (PT evaluation), 97165-97167 (OT evaluation) and 92507 / 92523 (speech). Then compute revenue for a 30-minute and a 60-minute visit.',
   },
 ];
 
