@@ -418,3 +418,79 @@ From the rule, read directly:
 3. C.R.S. 25-27.5-102, the statutory definitions.
 4. The HCA fee schedule 2026/2027 page itself, for the Class A amount.
 5. Whatever HCPF document carries the 2026 pediatric LTHH PAR dates.
+
+---
+
+## Third addendum: the outpatient rates, read directly
+
+You sent the January 2026 Physician Fee Schedule. It is 156 pages; the
+therapy codes are on pages 94 and 103. Its rate column is labelled
+"10-01-2025 rates", so it predates the July 2026 2% cut. Everything below is
+therefore about 2% high, and the July 2026 schedule is the one remaining
+download for this question.
+
+### The rates
+
+| Code | What it is | Per unit / session |
+|---|---|---|
+| 97530 | Therapeutic activities (15 min) | $34.97 |
+| 97110 | Therapeutic exercise (15 min) | $32.14 |
+| 97112 | Neuromuscular re-education (15 min) | $33.55 |
+| 97140 | Manual therapy (15 min) | $29.98 |
+| 97161–97163 | PT evaluation, any complexity | $87.52 |
+| 97164 | PT re-evaluation | $60.52 |
+| 97165–97167 | OT evaluation | $88.12–$90.05 |
+| 92507 | Speech treatment, per session, any length | $72.01 |
+| 92523 | Speech and language evaluation | $197.61 |
+
+### What a visit is worth, lane by lane
+
+Using the 8-minute rule from the training deck (30 minutes = 2 units,
+60 minutes = 4) and 97530:
+
+| Visit | Outpatient lane | Home health lane | Ratio |
+|---|---|---|---|
+| 60-minute EI visit | $139.88 | $140.16 | ~100% |
+| 30-minute visit | $69.94 | $140.16 | ~50% |
+| Weighted, Ellen's mix (11 of 33 EI) | $93.25 | $140.16 | ~67% |
+| Gross per week, 33 visits | $3,077 | $4,625 | ~67% |
+
+At 97110 instead of 97530, subtract about 8%.
+
+Three things to take from this:
+
+1. **The open lane is a real business, not a hobby.** A 60-minute visit pays
+   the same as home health. The plan's worry that outpatient rates might be a
+   fraction of home health was right only for short visits.
+2. **The visit-mix lever has reversed.** Under the flat rate, Ellen's eleven
+   60-minute EI children were the capacity drain. Under per-unit pay they are
+   the best-paid visits, and the 30-minute children are the thin ones. Every
+   conclusion in the Simulator's mix sensitivity is about the *closed* lane.
+3. **Evaluations matter.** Every new child starts with an $87.52 evaluation
+   that sits outside the 48-unit allowance. Intake is not just paperwork; it
+   is revenue.
+
+Speech is the exception: a speech session is a flat $72.01 regardless of
+length in the outpatient lane against $152.37 in home health, so a speech
+therapist's economics differ sharply by lane. That bears on D-004.
+
+### What changed in the app
+
+- EV-050 records the rates; AS-032 (97530), AS-033 (97110) and AS-034 (PT
+  evaluation) are filled, marked "Strong evidence" rather than "Confirmed"
+  because the July 2026 cut is not yet reflected.
+- A small new model, `src/model/outpatient.ts`, applies the 8-minute rule and
+  compares the lanes. It holds no rate of its own; rates come from the
+  register. Nine new tests cover it.
+- The dashboard now shows the two-lane comparison at the top. The Simulator,
+  Staffing and Founder Ramp screens still run on the home health rate, and
+  say so.
+- UU-009 is marked understood, Q-010 answered, T-008 done.
+
+### Still missing
+
+1. Physician Fee Schedule effective 1 July 2026, for the post-cut figures.
+2. Early Intervention Colorado provider qualification and payment (Q-014).
+3. C.R.S. 25-27.5-102.
+4. The HCA fee schedule 2026/2027 page.
+5. Provider Bulletin B2600538 (May 2026) for the pediatric LTHH PAR dates.

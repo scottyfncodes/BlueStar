@@ -121,13 +121,13 @@ export const unknownUnknowns: UnknownUnknown[] = [
   },
   {
     id: 'UU-009',
-    surprise: 'In the outpatient lane a visit is paid by the 15-minute unit — and nobody has looked up the rate.',
+    surprise: 'In the outpatient lane a 60-minute visit pays about what home health pays. A 30-minute visit pays about half.',
     whyItMatters:
-      'Every dollar figure in this system assumes $143.02 per visit. In the outpatient lane that number does not exist: a 30-minute visit bills 2 units and a 60-minute visit 4 (unit counts now confirmed from the HCPF training deck, EV-044), at a per-unit rate published in a fee schedule this pass could not open (EV-043). Medicaid therapy unit rates elsewhere run roughly $20-$40, which would put a 30-minute visit at a fraction of the home health rate — but that is an out-of-state bracket, not a Colorado figure, and it must not be used. The point is that the single most decision-relevant number in the plan is currently blank (AS-032).',
-    costImpact: 'Unknown, and potentially the difference between viable and not viable in the only lane currently open.',
-    timelineImpact: 'None — the number can be looked up in an afternoon (roadmap T-008).',
+      'Read directly from the January 2026 physician fee schedule (EV-050): 97530 pays $34.97 a unit and 97110 $32.14, before the July 2026 2% cut. Under the 8-minute rule (EV-044) a 60-minute visit bills 4 units — $139.88 at 97530, within a dollar of the $140.16 home health rate — while a 30-minute visit bills 2 units, $69.94. On Ellen\'s actual mix (11 of 33 weekly visits are 60-minute EI visits) the outpatient lane grosses about two-thirds of what the home health lane would for the identical schedule. And the visit-mix lever flips: the long EI visit, a capacity drain under the flat rate, is the best-paid visit here, and a caseload of 30-minute visits is the thin one.',
+    costImpact: 'About -34% gross revenue on the current schedule versus the (currently closed) agency lane; near parity on 60-minute visits, roughly half on 30-minute visits.',
+    timelineImpact: 'None — the number is now known. The July 2026 schedule should be read to apply the 2% cut.',
     dependency: 'AS-032', owner: 'Scott',
-    evidenceIds: ['EV-043', 'EV-044', 'EV-009'], status: 'Open',
+    evidenceIds: ['EV-050', 'EV-044', 'EV-007'], status: 'Understood',
   },
   {
     id: 'UU-010',
@@ -237,12 +237,12 @@ export const openQuestions: OpenQuestion[] = [
   },
   {
     id: 'Q-010',
-    question: 'What does Health First Colorado pay per 15-minute unit for the CPT codes a pediatric home visit would bill, and what does that make a 30-minute and a 60-minute visit worth?',
+    question: 'ANSWERED 2026-09-27 — What does Health First Colorado pay per 15-minute unit, and what is a 30- and 60-minute visit worth? Remaining: confirm the post-July-2026 figures.',
     whyItMatters:
-      'This is the revenue figure for the only lane currently open (the agency lane is frozen, EV-033). The system holds no value for it (AS-032). Until it is filled, no profitability conclusion in this app applies to a realistic Blue Star launch.',
-    askWho: 'Nobody — read it off the Health First Colorado Physician Fee Schedule (EV-043) or the HCPF code lookup. Codes: 97110, 97530, 97140, 97161-97163, 97165-97167, 92507, 92523.',
-    estimatedCostRange: 'Free — one afternoon',
-    category: '02-Payers', priority: 'Critical', blocksTaskIds: ['T-008', 'T-007'],
+      'Answered from the January 2026 physician fee schedule, read directly (EV-050, AS-032, AS-033): 97530 $34.97/unit, 97110 $32.14/unit, PT evaluation $87.52; a 60-minute visit is $139.88 and a 30-minute visit $69.94 at 97530. What remains is the July 1, 2026 schedule, which should carry the 2% cut (EV-046) — expected 97530 about $34.27.',
+    askWho: 'Nobody — download the July 1, 2026 Physician Fee Schedule from the HCPF provider rates page and check 97530, 97110 and 97161.',
+    estimatedCostRange: 'Free — ten minutes',
+    category: '02-Payers', priority: 'Medium', blocksTaskIds: [],
   },
   {
     id: 'Q-011',

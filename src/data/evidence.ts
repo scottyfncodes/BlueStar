@@ -1037,7 +1037,7 @@ export const evidence: Evidence[] = [
     section: 'CPT 97xxx therapy codes',
     appliesTo: ['Visit economics', 'Revenue model', 'Path comparison'],
     interpretation:
-      'This is the number that decides whether the outpatient lane is a business or a hobby. Under it a 30-minute visit bills 2 units and a 60-minute visit 4, capped at 5 units a day (EV-009). Until it is read off the schedule, no revenue figure for lane B exists in this system, and AS-032 stays null. Do not guess it: Medicaid therapy per-unit rates vary by state by more than 2x.',
+      'SUPERSEDED by EV-050, which reads the rates directly from the January 2026 schedule. Kept for the record of what was and was not known when the lane comparison was first flagged.',
     confidence: 'Unknown',
     retrieval: 'not-accessed',
     requiresProfessionalVerification: false,
@@ -1180,6 +1180,29 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: false,
     recheckDate: '2027-03-01',
     notes: 'Not a fee schedule. Cost line C-002 remains null.',
+  },
+  {
+    id: 'EV-050',
+    category: '02-Payers',
+    topic: 'Outpatient PT/OT/ST per-unit rates — Physician Fee Schedule, READ DIRECTLY',
+    claim:
+      'Health First Colorado Physician Fee Schedule, rates effective January 1, 2026 (156 pages; the allowable column is headed "Total Allowable Amount 10-01-2025 Rates"), read directly. Timed PT/OT codes, per 15-minute unit: 97110 therapeutic exercise $32.14; 97112 neuromuscular re-education $33.55; 97116 gait training $25.72; 97140 manual therapy $29.98; 97530 therapeutic activities $34.97; 97533 sensory integration $57.36; 97535 self-care/home management $28.77; 97150 group $15.37. Evaluations (untimed): PT 97161/97162/97163 $87.52, PT re-evaluation 97164 $60.52; OT 97165/97166 $88.12, 97167 $90.05, OT re-evaluation 97168 $60.82. Speech (per session, untimed): 92507 treatment $72.01 ($77.01 via telehealth, modifier GT); 92508 group $20.79; 92521 $115.64; 92522 $96.89; 92523 speech-and-language evaluation $197.61; 92524 $95.36; 92526 swallowing $74.24. 97755 assistive technology assessment $33.12/unit. The timed PT/OT codes are marked "Conditional" for prior authorization (the 48-unit rule, EV-044); 92507 is marked "Yes".',
+    source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
+    url: 'https://hcpf.colorado.gov/sites/hcpf/files/01_CO_Fee%20Schedule_Health%20First%20Colorado_01012026%20v1.0.pdf',
+    document: 'Health First Colorado Physician Fee Schedule, Rates Effective January 1, 2026, v1.0 (stored at docs/sources/)',
+    publicationDate: '2026-01-01',
+    effectiveDate: '2026-01-01',
+    accessedDate: '2026-09-27',
+    section: 'Pages 94 (speech) and 103-104 (physical medicine)',
+    appliesTo: ['Visit economics', 'Revenue model', 'Path comparison', 'Disciplines at launch'],
+    interpretation:
+      "The number the plan has been missing. Two consequences fall straight out. (1) A 60-minute visit at 97530 bills 4 units = $139.88 — within a dollar of the $140.16 home health rate — while a 30-minute visit bills 2 units = $69.94, about half. So the outpatient lane roughly matches home health on Ellen's EI visits and pays about half on her non-EI visits; on her actual mix (11 of 33 visits EI) it grosses about 66% of what the home health lane would. (2) The visit-mix lever reverses: under per-unit pay the longer visit is the better-paid one, and a 30-minute caseload is the thin one. Speech is the outlier — 92507 is a flat $72.01 per session regardless of length, against $152.37 in home health. CAVEAT: this column is the October 1, 2025 rate set; the 2.0% across-the-board cut of July 1, 2026 (EV-046) is not reflected, so current figures are very likely 2% lower (97530 about $34.27, 97110 about $31.50). Which code a visit bills is a clinical and coding judgement — 97530 and 97110 bracket the likely range.",
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-10-15',
+    notes:
+      'Read from the PDF Scott supplied (unzipped). Download the July 1, 2026 physician fee schedule to confirm the post-cut figures. Evaluations pay well relative to treatment units — every new child starts with an $87.52 evaluation on top of the visit.',
   },
 ];
 

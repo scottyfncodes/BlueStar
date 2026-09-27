@@ -185,10 +185,10 @@ export const tasks: RoadmapTask[] = [
     phase: 0,
     title: 'Look up the outpatient PT/OT per-unit rates and price a 30- and 60-minute visit',
     detail:
-      'Open the Health First Colorado Physician Fee Schedule (EV-043) or the HCPF code lookup and record the rate per unit for 97110, 97530, 97140, 97161-97163, 97165-97167, 92507 and 92523. Then compute collected revenue for a 30-minute (2-unit) and a 60-minute (4-unit) visit and fill AS-032. Unit counts are confirmed from the HCPF training deck (EV-044); only the dollar rate per unit is missing. This is the revenue figure for the only lane currently open, and the system holds nothing for it.',
+      'DONE 2026-09-27: Scott supplied the January 2026 Physician Fee Schedule and it was read directly (EV-050). 97530 $34.97/unit, 97110 $32.14/unit, PT evaluation $87.52, speech session $72.01. A 60-minute visit is $139.88 and a 30-minute visit $69.94 at 97530. AS-032 to AS-034 filled; the lane comparison is on the dashboard. Remaining: read the July 1, 2026 schedule to apply the 2% cut.',
     dependsOn: [],
     owner: 'Scott',
-    status: 'Not started',
+    status: 'Done',
     estimatedDurationDays: 1,
     costRefIds: [],
     evidenceIds: ['EV-043', 'EV-009'],

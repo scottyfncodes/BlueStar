@@ -8,6 +8,8 @@ import { costs } from '../data/costs';
 import { viabilityCheck, annualModel, visitCycle, capacityVolume } from '../model/economics';
 import { capitalRequirement } from '../model/capital';
 import { defaultScenario, SALARY_TEST_POINTS, ELLEN_BASELINE } from '../model/defaults';
+import { laneComparison } from '../model/outpatient';
+import { assumptionValue } from '../data/assumptions';
 
 export function Dashboard({ go }: { go: (v: string) => void }) {
   const scenario = defaultScenario();
@@ -27,6 +29,16 @@ export function Dashboard({ go }: { go: (v: string) => void }) {
   const unknownCritical = criticalAssumptions.filter((a) => a.confidence === 'Unknown');
   const nextTasks = tasks.filter((t) => t.phase === 0 && t.dependsOn.length === 0).slice(0, 3);
   const verifyFirst = evidence.filter((e) => e.requiresProfessionalVerification);
+
+  // Same schedule, two payment mechanics. Rates come from the register, never from here.
+  const lanes = laneComparison({
+    homeHealthRatePerVisit: scenario.reimbursementPerVisit,
+    outpatientRatePerUnit: assumptionValue('AS-032') ?? 0,
+    eiVisitMinutes: scenario.eiVisitMinutes,
+    nonEiVisitMinutes: scenario.nonEiVisitMinutes,
+    eiVisitShare: scenario.eiMixShare,
+    visitsPerWeek: ELLEN_BASELINE.visitsPerWeek,
+  });
 
   return (
     <>
@@ -68,14 +80,54 @@ export function Dashboard({ go }: { go: (v: string) => void }) {
         changed the picture: the agency lane also needs <em>Medicare certification</em>, which needs
         <em> skilled nursing</em> on staff, and new home health agencies are under a <em>nationwide
         Medicare enrollment freeze</em> since May 13, 2026. So for now only the outpatient lane is open —
-        and this system holds <strong style={{ display: 'inline' }}>no revenue figure</strong> for it.
-        Every dollar shown below still assumes the home health rate, now $140.16 (read directly from the
-        FY2026-27 schedule; the app previously carried $143.02, the October 2025 figure).
+        and its per-unit rates are now read directly too (EV-050) — see the lane comparison below. Every
+        other dollar figure on this page still assumes the home health rate, now $140.16 (read directly
+        from the FY2026-27 schedule; the app previously carried $143.02, the October 2025 figure).
         <div style={{ marginTop: 8 }}>
           <button className="btn" onClick={() => go('decisions')}>Open decision D-001</button>
           <button className="btn" style={{ marginLeft: 8 }} onClick={() => go('unknowns')}>What changed</button>
         </div>
       </Callout>
+
+      <Card title="Two lanes, one schedule — what a visit is worth">
+        <p className="small muted" style={{ marginTop: 0 }}>
+          The home health lane pays a flat rate per visit and is closed to new agencies for now. The
+          outpatient lane pays per 15-minute unit and is open. Both rates below were read directly from
+          HCPF schedules (EV-007, EV-050). Gross figures, before collection loss, mileage and pay.
+        </p>
+        <div className="grid">
+          <Stat
+            label={`${lanes.ei.minutes}-minute EI visit`}
+            value={`${money(lanes.ei.outpatient)} vs ${money(lanes.ei.homeHealth)}`}
+            note={`Outpatient (${lanes.ei.units} units at 97530) vs home health`}
+          />
+          <Stat
+            label={`${lanes.nonEi.minutes}-minute visit`}
+            value={`${money(lanes.nonEi.outpatient)} vs ${money(lanes.nonEi.homeHealth)}`}
+            note={`Outpatient (${lanes.nonEi.units} units at 97530) vs home health`}
+          />
+          <Stat
+            label="Weighted, Ellen's mix"
+            value={`${money(lanes.weighted.outpatient)} vs ${money(lanes.weighted.homeHealth)}`}
+            note={`Outpatient earns ${Math.round(lanes.weighted.ratio * 100)}% of home health per visit`}
+          />
+          {lanes.weeklyGross && (
+            <Stat
+              label={`Gross per week, ${ELLEN_BASELINE.visitsPerWeek} visits`}
+              value={`${money(lanes.weeklyGross.outpatient)} vs ${money(lanes.weeklyGross.homeHealth)}`}
+              note="Same schedule, two payment mechanics"
+            />
+          )}
+        </div>
+        <Callout tone="warn" title="Read this with two caveats">
+          {lanes.note} The outpatient figures use the January 2026 schedule, which predates the July
+          2026 2% cut, and assume 97530 for every unit; 97110 pays about 8% less. Every other dollar
+          figure on this page still uses the home health rate.
+        </Callout>
+        <div style={{ marginTop: 10 }}>
+          <EvidenceRefs ids={['EV-050', 'EV-044', 'EV-007']} />
+        </div>
+      </Card>
 
       <Card title="Can this business actually work?">
         <p className="small muted" style={{ marginTop: 0 }}>
