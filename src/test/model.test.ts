@@ -11,7 +11,7 @@ import { costs } from '../data/costs';
 
 /** Ellen's observed baseline: 45m visit + 15m travel = 60m cycle, 8 visits in 8h. */
 const base: ScenarioInputs = {
-  reimbursementPerVisit: 143.02,
+  reimbursementPerVisit: 140.16,
   visitsPerDay: 8,
   workingDaysPerYear: 230,
   scheduledDaysPerWeek: 4,
@@ -73,8 +73,8 @@ describe('loaded clinician cost', () => {
 describe('visit economics', () => {
   it('applies the collection rate to gross revenue', () => {
     const v = visitEconomics(base);
-    expect(v.grossRevenue).toBe(143.02);
-    expect(v.collectedRevenue).toBeCloseTo(143.02 * 0.93, 6);
+    expect(v.grossRevenue).toBe(140.16);
+    expect(v.collectedRevenue).toBeCloseTo(140.16 * 0.93, 6);
   });
 
   it('counts travel and documentation as consumed clinician time', () => {
@@ -98,7 +98,7 @@ describe('visit economics', () => {
     const v = visitEconomics({ ...base, travelMinutesPerVisit: 35 });
     expect(v.totalMinutesConsumed).toBe(80);
     expect(v.revenuePerClinicianHour).toBeLessThan(v.collectedRevenue);
-    expect(v.revenuePerClinicianHour).toBeCloseTo((143.02 * 0.93 / 80) * 60, 6);
+    expect(v.revenuePerClinicianHour).toBeCloseTo((140.16 * 0.93 / 80) * 60, 6);
   });
 
   it('degrades gracefully when salary is unknown', () => {
@@ -331,7 +331,7 @@ describe('cash calendar', () => {
 
 describe('default scenario wiring', () => {
   it('draws its reimbursement rate from the assumption register', () => {
-    expect(defaultScenario().reimbursementPerVisit).toBe(143.02);
+    expect(defaultScenario().reimbursementPerVisit).toBe(140.16);
   });
 
   it('leaves clinician salary null because the register says it is unknown', () => {

@@ -35,6 +35,12 @@ the primary document**, not by opening the document. The URLs are correct
 primary sources, but **no figure here has been read off a source PDF**. One
 human verification pass is required before any of it drives a real decision.
 
+Update, later on 2026-09-27: Scott supplied three primary documents, now stored
+under `docs/sources/` and read directly — the FY2026-27 Home Health Fee Schedule,
+HCPF's therapy specialty training deck (05/13/2026), and C.R.S. 25-27.5-103.
+Records EV-007, EV-044 and EV-045 carry `retrieval: 'direct-read'` and the
+modelling rate AS-001 was corrected from $143.02 to $140.16.
+
 ## Verification pass — 2026-09-27
 
 A second session re-checked the knowledge base against multiple independent
@@ -53,7 +59,7 @@ the system. See decision D-001, unknowns UU-007 to UU-010, and roadmap T-008.
 src/
   types.ts            Domain model — Evidence, Assumption, Decision, CostItem, …
   data/               The knowledge base (plain TypeScript, no database)
-    evidence.ts       43 records with source, URL, dates, confidence, retrieval
+    evidence.ts       46 records with source, URL, dates, confidence, retrieval
     assumptions.ts    Every number the financial model uses
     decisions.ts      Decision log — options, consequences, reversibility
     roadmap.ts        11 phases, tasks as a dependency graph

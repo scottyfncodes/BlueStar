@@ -245,3 +245,92 @@ policy needs these hosts allowed: `hcpf.colorado.gov`, `cdphe.colorado.gov`,
 `www.sos.state.co.us`, `leg.colorado.gov`, `cdle.colorado.gov`, `www.cms.gov`,
 `www.ecfr.gov`, `www.federalregister.gov`, `www.irs.gov`,
 `www.law.cornell.edu`, `law.justia.com`.
+
+---
+
+## Addendum, later the same day: three primary documents read directly
+
+You uploaded the FY2026-27 Home Health Fee Schedule and HCPF's therapy
+training deck, and pasted the licensing statute. All three are now in
+`docs/sources/` and were read in full. These are the first figures in the
+system that do not rest on a search summary.
+
+### The modelling rate was wrong, and is now right
+
+The fee schedule has **two columns**. The $143.02 the app was using is the
+rate **effective 1 October 2025**. The rate **effective 1 July 2026** is
+**$140.16**. The state cut rates again, 2.0% across the board, through
+HB 26-1410 in the 2026 session.
+
+| Pediatric discipline | FY2025-26 | From 1 Oct 2025 | From 1 Jul 2026 |
+|---|---|---|---|
+| Physical therapy (rev. code 421) | $145.31 | $143.02 | **$140.16** |
+| Occupational therapy (431) | $146.31 | $144.01 | **$141.13** |
+| Speech (441) | $157.97 | $155.48 | **$152.37** |
+
+Every arithmetic cross-check lands exactly (÷1.016, then ×0.98), which also
+retro-confirms the FY2025-26 figures the first build found. Cumulative: about
+**-3.5% in nine months**, from two separate budget actions. That is the pattern
+to plan for. AS-001 is updated, the dashboard says so, and the one test that
+pinned the old number was moved.
+
+> Reminder: this rate only exists in the agency lane, which is closed to new
+> entrants under the Medicare freeze. It is now the *correct* number for a
+> business you cannot currently be.
+
+### The outpatient lane, from the source
+
+The training deck (dated 13 May 2026) is the operating manual for the lane
+that *is* open. What it settles:
+
+- **Unit counts are confirmed.** 23 to 37 minutes bills 2 units; 53 to 67
+  minutes bills 4. So a 30-minute visit is 2 units and a 60-minute EI visit is
+  4. Only the dollar rate per unit is still missing (that is the Physician Fee
+  Schedule, still on the list).
+- **Travel and documentation are explicitly not billable.** The deck says so
+  in plain words. In the agency lane they were absorbed into a flat rate; here
+  they are pure cost.
+- **Enrollment path:** the practice enrolls first as a group (Provider Type
+  48, Specialty 397, with the FEIN), then each PT enrolls as Provider Type 17,
+  Specialty 451 with their SSN and affiliates to the group.
+- **Every child needs a physician, PA or NP order** (an IFSP counts), care
+  must start within 28 days, and the plan of care is limited to 90 days and
+  must be re-signed every 90 days. That is a recurring paperwork loop per child.
+- **PAR timing:** 48 PT+OT units per rolling year before a PAR. A weekly
+  60-minute patient uses that in about 12 weeks; a weekly 30-minute patient in
+  about 24. Retroactive PARs are not allowed, except for EI children aged 0 to 4.
+- **Documentation is heavier than Ellen's 5-minute note.** Encounter notes
+  must carry start and stop times, timed minutes per code, units billed and
+  SOAP elements. AS-007 now carries that warning.
+- **A PT may supervise up to four assistants.** PTAs cannot enroll or bill on
+  their own, but they can deliver visits under Ellen's NPI. None of the
+  strategy paths considers this. New question Q-013.
+- **School-age children with an IEP** are paid by the school district, not
+  fee-for-service. That bounds the referral base.
+
+### The statute: one correction and one warning
+
+The text you pasted is section 103. It contains the licence requirement and the
+penalties, and **no exemptions**. My earlier record placed the "individual acting
+alone" exclusion in 103(1)(b)(III); that was wrong. Subsection (1)(b) is the
+civil-penalty clause. The exclusion lives in the **definition of "home care
+agency" in section 102**, which is the next thing worth pasting.
+
+Two things the direct read added:
+
+- **The penalty is concrete:** a misdemeanor with a $50 to $500 fine, plus a
+  civil penalty of **up to $10,000 per violation**. In a visit-based business,
+  "per violation" is a phrase to take seriously.
+- **Subsection (1.5)** says an entity that contracts with a service agency and
+  itself meets the definition of a home care agency is *not* relieved of its
+  own licence duty. That closes the "we just contract with therapists" idea
+  before anyone has it.
+
+### What is still missing, in order
+
+1. **Physician Fee Schedule** (1 Jan and 1 Apr 2026 versions) for the per-unit
+   rates. With the unit counts now confirmed, this one document turns the open
+   lane into a number.
+2. **C.R.S. 25-27.5-102**, the definitions, for the exact wording of the
+   individual exclusion.
+3. Everything else on the earlier list, unchanged.

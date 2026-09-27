@@ -37,7 +37,7 @@ export const decisions: Decision[] = [
           'Substantially longer pre-revenue period — now measured in many months at best',
         ],
         creates: [
-          'Access to the pediatric LTHH benefit at roughly $143/visit (EV-007)',
+          'Access to the pediatric LTHH benefit at $140.16 per PT visit, $141.13 OT, $152.37 speech (EV-007, read directly)',
           'A licensed, surveyable, transferable asset — licenses carry real enterprise value at exit',
           'Credibility with hospital and complex-care referral sources',
           'A structure that scales to nursing and multi-discipline services later',
@@ -62,7 +62,8 @@ export const decisions: Decision[] = [
         whatItIs:
           'Enroll as an outpatient PT/OT provider with Health First Colorado and deliver therapy in the child\'s home, billing timed CPT codes rather than the home health per-visit rate.',
         requires: [
-          'Medicaid provider enrollment (EV-013)',
+          'Medicaid enrollment: the practice first as a Provider Type 48 / Specialty 397 group, then each PT as Provider Type 17 / Specialty 451 (EV-044)',
+          'A physician, PA or NP order for every child (an IFSP counts), care starting within 28 days, and a plan of care re-signed every 90 days (EV-044)',
           'Licensed therapists. The statute exempts an INDIVIDUAL acting alone with no employees or contractors (EV-034); whether an entity with employees is exempt is UNCONFIRMED',
           'The outpatient per-unit rates, which this system does not yet hold (AS-032, EV-043) — revenue per visit is very likely well below the $143.02 home health rate, especially for 30-minute visits',
           'Authorization once a member passes 48 units in a rolling 12 months (EV-009)',
@@ -76,7 +77,7 @@ export const decisions: Decision[] = [
           'Freedom to test the market before committing to licensure',
         ],
         risks: [
-          'REGULATORY RISK IS THE WHOLE STORY. If Colorado deems this "managing and offering skilled home health services", operating without a license is a serious violation.',
+          'REGULATORY RISK IS THE WHOLE STORY. If Colorado deems this "managing and offering skilled home health services", operating without a license is a misdemeanor plus a civil penalty of up to $10,000 per violation (EV-045, read directly).',
           'Five-unit daily cap limits revenue per visit (EV-009)',
           'May carry less weight with institutional referral sources',
           'Could require restructuring later, at a worse time',
@@ -119,8 +120,8 @@ export const decisions: Decision[] = [
         whatItIs:
           'Ellen practises as a single therapist with no employees and no contractors, relying on the express statutory exemption for an individual who acts alone (EV-034), enrolled with Health First Colorado as an outpatient PT and billing CPT codes with the home as place of service. Blue Star as an entity waits until the lane question is answered.',
         requires: [
-          'Counsel confirming the individual exemption covers Ellen if she practises through (or alongside) an LLC — the statute says "individual", not "entity"',
-          'Health First Colorado enrollment as an individual or group outpatient PT provider (EV-013)',
+          'Counsel confirming the individual exclusion in the definitions section (25-27.5-102) covers Ellen if she practises through (or alongside) an LLC — the statute says "individual", not "entity", and section 103(1.5) warns that contracting arrangements do not remove an entity\'s own duty (EV-045)',
+          'Health First Colorado enrollment as an individual PT, Provider Type 17 / Specialty 451 (EV-044)',
           'The outpatient per-unit rates (AS-032) so the arithmetic can be run before committing',
           'Strict discipline: engaging ANY second clinician, even PRN, ends the exemption',
         ],
@@ -142,7 +143,7 @@ export const decisions: Decision[] = [
         reversibility: 'Easy',
       },
     ],
-    evidenceIds: ['EV-001', 'EV-003', 'EV-006', 'EV-007', 'EV-008', 'EV-009', 'EV-014', 'EV-031', 'EV-032', 'EV-033', 'EV-034', 'EV-035', 'EV-040', 'EV-041', 'EV-043'],
+    evidenceIds: ['EV-001', 'EV-003', 'EV-006', 'EV-007', 'EV-008', 'EV-009', 'EV-014', 'EV-031', 'EV-032', 'EV-033', 'EV-034', 'EV-035', 'EV-040', 'EV-041', 'EV-043', 'EV-044', 'EV-045', 'EV-046'],
     chosenOptionId: null,
     decidedOn: null,
     rationale: null,

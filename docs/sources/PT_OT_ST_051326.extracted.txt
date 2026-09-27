@@ -1,0 +1,1018 @@
+
+===== PAGE 1 =====
+Therapy
+(Physical, Occupational, Speech)
+Specialty Training
+Health First Colorado
+(Colorado’s Medicaid Program)
+
+===== PAGE 2 =====
+Navigating This Presentation
+2
+• Underlined words or phrases often will link viewers to more information, 
+such as web pages. If you are viewing this presentation in normal mode (not 
+slideshow mode), you may need to press the Ctrl key while you click on the 
+link in order to open it.
+• Use color-coded table of contents slides to navigate to specific areas of 
+interest in the presentation.
+• Use back arrows provided in the bottom right corner of some slides to 
+return to table of contents slides.
+
+===== PAGE 3 =====
+Welcome!
+Health First Colorado = Colorado’s Medicaid Program 
+(under Title XIX)
+This training offers guidance for billing Health First Colorado only
+Please reach out to other organizations for more information and training on 
+their billing policies:
+Regional Accountable Entities (RAEs): https://hcpf.colorado.gov/accphaseIII
+Care and Case Management (CCM): https://hcpf.colorado.gov/care-case-management-system
+Child Health Plan Plus (CHP+): https://hcpf.colorado.gov/child-health-plan-plus
+Medicare: https://www.cms.gov/medicare/enrollment-renewal/providers-suppliers
+3
+
+===== PAGE 4 =====
+Agenda
+Introduction
+Provider 
+Enrollment
+Benefit 
+Overview
+Prior 
+Authorization 
+Requests (PARs)
+Billing & 
+Payment
+Resources
+5
+
+===== PAGE 5 =====
+Introduction
+6
+
+===== PAGE 6 =====
+Outpatient Therapies
+Health First Colorado (Colorado's Medicaid program) covers Physical Therapy 
+(PT), Occupational Therapy (OT) and Speech Therapy (ST) services provided in an 
+outpatient setting
+•
+Services take place in the office, hospital, home and other settings
+•
+Therapies may also be available through the Home Health Program and in the 
+school as part of the School Health Services Program
+•
+Outpatient therapy services are billed as fee-for-service claims to Health First 
+Colorado’s Fiscal Agent (Gainwell Technologies)
+7
+
+===== PAGE 7 =====
+Rehabilitative Therapy
+"Rehabilitative" means therapy that treats acute injuries and illnesses which are 
+non-chronic conditions (short-term in nature)
+• Rehabilitative therapies assist with:
+•
+Recovery from acute injury, illness or 
+surgery
+•
+Regaining or relearning skills and functions 
+for daily living
+•
+Rehabilitative therapies are a benefit 
+when provided in nursing facilities
+8
+
+===== PAGE 8 =====
+Habilitative Therapy
+"Habilitative" means therapy that treats chronic conditions with the purpose of 
+helping the member retain or improve skills and functioning that are affected by 
+the chronic condition (long-term)
+•
+Not a benefit when provided in nursing facilities
+•
+Not categorized as an Inpatient or Home Health 
+benefit (“Acute” and “Long-term” therapies are 
+Home Health benefits)
+•
+Not to be confused with Habilitation services found 
+within Home and Community-Based Services (HCBS) 
+waivers programs
+9
+
+===== PAGE 9 =====
+Provider Enrollment
+10
+
+===== PAGE 10 =====
+Eligible Rendering Providers
+Approved provider types for outpatient therapies include:
+•
+Physical therapist 
+•
+Occupational therapist
+•
+Speech-language pathologist
+•
+Physician (MD or DO)
+•
+Physician assistant
+•
+Advanced practice nurse
+All provider types must be licensed by the Colorado Department of Regulatory 
+Agencies (DORA)
+11
+
+===== PAGE 11 =====
+Supervision of Other Providers
+12
+The following providers are eligible to provide services, but they must work 
+under supervision of an enrolled therapist:
+•
+Physical therapy assistants
+•
+Occupational therapy assistants
+•
+Speech-language pathology assistants
+•
+Clinical fellows 
+• Cannot enroll with Health First Colorado
+• Supervising therapist’s National Provider Identifier (NPI) must be used as the 
+rendering provider on the claim form
+• Documentation must indicate that the assistant performed the services
+
+===== PAGE 12 =====
+Physical Therapist Supervision
+Physical therapists may supervise up to four (4) individuals at one time 
+• Supervising individuals who are not physical therapists
+• This may include certified nurse aides
+• These individuals may assist in the therapist's clinical practice
+Authority extends to the limits stated in the Physical Therapists Practice Act
+13
+
+===== PAGE 13 =====
+Paying Individuals (SSN) v. Groups (FEIN)
+Social Security Number 
+(SSN)
+Federal Employer Identification 
+Number (FEIN)
+• All individuals enroll with SSN 
+for individual National 
+Provider Identifier (NPI)
+• Individual provider may 
+affiliate to a group
+• Rendering provider on claim 
+is for individual NPI using SSN
+• Second National Provider 
+Identifier (NPI) optional if 
+provider wants to be paid 
+under Tax ID (FEIN)
+• Billing provider on claim is for 
+group NPI using FEIN
+14
+
+===== PAGE 14 =====
+Individual Enrollment
+Provider Type 17, Specialty 451: Physical Therapist
+Provider Type 27, Specialty 452: Speech Therapist
+Provider Type 28, Specialty 450: Occupational Therapist
+Enrollment Types:
+• Billing Individual
+• Individual Within a Group
+• Ordering, Prescribing and Referring (OPR) (Speech Therapists only)
+• Must enroll with individual’s Social Security Number (SSN)
+• May affiliate with one or more groups (after group is enrolled with Health 
+First Colorado)
+15
+
+===== PAGE 15 =====
+Provider Type 48 Group Enrollment
+Provider Type 48, Specialty 397: Practitioner
+• Affiliated physical, occupational or speech therapist in the group
+Provider Type 48, Specialty 470: Comprehensive Outpatient Rehabilitation 
+Facility
+• Affiliated Doctor of Medicine (MD) or Doctor of Osteopathic Medicine (DO) 
+in the group
+Enrollment Type = Group
+• Must enroll with group’s Federal Employer Identification Number (FEIN)
+• Group must be enrolled prior to affiliation of individual practitioners
+16
+
+===== PAGE 16 =====
+Provider Type 25 Group Enrollment
+Provider Type 25, Specialty 441: Non-Physician Practitioner - Group
+• Affiliated behavioral health clinician, psychologist, nurse practitioner, nurse 
+midwife, Certified Registered Nurse Anesthetist (CRNA), physical therapist, 
+occupational therapist, speech therapist or audiologist in the group
+Enrollment Type = Group
+• Must enroll with group’s Federal Employer Identification Number (FEIN)
+• Group must be enrolled prior to enrollment of individual practitioners
+17
+
+===== PAGE 17 =====
+Provider Type 15 Group Enrollment
+Provider Type 15, Specialty 220: Outpatient Therapies Pediatric Behavioral 
+Therapy Clinic
+• Affiliated behavioral therapist, physical therapist, occupational therapist or 
+speech therapist in the group
+Enrollment Type = Group
+• Must enroll with group’s Federal Employer Identification Number (FEIN)
+• Group must be enrolled prior to enrollment of individual practitioners
+• Behavioral Therapy Provider Attestation Form must be included for the 
+individual pediatric behavioral therapists affiliated with the group
+18
+
+===== PAGE 18 =====
+Benefit Overview
+19
+
+===== PAGE 19 =====
+Member Eligibility
+• Physical and Occupational Therapies (PT and OT)
+• Rehabilitative and habilitative physical and occupational therapy services are 
+covered for all age groups
+• Speech Therapy
+• Rehabilitative and habilitative speech therapy services are covered for all age 
+groups
+• Previous policy required adults to be eligible for the Alternative Benefits Plan 
+(ABP) to receive habilitative speech therapy
+20
+
+===== PAGE 20 =====
+General Policies for Outpatient Therapies
+• Services must be medically necessary
+• Services must have an approved plan of care 
+• Services must be ordered by an enrolled physician, physician assistant, or 
+nurse practitioner
+• Individualized Family Service Plans (IFSPs) count as an order
+• Claims must have National Provider Identification (NPI) number of enrolled 
+provider who rendered the service and the NPI of enrolled provider who 
+ordered the service
+• Services provided to children in a school, with an IEP, must be reimbursed by 
+the School District, not fee-for-service via the Provider Web Portal
+21
+
+===== PAGE 21 =====
+Medical Necessity
+• Therapy services must be medically necessary to qualify for Health First 
+Colorado reimbursement, which means the good or service:
+• Will, or is reasonably expected to prevent, diagnose, cure, correct, reduce or 
+ameliorate the pain and suffering, or the physical, mental, cognitive or 
+developmental effects of an illness, condition, injury or disability
+• Is clinically appropriate in terms of type, frequency, extent, site and duration
+• Is not primarily for the economic benefit of the provider or primarily for the 
+convenience of the member, caretaker or provider
+• Is delivered in the most appropriate setting(s) required by the member's condition
+• Is not experimental or investigational 
+• Is not more costly than other equally effective treatment options
+22
+
+===== PAGE 22 =====
+Ordering, Prescribing, Referring (OPR) Providers
+All services must have a written order, prescription or referral by any of the 
+following Health First Colorado-enrolled providers:
+• Physician (MD or DO)
+• Physician Assistant
+• Nurse Practitioner
+• An approved Individualized Family Service Plan (IFSP) 
+for Early Intervention Physical Therapy/Occupational 
+Therapy or Speech Therapy
+Services must be started within 28 days 
+of the date ordered
+23
+
+===== PAGE 23 =====
+Documentation Requirements
+• Rendering providers must document evaluations, re-evaluations, services, 
+member progress, attendance and discharge plans
+• Documentation must be kept in member's records with a copy of the 
+Ordering, Prescribing and Referring (OPR) provider’s order
+• Documentation must support medical necessity and need for level of skill 
+provided
+• Rendering providers must copy member's primary care provider, OPR provider 
+and medical home on records
+24
+
+===== PAGE 24 =====
+Documentation Requirements Continued
+• All documentation must include:
+• Member's name and date of birth
+• Date and type of service provided
+• Description of each service provided during the encounter, including 
+procedure codes and time spent on each (including start and stop times) 
+• Total duration of the encounter
+• Name(s) and title(s) of the person(s) providing each service and the name 
+and title of the therapist supervising or directing the services
+25
+
+===== PAGE 25 =====
+Documentation: Episode of Care
+• Health First Colorado requires the following types of documentation as a 
+record of services provided within an episode of care: initial evaluation, re-
+evaluation, visit/encounter notes and a discharge summary
+• An episode of care is defined as the period of time from the first date of 
+service to the last date of service a member is under the care of a provider:
+•
+In one therapy discipline
+•
+In one setting 
+•
+For the current condition(s) being treated
+•
+For a specific plan of care
+26
+
+===== PAGE 26 =====
+Documentation: Initial Evaluation
+Documentation of the initial evaluation must include:
+1. Referral Information: Referral source and reason
+2. History: Member’s relevant health history and diagnoses
+3. Assessment: Summary of impairments, functional limitations and disabilities
+4. Plan of care:
+•
+Specific treatment goals for episode of care
+•
+Proposed interventions and treatments
+•
+Proposed duration and frequency of services
+•
+Dated signature of physician, physician assistant or nurse practitioner or some other 
+document that indicates approval of the plan of care
+27
+
+===== PAGE 27 =====
+Care Plan Regular Review
+• A care plan cannot cover more than a 90-day period, or the time frame 
+documented in an approved Individualized Family Service Plan (IFSP)
+• Under state law, a therapist's plan of care must be reviewed, revised if 
+necessary and signed as medically necessary by the member’s physician, 
+physician assistant or nurse practitioner once every 90 days
+28
+
+===== PAGE 28 =====
+Documentation: Re-Evaluation
+Re-evaluation must occur when there is an unanticipated change in the 
+member's status, failure to respond to interventions or any new problems or 
+goals that require significant modification of the treatment plan
+Re-evaluation documentation must include the following:
+1. Reason for re-evaluation
+2. Member's health and functional status reflecting changes
+3. Findings from any repeated or new examination elements
+4. Changes to plan of care
+29
+
+===== PAGE 29 =====
+Documentation: Encounter Notes
+• Encounter notes document the implementation of the plan of care 
+established by the therapist at the initial evaluation and must include:
+• Member's name and date of birth
+• Date and type of service(s)
+• Description of each service provided, including procedure codes
+• Short- or long-term goals being addressed during the visit
+• Total timed code treatment minutes and total treatment time in minutes (not 
+including time for services that are not billable, such as rest periods)
+• Number of units billed
+• Name(s) and title(s) of the person(s) providing each service, including assistants 
+and the therapist supervising or directing the service(s)
+30
+
+===== PAGE 30 =====
+Encounter Notes Continued
+• Encounter notes should also include:
+•
+Subjective element that includes the reason for the visit, the member or 
+caregiver's report of the member's current status relative to treatment goals and 
+any changes in member's status since the previous visit
+•
+Objective element that includes the provider’s findings, including abnormal and 
+pertinent normal findings from any procedures or tests performed
+•
+Assessment element that includes the provider’s assessment of the member's 
+response to interventions, specific progress made toward treatment goals and 
+any factors affecting the intervention or progression of goals
+•
+Plan element that states the plan for the next visit(s)
+31
+
+===== PAGE 31 =====
+Documentation: Discharge Summary
+• At the conclusion of therapy services, a discharge summary must be included 
+in the documentation of the final visit in an episode of care, including:
+• Highlights of the member's progress or lack of progress towards treatment 
+goals
+• Summary of the outcome of services provided during the episode of care
+32
+
+===== PAGE 32 =====
+Limits: Physical and Occupational Therapy
+• A daily limit of five (5) units of physical therapy and five (5) units of 
+occupational therapy is allowed, regardless of whether it is rehabilitative or 
+habilitative services
+• Some specific daily limits per procedure code apply
+33
+
+===== PAGE 33 =====
+PT and OT Limitations Continued
+Members may receive up to 48 units (approximately 12 hours) of any 
+combination of physical therapy and occupational therapy services per a 
+rolling 12-month period before a Prior Authorization Request (PAR) is required
+• The 12-month rolling period begins on member’s first date of service, not with 
+the start of a calendar year
+• Unused units do not roll over into the next 12-month period
+• Units begin decrementing from paid units for a specific member on the first date 
+of service regardless of provider
+• A unit equals either 1) a timed increment, or 2) one treatment session as 
+described in the specific Current Procedural Terminology (CPT) codes
+• Evaluation and orthotic services are not included in the 48-unit limit
+34
+
+===== PAGE 34 =====
+Covered Speech Therapy Assessments
+Assessment: Speech therapy service may include testing and clinical 
+observation, as appropriate for chronological or developmental age, for one or 
+more of the following areas, and must yield a written evaluation report
+•
+Expressive language
+•
+Receptive language
+•
+Cognition
+•
+Augmentative and alternative 
+communication
+•
+Voice disorder
+•
+Resonance patterns
+•
+Articulation/phonological 
+development
+•
+Pragmatic language
+•
+Fluency
+•
+Feeding and swallowing
+•
+Hearing status based on pass/fail criteria
+•
+Motor speech
+•
+Aural rehabilitation (defined by provider's 
+scope of practice)
+•
+Speech therapy for the diagnosis of Gender 
+Affirming Care
+35
+
+===== PAGE 35 =====
+Covered Speech Therapy Treatment
+Treatment: Speech therapy service may include one or more of the following, 
+as appropriate:
+• Articulation/phonological therapy
+• Language therapy including expressive, 
+receptive and pragmatic language
+• Augmentative and alternative 
+communication therapy*
+• Auditory processing/discrimination 
+therapy
+• Fluency therapy
+• Voice therapy
+• Oral motor therapy
+• Swallowing therapy
+• Speech reading
+• Cognitive treatment
+• Necessary supplies and equipment
+• Aural rehabilitation (defined by 
+provider's scope of practice)
+*Adults with chronic conditions may qualify
+36
+
+===== PAGE 36 =====
+Limitations: Speech Therapy
+• Members may not receive both rehabilitative and habilitative speech therapy 
+services on the same date of service
+• Members determined to need a speech-generating device should be referred 
+to a Health First Colorado-enrolled Durable Medical Equipment (DME) supplier 
+to be prior authorized
+37
+
+===== PAGE 37 =====
+Speech Therapy Session Limitations
+Members may receive up to 12 sessions of speech therapy services per a rolling 
+12-month period before a Prior Authorization Request (PAR) is required
+• One (1) date of service is equivalent to one session, regardless of the number of 
+units billed on that date of service
+• The 12-month rolling period begins on the member’s first date of service, not 
+with the start of a calendar year
+• Unused units do not roll over into the next 12-month period
+• Units begin decrementing from paid units for a specific member on the first date 
+of service regardless of provider
+38
+
+===== PAGE 38 =====
+Verifying Remaining Service Units
+• Providers can verify remaining service units on the Provider Web Portal by 
+clicking on “Eligibility” and then “Eligibility Verification”
+• Providers should check the “Limit Details” after searching for the specific 
+member
+• If the used limit quantity or amount is 0 (nothing used), then the Limit Details 
+section will not display in the Provider Web Portal
+39
+
+===== PAGE 39 =====
+Remaining Units Continued
+• Units are calculated regardless of whether they were paid with a Prior 
+Authorization Request (PAR)
+• Once a PAR is utilized, a full 365 days must elapse before a member has 
+another 48 units of physical and occupational therapy or 12 units of speech 
+therapy available without requiring a PAR
+• Providers may request revision of an existing PAR or may submit a new PAR if 
+additional therapy is needed
+Resource: Verify Remaining Therapy Service Units Quick Guide
+40
+
+===== PAGE 40 =====
+Co-Treatment
+• Therapists are only allowed to bill for the time interacting with the member 
+and not the total time in the room
+• Each provider may only bill for the time they directly treat the member during the 
+co-treatment session
+41
+
+===== PAGE 41 =====
+Co-Treatment Matrix
+•
+Valid clinical rationale for providing co-treatment must be present
+•
+Each provider must have an approved plan of care or Individualized Family Service Plan (IFSP) for Early 
+Intervention which includes co-treatment
+•
+Each provider must have an approved prior authorization which includes the plan of care or IFSP 
+documentation that co-treatment will be used
+•
+Each provider may only bill for the time they directly treat the member during the co-treatment session
+42
+
+===== PAGE 42 =====
+Services Not Covered
+• Duplicate therapy (same services performed by therapists of different 
+disciplines on the same dates of service)
+• Services provided by unsupervised therapy assistants
+• Services specified in a plan of care that is not reviewed and revised as 
+medically necessary by the member's physician, physician assistant, nurse 
+practitioner or approved Individualized Family Service Plan (IFSP) for Early 
+Intervention Physical Therapy/Occupational Therapy or Speech Therapy
+• Services that are experimental, investigational or provided as part of a clinical 
+trial and have been determined not to be medically necessary
+• Services not documented in the member's health care record
+43
+
+===== PAGE 43 =====
+Services Not Covered Continued
+• Services not part of the member's plan of care
+• Services for conditions of chronic pain that do not interfere with the member's 
+functional status and that can be treated by routine nursing measures
+• Therapeutic service that is denied Medicare payment because of the provider's 
+failure to comply with Medicare requirements
+• Supplies that can be obtained from a medical supplier
+• Vocational or educational services, except as provided under Individualized 
+Education Plan (IEP)-related or waiver services
+• Educational, personal need and comfort therapies
+• Art and craft activities for the purposes of recreation
+44
+
+===== PAGE 44 =====
+Services and Time Not Covered
+• Psychosocial services
+• Record keeping documentation and travel time (e.g., transport and waiting 
+time of a member to and from therapy sessions)
+• Time spent for preparation, report writing, processing of claims or 
+documentation regarding billing or service provision
+45
+
+===== PAGE 45 =====
+Services Not Covered: Speech Therapy
+Speech therapy services not covered for any age:
+•
+Treatment for dysfunction that is self-correcting (e.g., natural dysfluency or 
+developmental articulation errors)
+•
+Services provided for simple articulation or academic difficulties that are not 
+medical in origin are non-benefit services
+•
+Treatment of speech and language delays not associated with an acquired or 
+chronic medical condition, neurological disorder, acute illness, injury or 
+congenital defect, unless they are covered by an Individualized Family Service 
+Plan (IFSP)
+46
+
+===== PAGE 46 =====
+Adult Speech Therapy Services
+Speech therapy services not covered for adults (ages 21 and above):
+•
+Maintenance programs when goals of a treatment plan have been achieved, and 
+no further progress is expected
+47
+
+===== PAGE 47 =====
+Prior Authorization Requests 
+(PARs)
+50
+
+===== PAGE 48 =====
+Physical and Occupational Therapy
+• A Prior Authorization Request (PAR) is needed for greater than 48 units of most 
+physical and occupational therapy services per a rolling 12-month period
+• Members may receive physical and occupational therapy services during the 
+same time period
+• Separate PAR and necessary documentation are required for each request
+• Retroactive PARs are not allowed
+• A maximum of one PAR for Early Intervention outpatient physical and 
+occupational therapy and one PAR for non-Early Intervention outpatient 
+therapy may be active at any time for children ages 0 through 4
+•
+Overlapping Early Intervention and non-Early Intervention outpatient PT/OT PARs 
+will only be accepted if the treatment plans associated with each meet different 
+goals and use different treatments
+51
+
+===== PAGE 49 =====
+Speech Therapy
+• A Prior Authorization Request (PAR) is needed for services greater than 12 
+units of speech therapy per a rolling 12-month period
+• Modifiers are required on all claims regardless of whether a PAR is required
+• Retroactive PARs will be accepted for children ages 0 through 4 who are under 
+the direction of the Early Intervention program
+• Retroactive authorizations will be approved for a window of 30 calendar 
+days from the date on which the provider submits the PAR, even if this does 
+not encompass the start date of the Individualized Family Service Plan 
+(IFSP)
+• Dates requested on the PAR must be within the dates on the IFSP
+52
+
+===== PAGE 50 =====
+PAR Requirements
+• Prior Authorization Requests (PARs) must include:
+• A letter of medical necessity (e.g., prescription, approved plan of care) signed by 
+a physician (MD or DO), Physician Assistant (PA) or Nurse Practitioner and include:
+• Diagnosis (preferably with International Classification of Diseases [ICD]-10 code)
+• Reason for therapy
+• Number of requested therapy sessions per week
+• Expected total duration of therapy
+• Member’s treatment history, including assessment and progress notes no greater 
+than 60 days from the date of request
+• Name, address and National Provider Identifier (NPI) of rendering provider if 
+individual therapist
+• Name, address and NPI of billing provider
+53
+
+===== PAGE 51 =====
+PAR Requirements Continued
+•
+Refusal, failure or negligence by the provider to submit a Prior Authorization 
+Request (PAR) for services beyond the first 48 units of physical and 
+occupational therapy or first 12 units of speech therapy does not mean that 
+those additional services are non-covered
+•
+Technical/lack of information (LOI) denial does not mean those services are 
+not covered and members may not be billed for services denied for LOI
+•
+Services partially approved are still considered covered services and members 
+may not be billed for the denied portion of the request
+•
+Services totally denied for not meeting medical necessity criteria are 
+considered non-covered services
+54
+
+===== PAGE 52 =====
+Assistive Technology
+• HB14-1211 requires that all members seeking complex rehabilitation 
+technology must have an initial Assistive Technology Assessment prior to 
+receiving complex rehabilitation technology and then follow-up assessments 
+as needed (Current Procedural Terminology code 97755)
+• Only licensed speech, physical and occupational therapists may render this 
+specialty evaluation and Prior Authorization Requests (PARs) must follow 
+these guidelines:
+•
+Include a current prescription or referral for an Assistive Technology Assessment 
+from the member's primary care physician
+•
+May indicate up to one (1) year duration
+•
+May indicate initial new assessment or follow-up assessment visits
+55
+
+===== PAGE 53 =====
+Assistive Technology PARs
+• Prior Authorization Requests (PARs) for code 97755 should be submitted 
+independently from other services
+• Only one (1) active Prior Authorization Request (PAR) is allowed per member, 
+per time period, for assistive technology; overlapping PAR requests will be 
+denied
+• Initial physical, occupational and speech therapy evaluation services (e.g., 
+97161 and 92521) are not required prior to submitting PAR
+• Code 97755 is limited per member to 20 units (5 hours of assessment) per day 
+and 60 units per State Fiscal Year (July 1-June 30)
+• Code 97755 is separate from physical and occupational therapy and is not 
+part of the benefit limitations
+56
+
+===== PAGE 54 =====
+Assistive Technology Continued
+• If a member requires further assessment by a different provider not indicated 
+on the original and still active Prior Authorization Request (PAR), the original 
+PAR must be closed by the original requesting provider
+• Once closed, a new PAR can be submitted
+• Members may request a “change of provider” on their PAR by contacting the 
+utilization management vendor directly
+57
+
+===== PAGE 55 =====
+Early and Periodic Screening, Diagnostic and 
+Treatment
+• All Prior Authorization Requests (PARs) for members ages 20 and under are 
+reviewed according to Early Periodic Screening, Diagnostic and Treatment 
+(EPSDT) guidelines
+58
+
+===== PAGE 56 =====
+ColoradoPAR Program
+• All therapy Prior Authorization Requests (PARs) and revisions must be processed 
+by the ColoradoPAR Program
+•
+Acentra Health is the Utilization Management (UM) vendor
+•
+Refer to the Colorado Utilization Manual (UM) Provider Manual
+• When submitting a PAR:
+•
+Request number of units, not number of services
+•
+Include appropriate modifiers
+•
+Answer clinical questions on the portal
+•
+Attach relevant clinical documentation
+59
+
+===== PAGE 57 =====
+Final PAR Determination Letters
+• Final Prior Authorization Request (PAR) determination letters are mailed to 
+members
+•
+Letter inquiries should be directed to ColoradoPAR
+• Providers can review requests via the Provider Web Portal
+• Do not render or bill for services until the PAR has been approved
+60
+
+===== PAGE 58 =====
+PAR Denials
+• Prior Authorization Requests (PARs) that are denied may go through a peer-
+to-peer review with the provider who originally requested the PAR
+• Providers can request reconsideration (second opinion) of PARs that have 
+been denied after peer-to-peer review
+• If the PAR is denied for medical necessity, the reconsideration will be 
+performed by a different physician, including an appropriate specialist
+• Members can also submit appeals for PAR reconsiderations
+61
+
+===== PAGE 59 =====
+Primary Payers
+Prior authorization is not needed when a primary payer, such as 
+commercial insurance, pays
+62
+
+===== PAGE 60 =====
+Billing & Payment
+63
+
+===== PAGE 61 =====
+Claims Submission
+Therapy services are usually billed using the 
+CMS 1500 professional claims form or the 837 
+Professional (837P) transaction, which requires 
+using Rendering; Billing; and Ordering, 
+Prescribing and Referring (OPR) National 
+Provider Identifiers (NPIs)
+Claims should be submitted to the Fiscal Agent 
+(Gainwell Technologies)
+64
+
+===== PAGE 62 =====
+Exceptions to Professional Claim Submission
+• Therapy services provided at an outpatient hospital are reported on the 
+institutional claim (UB-04) and are reimbursed as part of the hospital’s 
+Enhanced Ambulatory Patient Groups (EAPG) payment
+• Therapy services provided at Federally Qualified Health Centers (FQHCs) and 
+Rural Health Clinics (RHCs) are billed as part of the encounter rate for the 
+center
+65
+
+===== PAGE 63 =====
+Procedure Codes
+• Refer to the appropriate billing manual for a list of covered procedure codes
+• Some codes represent a treatment session without regard to its length of time 
+(1 unit maximum)
+• Some codes may be billed incrementally as timed units
+• Providers must follow correct coding guidelines as mandated by the Health 
+Insurance Portability and Accountability Act (HIPAA) and the National Correct 
+Coding Initiative (NCCI)
+• Current Procedural Terminology (CPT) codes describe medical procedures and 
+professional services
+• CPT is a numeric coding system maintained and copyrighted by the American 
+Medical Association
+• Code books are available from a variety of bookstores
+66
+
+===== PAGE 64 =====
+Untimed and Timed Codes
+• Untimed Codes
+•
+Providers enter "1" in the claim field labeled “units” when reporting units for 
+codes where the procedure is not defined by a specific timeframe
+•
+Untimed code units are reported based on the number of times the procedure is 
+performed
+• Timed Codes
+•
+Providers enter the appropriate number of 15-minute units of service in the claim 
+field labeled “units” when reporting units for codes specifying direct (one-on-
+one) time spent in contact with member
+•
+Example: A member received a total of 60 minutes of occupational therapy 
+(e.g., 97530) on a given date of service. The provider reports 4 units of code 
+97530.
+67
+
+===== PAGE 65 =====
+Reporting Timed Codes
+• Providers should report codes only for time spent in the delivery of the 
+modality requiring constant attendance and therapy services (e.g., intra-
+service care which begins when the provider is directly working with the 
+patient)
+• Pre- and post-delivery services should not be counted (e.g., rest periods, 
+bathroom breaks, getting member to treatment table or mat)
+68
+
+===== PAGE 66 =====
+Counting Minutes for Timed Codes
+• Providers should not bill for services performed for less than eight (8) minutes 
+when only one (1) service is rendered in a day
+• Providers should bill a single 15-minute unit for treatment greater than or 
+equal to eight (8) minutes through and including 22 minutes for any single 
+timed code in the same day
+• Providers should bill a single 15-minute unit if any 15-minute timed service is 
+performed for seven (7) minutes or less than 7 minutes on the same day as 
+another 15-minute timed service is also performed for 7 minutes or less since 
+the total time of the two is eight (8) minutes or greater than 8 minutes
+•
+Bill the one (1) unit for the service performed for the most minutes
+•
+The same logic is applied when three or more different services are provided for 
+7 minutes or less than 7 minutes
+69
+
+===== PAGE 67 =====
+Billing More than One Unit
+Providers should bill two (2) units if the duration of a single modality or 
+procedure in a day is greater than or equal to 23 minutes through and including 
+37 minutes and so on:
+•
+3 units if duration is 38 minutes through 52 minutes
+•
+4 units if duration is 53 minutes through 67 minutes
+•
+5 units if duration if 68 minutes through 82 minutes
+•
+6 units if duration is 83 minutes through 97 minutes
+•
+7 units if duration is 98 minutes through 112 minutes
+•
+8 units if duration is 113 minutes through 127 minutes
+The pattern remains the same for treatment times in excess of 2 hours
+70
+
+===== PAGE 68 =====
+Units to Minutes 
+71
+
+===== PAGE 69 =====
+National Correct Coding Initiative (NCCI): 
+Speech Therapy
+• National Correct Coding Initiative (NCCI) Procedure-To-Procedure (PTP) and 
+Medically Unlikely Edits (MUE) edits apply to certain combinations of speech 
+therapy procedure codes
+• Providers should not report CPT codes 97110, 97112, 97150, 97530, 
+97127 or G0515 as unbundled services included in services coded as 92507, 92508 
+or 92526
+• One (1) provider should not report CPT codes 92507 and 92508 on the same date of 
+service as CPT codes 97127, 97533 or G0515
+• One (1) provider should not report CPT code G0283 with CPT code 92526
+72
+
+===== PAGE 70 =====
+Procedure Modifiers
+• Providers should use modifiers on both the PAR and claim submission
+•
+All habilitative claims must have modifier 96 in addition to the above modifiers
+•
+All rehabilitative claims must have modifier 97 in addition to the above modifiers
+•
+Early intervention providers must attach modifier TL to all claims in addition to 
+the above modifiers
+73
+
+===== PAGE 71 =====
+Speech Therapy Modifiers
+All claims must include and be submitted with the correct modifier, regardless 
+of PAR requirements, or the claim will be denied.
+Speech therapy delivered via telemedicine should use modifier 95
+74
+
+===== PAGE 72 =====
+Places of Service: Physical Therapy and 
+Occupational Therapy
+•
+Telemedicine is available only for specific procedure codes found in the 
+Telemedicine Billing Manual
+75
+
+===== PAGE 73 =====
+Places of Service: Speech Therapy
+•
+Telemedicine is available only for specific procedure codes found in the 
+Telemedicine Billing Manual
+•
+Early intervention providers may report any place of service code that aligns with 
+the treatment ordered by the member's Individualized Family Service Plan (IFSP)
+76
+
+===== PAGE 74 =====
+Ordering, Prescribing and Referring (OPR)
+• A Health First Colorado-enrolled Ordering, Prescribing and Referring (OPR) 
+provider’s National Provider Identification (NPI) number must be included on 
+the claim form (CMS 1500 field 17b)
+• Physician (MD or DO)
+• Physician Assistant
+• Nurse Practitioner
+• Claims without a valid OPR NPI which are paid will be subject to recovery
+•
+“Valid” means the NPI is registered to a provider that legitimately orders, 
+prescribes or refers the therapy service being rendered
+• Medical documentation must be kept on file to substantiate the order, 
+prescription or referral for therapy services
+77
+
+===== PAGE 75 =====
+OPR Continued
+The Early Intervention Service Broker may list their National Provider 
+Identifier (NPI) as the rendering and referring NPI for early intervention 
+services ordered through an Individualized Family Service Plan (IFSP)
+•
+Must include modifier “TL” on the procedure line to denote service ordered by an 
+approved IFSP and delivered with the time span noted in the IFSP
+If the member does not have an IFSP, the referring provider must be a 
+different ordering provider, not the provider who is rendering the service.
+Refer to the Early Intervention Billing Manual for more information
+For additional IFSP questions please email HCPF_EPSDT@state.co.us
+78
+
+===== PAGE 76 =====
+Resources
+80
+
+===== PAGE 77 =====
+Resource Links
+For Our Providers web pages: https://hcpf.colorado.gov/our-providers
+The General Provider Information Manual is an overview of the program, 
+including billing and policy information
+The Physical and Occupational Therapy Billing Manual provides specific 
+guidance for the physical therapy and occupational therapy benefits
+The Speech Therapy Billing Manual provides specific guidance for the speech 
+therapy benefit
+Fee Schedule web page
+Provider Contacts web page
+81
+
+===== PAGE 78 =====
+hcpf.colorado.gov/our-providers
+hcpf.colorado.gov/our-providers
+Where can I find…?
+• Enrollment forms
+• Revalidation dates spreadsheet
+• Provider types
+• Newsletters
+• What’s New?
+• Check member eligibility
+• Submit claims
+• Review Prior Authorization Requests (PARs)
+• Receive Remittance Advices (RAs)
+• Complete provider maintenance requests4
+• Quick Guides for Web Portal
+• Known issues
+• Training registration
+• General Provider Information manual
+• Billing manuals & appendices
+83
+
+===== PAGE 79 =====
+Thank you!
+85

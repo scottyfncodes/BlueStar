@@ -51,13 +51,13 @@ export const unknownUnknowns: UnknownUnknown[] = [
   },
   {
     id: 'UU-002',
-    surprise: 'Colorado Medicaid pediatric therapy rates went DOWN this year.',
+    surprise: 'Colorado Medicaid pediatric therapy rates went DOWN twice in nine months.',
     whyItMatters:
-      'The pediatric PT home health rate fell from $145.31 to $143.02, exactly -1.6%. Business plans routinely assume reimbursement rises with inflation. Here it did the opposite, and now we know why: in September 2025 the Governor declared a revenue shortfall and HCPF took back the 1.6% increase the legislature had granted for FY2025-26, effective October 1, 2025 (EV-037). Margin has to come from operating efficiency, any plan that needs a rate increase to work is not a plan, and Colorado can cut mid-year on about a month\'s notice.',
+      'The pediatric PT home health rate fell from $145.31 to $143.02 in October 2025 (-1.6%) and again to $140.16 on July 1, 2026 (-2.0%, HB 26-1410, EV-046) — read directly off the FY2026-27 schedule (EV-007). The first step: Business plans routinely assume reimbursement rises with inflation. Here it did the opposite, and now we know why: in September 2025 the Governor declared a revenue shortfall and HCPF took back the 1.6% increase the legislature had granted for FY2025-26, effective October 1, 2025 (EV-037). Margin has to come from operating efficiency, any plan that needs a rate increase to work is not a plan, and Colorado can cut mid-year on about a month\'s notice.',
     costImpact: 'Reduces revenue per visit and compresses margin on every future visit.',
     timelineImpact: 'None directly, but it lengthens time to break-even.',
     dependency: 'AS-001', owner: 'Scott',
-    evidenceIds: ['EV-007', 'EV-006', 'EV-037'], status: 'Understood',
+    evidenceIds: ['EV-007', 'EV-006', 'EV-037', 'EV-046'], status: 'Understood',
   },
   {
     id: 'UU-003',
@@ -123,21 +123,21 @@ export const unknownUnknowns: UnknownUnknown[] = [
     id: 'UU-009',
     surprise: 'In the outpatient lane a visit is paid by the 15-minute unit — and nobody has looked up the rate.',
     whyItMatters:
-      'Every dollar figure in this system assumes $143.02 per visit. In the outpatient lane that number does not exist: a 30-minute visit bills 2 units and a 60-minute visit 4, at a per-unit rate published in a fee schedule this pass could not open (EV-043). Medicaid therapy unit rates elsewhere run roughly $20-$40, which would put a 30-minute visit at a fraction of the home health rate — but that is an out-of-state bracket, not a Colorado figure, and it must not be used. The point is that the single most decision-relevant number in the plan is currently blank (AS-032).',
+      'Every dollar figure in this system assumes $143.02 per visit. In the outpatient lane that number does not exist: a 30-minute visit bills 2 units and a 60-minute visit 4 (unit counts now confirmed from the HCPF training deck, EV-044), at a per-unit rate published in a fee schedule this pass could not open (EV-043). Medicaid therapy unit rates elsewhere run roughly $20-$40, which would put a 30-minute visit at a fraction of the home health rate — but that is an out-of-state bracket, not a Colorado figure, and it must not be used. The point is that the single most decision-relevant number in the plan is currently blank (AS-032).',
     costImpact: 'Unknown, and potentially the difference between viable and not viable in the only lane currently open.',
     timelineImpact: 'None — the number can be looked up in an afternoon (roadmap T-008).',
     dependency: 'AS-032', owner: 'Scott',
-    evidenceIds: ['EV-043', 'EV-009'], status: 'Open',
+    evidenceIds: ['EV-043', 'EV-044', 'EV-009'], status: 'Open',
   },
   {
     id: 'UU-010',
     surprise: 'A therapist working entirely alone is expressly exempt from home care agency licensing.',
     whyItMatters:
-      'The licensing statute exempts an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors (EV-034). That is exactly the first phase of the Founder Ramp — Ellen, alone, at $0 owner compensation. It means a lawful first paid visit may not require any facility licence at all. The catch is the word "individual": whether the exemption covers Ellen practising through Blue Star LLC, and it certainly ends the moment a second clinician is engaged, are questions for counsel. It is an on-ramp, not a destination.',
+      'The definitions section of the licensing statute (25-27.5-102) excludes from "home care agency" an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors (EV-034); the licence requirement and its $10,000-per-violation penalty are in section 103, read in full (EV-045). That is exactly the first phase of the Founder Ramp — Ellen, alone, at $0 owner compensation. It means a lawful first paid visit may not require any facility licence at all. The catch is the word "individual": whether the exemption covers Ellen practising through Blue Star LLC, and it certainly ends the moment a second clinician is engaged, are questions for counsel. It is an on-ramp, not a destination.',
     costImpact: 'Could remove licensure cost and timeline from the launch phase entirely.',
     timelineImpact: 'Could compress time to first revenue to the length of Medicaid provider enrollment.',
     dependency: 'D-001', owner: 'Attorney',
-    evidenceIds: ['EV-034', 'EV-003'], status: 'Open',
+    evidenceIds: ['EV-034', 'EV-045', 'EV-003'], status: 'Open',
   },
 ];
 
@@ -241,6 +241,15 @@ export const openQuestions: OpenQuestion[] = [
     askWho: 'HCPF Provider Services; CMS moratorium page; recheck after 2026-11-13',
     estimatedCostRange: 'Free',
     category: '01-Regulatory', priority: 'High', blocksTaskIds: ['T-020'],
+  },
+  {
+    id: 'Q-013',
+    question: 'A PT may supervise up to four assistants (EV-044). Is a PT-plus-PTA model the scaling path, and what do Denver pediatric PTAs earn?',
+    whyItMatters:
+      'Every staffing path in this system assumes each additional clinician is a physical therapist. If a physical therapist assistant can deliver routine follow-up visits under Ellen\'s supervision at a lower loaded cost, cost per visit falls and Ellen\'s time concentrates on evaluations and plans of care — which are also the visits the outpatient lane pays best. PTA pay was not researched. Note the training deck: assistants cannot enroll and bill under the supervising PT\'s NPI, and documentation must name who did what.',
+    askWho: 'Ellen (clinical view); live Colorado PTA postings for pay',
+    estimatedCostRange: 'Free',
+    category: '08-HR', priority: 'Medium', blocksTaskIds: [],
   },
 ];
 

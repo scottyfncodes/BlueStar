@@ -160,30 +160,30 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2026-10-15',
     notes:
-      'MUST VERIFY against the source PDF. This number drives every downstream financial conclusion in the app.',
+      'Superseded as the modelling rate by EV-007 (read directly). Cross-check 2026-09-27: the FY2026-27 schedule\'s "effective 10/1/2025" column shows PT $143.02, OT $144.01 and speech $155.48 — each exactly the figure here divided by 1.016, which confirms these FY2025-26 values indirectly.',
   },
   {
     id: 'EV-007',
     category: '02-Payers',
-    topic: 'Home health per-visit reimbursement — pediatric (FY2026-27, current)',
+    topic: 'Home health per-visit reimbursement — pediatric (FY2026-27, current) — READ DIRECTLY',
     claim:
-      'Colorado Medicaid home health fee schedule effective July 1, 2026 – June 30, 2027 reimburses pediatric (ages 0–20) PT at $143.02 per visit (one visit up to 2.5 hours, revenue codes 420/421).',
+      'The Home Health Fee Schedule effective July 1, 2026 – June 30, 2027 (version 1.0, updated 6/01/2026) shows two rate columns. Rate effective 10/1/2025: pediatric (0-20) PT, revenue codes 420/421, $143.02; OT 430/431 $144.01; speech 440/441 $155.48; RN/LPN $130.85. Rate effective 7/1/2026: PT $140.16; OT $141.13; speech $152.37; RN/LPN $128.23. Unit value for each therapy line is one visit up to 2½ hours. The long-term home health daily maximum ($445.82 from 7/1/2026) applies only to members aged 21 and older.',
     source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
     url: 'https://hcpf.colorado.gov/sites/hcpf/files/10A_CO_FeeSchedule_HomeHealth_07.01.2026-27_v1.0.pdf',
-    document: 'Home Health Fee Schedule Rates, Effective July 1, 2026 – June 30, 2027',
-    publicationDate: null,
+    document: 'Home Health Fee Schedule Rates, Effective July 1, 2026 – June 30, 2027 (stored at docs/sources/)',
+    publicationDate: '2026-06-01',
     effectiveDate: '2026-07-01',
-    accessedDate: ACCESSED,
+    accessedDate: '2026-09-27',
     section: 'Pediatric therapy rates',
     appliesTo: ['Visit economics', 'Revenue model', 'Rate risk'],
     interpretation:
-      'The current-year pediatric PT rate appears to have DECREASED from $145.31 to $143.02 — about -1.6% year over year. Two things follow. First, use $143.02, not $145.31, as the live modelling rate. Second, and more important: Colorado Medicaid therapy rates can go DOWN. Any plan that assumes rate growth is unsupported. Model flat-to-declining reimbursement and make margin from operating efficiency, not from rate increases.',
-    confidence: 'Strong evidence',
-    retrieval: 'search-summary',
-    requiresProfessionalVerification: true,
-    recheckDate: '2026-10-15',
+      'READ DIRECTLY from the PDF Scott supplied — the first figure in this system with that status. The current pediatric PT rate is $140.16, not $143.02: the model had been carrying the October 2025 rate as if it were the July 2026 rate. Two cuts now stack: -1.6% in October 2025 (the budget shortfall, EV-037) and -2.0% on July 1, 2026 (HB 26-1410, EV-046), taking pediatric PT from $145.31 to $140.16 — about -3.5% in nine months. Speech remains the best-paid pediatric discipline at $152.37; OT sits between. Everything else previously said about this rate still holds: flat per visit up to 2.5 hours, agency lane only, and the agency lane is currently closed to new entrants.',
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-07-01',
     notes:
-      'HIGHEST-PRIORITY VERIFICATION ITEM IN THE SYSTEM. Open the PDF, confirm $143.02, and confirm the OT and ST lines which were not returned by search.',
+      'Under-21 members are exempt from the daily maximum, which matters for a child receiving two disciplines on one day. Recheck at the next fiscal-year schedule, and sooner if HCPF issues another mid-year bulletin.',
   },
   {
     id: 'EV-008',
@@ -823,10 +823,10 @@ export const evidence: Evidence[] = [
     category: '01-Regulatory',
     topic: 'Home care agency licensing statute and its exemptions',
     claim:
-      'C.R.S. 25-27.5-103 makes it unlawful to conduct or maintain a home care agency that provides skilled home health services without a CDPHE license. The statute exempts, among others: an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors; outpatient rehabilitation agencies and comprehensive outpatient rehabilitation facilities; community and rural health networks making public-health home visits; consumer-directed attendant programs; and licensed dialysis centres providing in-home dialysis.',
-    source: 'Colorado Revised Statutes (via Justia / colorado.public.law) and CDPHE compliance guidance',
-    url: 'https://law.justia.com/codes/colorado/title-25/health-care/article-27-5/section-25-27-5-103/',
-    document: 'C.R.S. 25-27.5-103 — Home care agency license required',
+      'The definition of "home care agency" in C.R.S. 25-27.5-102 excludes, among others: an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors; outpatient rehabilitation agencies and comprehensive outpatient rehabilitation facilities; community and rural health networks making public-health home visits; consumer-directed attendant programs; and licensed dialysis centres providing in-home dialysis. CORRECTION 2026-09-27: these exclusions are NOT in section 103, which was read in full (EV-045) and contains only the licence requirement and penalties; they sit in the definitions section 102, which has not yet been read directly.',
+    source: 'Colorado Revised Statutes § 25-27.5-102 (via Justia search summaries) and CDPHE compliance guidance quoting the exclusion',
+    url: 'https://law.justia.com/codes/colorado/title-25/health-care/article-27-5/section-25-27-5-102/',
+    document: 'C.R.S. 25-27.5-102 — Definitions ("home care agency")',
     publicationDate: null,
     effectiveDate: null,
     accessedDate: '2026-09-27',
@@ -839,7 +839,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2026-11-01',
     notes:
-      'Statute text reached through search summaries and a CDPHE compliance page that quotes the individual exemption. Read the statute directly. The subsection reference (1)(b)(III) comes from the CDPHE page, not from the statute itself.',
+      'The exclusion text is consistent across the Justia summary of section 102 and a CDPHE compliance page, but section 102 itself has not been read. The earlier reference to 25-27.5-103(1)(b)(III) was wrong — (1)(b) of section 103 is the civil-penalty clause. Next document to paste: 25-27.5-102 in full.',
   },
   {
     id: 'EV-035',
@@ -907,7 +907,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2026-12-01',
     notes:
-      "The arithmetic is ours, not the bulletin's. It supports the $143.02 figure without proving it; the fee schedule PDF (EV-007) still has to be read.",
+      "The arithmetic is ours, not the bulletin's — but the FY2026-27 schedule, now read directly (EV-007), labels its left column 'Rate Effective 10/1/2025' and shows $143.02 there, which confirms both the date and the amount of this cut.",
   },
   {
     id: 'EV-038',
@@ -1044,6 +1044,74 @@ export const evidence: Evidence[] = [
     recheckDate: '2026-10-15',
     notes:
       'Open the PDF or the lookup tool and record the rate per unit for 97110, 97530, 97140, 97161-97163 (PT evaluation), 97165-97167 (OT evaluation) and 92507 / 92523 (speech). Then compute revenue for a 30-minute and a 60-minute visit.',
+  },
+  {
+    id: 'EV-044',
+    category: '02-Payers',
+    topic: 'Outpatient therapy rules — HCPF specialty training, READ DIRECTLY',
+    claim:
+      'HCPF Therapy (PT/OT/ST) Specialty Training dated 5/13/2026, read in full: outpatient therapy is covered in the office, hospital, home and other settings and is billed fee-for-service on the CMS-1500 / 837P to Gainwell. A PT enrolls individually as Provider Type 17, Specialty 451 (with SSN) and may affiliate with a group; the group must enroll first, as Provider Type 48 / Specialty 397 (Practitioner) or Provider Type 25 / Specialty 441, with its FEIN. Every episode needs an order from an enrolled physician, PA or NP; an approved IFSP counts as an order; services must start within 28 days; the plan of care may not exceed 90 days (or the IFSP period) and must be re-signed every 90 days. Limits: 5 units of PT and 5 of OT per day; 48 combined PT/OT units per rolling 12 months before a PAR (evaluations excluded); speech 12 sessions per rolling 12 months. Timed codes bill in 15-minute units under the 8-minute rule: 23-37 minutes = 2 units, 53-67 minutes = 4 units. Travel time, record-keeping and documentation time are explicitly not billable. Encounter notes must record start and stop times, total timed minutes and units billed. Modifiers: 96 habilitative, 97 rehabilitative, TL Early Intervention. A PT may supervise up to four individuals such as PTAs. Retroactive PARs are not allowed except for EI children aged 0-4 (30-day window). PARs for members under 21 are reviewed under EPSDT; ColoradoPAR (Acentra) is the vendor.',
+    source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
+    url: 'https://hcpf.colorado.gov/ptot-manual',
+    document: 'Therapy (Physical, Occupational, Speech) Specialty Training, 05/13/2026 (stored at docs/sources/PT_OT_ST_051326.pdf)',
+    publicationDate: '2026-05-13',
+    effectiveDate: null,
+    accessedDate: '2026-09-27',
+    section: 'Provider enrollment; benefit overview; PARs; billing and payment',
+    appliesTo: ['Regulatory lane', 'Enrollment', 'Authorization workflow', 'Visit economics', 'Documentation', 'Staffing'],
+    interpretation:
+      "This is the operating manual for the lane that is actually open, read from the source. Four consequences. (1) A 30-minute non-EI visit is 2 units and a 60-minute EI visit is 4 units — the unit counts behind AS-032 are now confirmed; only the dollar rate per unit is missing. (2) The 48-unit allowance runs out in about 12 weeks for a weekly 60-minute patient and 24 weeks for a weekly 30-minute one, so PAR work starts within the first quarter for every child, and the plan of care needs a physician signature every 90 days regardless. (3) Documentation in this lane is heavier than Ellen's 5-minute home health note: timed minutes per code, start and stop times, SOAP elements — AS-007 may not transfer. (4) A PT may supervise up to four PTAs, a staffing lever the strategy paths do not consider at all.",
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-05-01',
+    notes:
+      'The deck is training material, not the rule itself; the binding text is the PT/OT Billing Manual it points to. It also states that services provided to school-age children under an IEP are paid by the school district, not fee-for-service — a boundary on the referral base.',
+  },
+  {
+    id: 'EV-045',
+    category: '01-Regulatory',
+    topic: 'C.R.S. 25-27.5-103 — licence requirement and penalties, READ DIRECTLY',
+    claim:
+      'C.R.S. 25-27.5-103 (2025 edition), read in full: since January 1, 2010 it is unlawful for any person, partnership, association or corporation to conduct or maintain a home care agency that provides skilled home health services without a CDPHE licence. Violation is a misdemeanor punishable by a $50-$500 fine, and the department may assess a civil penalty of up to $10,000 for each violation. Subsection (1.5) states that an entity which contracts or arranges with a service agency, and which itself meets the definition of a home care agency, is not relieved of its own duty to hold a licence. The section contains no exemptions; who counts as a "home care agency" is settled by the definitions in section 25-27.5-102.',
+    source: 'Colorado Revised Statutes, 2025 (text supplied by Scott from Justia)',
+    url: 'https://law.justia.com/codes/colorado/title-25/health-care/article-27-5/section-25-27-5-103/',
+    document: 'C.R.S. 25-27.5-103 (stored at docs/sources/CRS_25-27.5-103_2025.txt)',
+    publicationDate: null,
+    effectiveDate: '2024-07-01',
+    accessedDate: '2026-09-27',
+    section: 'Subsections (1), (1.5), (3)',
+    appliesTo: ['Regulatory lane', 'Compliance risk', 'Entity structure'],
+    interpretation:
+      "The cost of getting D-001 wrong is now concrete: a misdemeanor plus up to $10,000 per violation — and 'per violation' in a visit-based business could be read per visit. Subsection (1.5) is a direct warning against the 'we just contract with therapists' workaround: contracting does not remove the duty if the entity itself meets the definition. That moves the decisive question to section 102 — the definition of home care agency and its exclusion for an individual acting alone — which is the next document to read.",
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: true,
+    recheckDate: '2027-07-01',
+    notes:
+      'Subsection (3) is about licensed facilities extending services off-premises and does not apply to Blue Star. Still needs counsel: whether an LLC whose sole clinician is a member-owner is a "corporation" that "conducts a home care agency" once it bills for her services.',
+  },
+  {
+    id: 'EV-046',
+    category: '02-Payers',
+    topic: 'Second rate cut — 2.0% across the board from July 1, 2026',
+    claim:
+      'Health First Colorado applied an across-the-board 2.0% provider rate reduction for dates of service on or after July 1, 2026, enacted through HB 26-1410 during the 2025-26 legislative session as part of balancing the FY2026-27 budget, and applied after all prior reductions.',
+    source: 'HCPF Provider News; July 2026 Provider Bulletin (B2600540)',
+    url: 'https://hcpf.colorado.gov/sites/hcpf/files/Bulletin%200726_B2600540.pdf',
+    document: 'July 2026 Provider Bulletin; HCPF FY 2025-26 & 2026-27 Budget Reduction Fact Sheet',
+    publicationDate: '2026-07-01',
+    effectiveDate: '2026-07-01',
+    accessedDate: '2026-09-27',
+    section: 'Across-the-board rate reduction',
+    appliesTo: ['Visit economics', 'Rate risk', 'Revenue model'],
+    interpretation:
+      'Second cut in nine months, and the arithmetic matches the directly read schedule exactly: $143.02 x 0.98 = $140.16 (EV-007). Together with EV-037 this is a pattern, not an event: Colorado has cut Medicaid provider rates twice in a year to balance its budget. Plan on flat-to-falling reimbursement and build the model to survive another 2-3%.',
+    confidence: 'Strong evidence',
+    retrieval: 'search-summary',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-01-15',
+    notes: 'The bulletin itself was not opened; the rate schedule that results from it was.',
   },
 ];
 
