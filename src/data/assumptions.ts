@@ -70,9 +70,9 @@ export const assumptions: Assumption[] = [
     unit: 'fraction of wages',
     kind: 'ASSUMPTION',
     source: 'Composed from FICA 7.65% plus FUTA/SUTA/FAMLI estimates',
-    evidenceIds: ['EV-018', 'EV-019'],
+    evidenceIds: ['EV-018', 'EV-019', 'EV-055'],
     whyThisValue:
-      'FICA employer share is 7.65% and is firm. The remainder (FUTA, Colorado SUTA at an unknown new-employer rate, FAMLI admin) is estimated at ~3.85%. Under 10 employees the FAMLI employer share does not apply.',
+      'FICA employer share is 7.65% and is firm — a real September 2026 Colorado payslip shows the employee mirror (6.20% + 1.45%) exactly (EV-055). The remainder (FUTA, Colorado SUTA at an unknown new-employer rate, FAMLI admin) is estimated at ~3.85%. Under 10 employees the FAMLI employer share does not apply; note the same payslip shows the EMPLOYEE FAMLI share withheld at 0.45%, not the 0.44% reported for 2026, a discrepancy to settle at famli.colorado.gov.',
     confidence: 'Reasonable estimate',
     financialImpact: 'High',
     operationalImpact: 'Low',

@@ -548,3 +548,71 @@ provider rates page) and is the one remaining download for this question.
 
 The register (AS-032 to AS-034), the dashboard card, the lane-comparison tests
 and the unknowns are all updated to the April figures.
+
+---
+
+## Fifth addendum: the PAR dates verified, an easier plan-of-care rule, the EI standard, and a payslip
+
+Four more documents read directly (the second copy of the April fee schedule
+was identical to the one already stored).
+
+### May 2026 Provider Bulletin (B2600538)
+
+- **The 2026 pediatric LTHH dates are now verified.** PARs required for every
+  new and existing child from 4 May 2026; fully enforced from 1 June 2026.
+  This is the document the first build should have cited instead of
+  OM 25-037. The dates were right; the attribution was wrong.
+- **PARs got faster and stricter in January 2026.** One pend per request,
+  seven calendar days to answer it, technical denial otherwise; standard
+  turnaround seven days; everything done within 21. The packet has to be
+  complete the first time.
+- **Good news for the outpatient lane.** From 15 May 2026 a physician's
+  signature on the plan of care is no longer required when an order or
+  referral exists and the therapist documents delivering the plan to the
+  physician within 30 days of the initial evaluation. That loosens the 90-day
+  re-signature loop in the therapy training deck.
+- From 18 May 2026, claims from a provider whose DORA licence has expired in
+  the payer's records deny automatically. Licence tracking is a billing
+  matter, not just an HR one.
+
+### Acentra's pediatric LTHH therapy training (April 2026)
+
+The agency-lane authorization machine in detail: a 10-day window after the
+first visit to submit the PAR; a plan of care on the HCFA-485 that a therapist
+may author but a physician must sign before the last claim of the period;
+units requested for the whole certification period up front (2 visits a week
+for 26 weeks = 52); one pend, seven days; expedited reviews in 72 hours. Two
+lessons carry to any lane: have the packet ready before the first visit, and
+ask for all the units you will need because revisions after expiry are refused.
+
+### EI Colorado personnel standards
+
+The qualification half of Q-014 is answered, and it is light. A physical
+therapist qualifies with a Colorado licence, training in the state's
+evaluation tools, and EI Colorado's 13-module online provider course with a
+final exam, certificate uploaded to the EI Provider Portal before billing.
+Ellen may already have done this through her employer; worth asking. What the
+document does not say is how an organisation contracts with the local EI
+program or what EI pays per visit. Those remain open.
+
+### The payslip
+
+The pay stub you uploaded is for a named individual at a named employer, at
+$20 an hour, so it is not Ellen's PT pay and I have not stored it or recorded
+who it belongs to. If the upload was unintentional, nothing identifying has
+been kept. It was still useful as a primary artefact:
+
+- OASDI 6.20% and Medicare 1.45% withheld exactly, which corroborates the
+  7.65% employer mirror in the payroll burden assumption.
+- **The FAMLI line was withheld at 0.45%**, which implies a 0.90% total
+  premium. Every HR summary says 0.88% for 2026. One of them is wrong, and a
+  payslip is stronger evidence than a summary. Settle it at famli.colorado.gov
+  before Blue Star's first payroll.
+
+### Still missing
+
+1. July 2026 Physician Fee Schedule (Excel) for the post-cut rates.
+2. How an organisation contracts with the Denver-area EI program, and EI pay.
+3. C.R.S. 25-27.5-102.
+4. The home care agency fee schedule 2026/2027 page.
+5. FAMLI 2026 rate, straight from famli.colorado.gov.

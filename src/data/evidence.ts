@@ -109,7 +109,7 @@ export const evidence: Evidence[] = [
     section: 'Whole memo',
     appliesTo: ['Revenue cycle', 'Operations', 'Cash timing', 'Technology'],
     interpretation:
-      'Authorization is a hard gate on pediatric LTHH revenue: every therapy visit has needed a PAR since July 1, 2025, and the whole caseload had been re-reviewed by April 2026. The memo also shows how HCPF enforces — weekly tracking, escalating letters, then payment withholding — and that a denied child must still be served for 30 days without guaranteed payment. All of this is agency-lane machinery; the outpatient lane has its own, lighter PAR rules (EV-044). CORRECTION: the first build attributed "PARs required for all members from May 4, 2026, fully enforced June 1, 2026" to this memo. Those dates are not in it. They were reported by search summaries of a different HCPF document (apparently an April 2026 notice) and remain unverified.',
+      'Authorization is a hard gate on pediatric LTHH revenue: every therapy visit has needed a PAR since July 1, 2025, and the whole caseload had been re-reviewed by April 2026. The memo also shows how HCPF enforces — weekly tracking, escalating letters, then payment withholding — and that a denied child must still be served for 30 days without guaranteed payment. All of this is agency-lane machinery; the outpatient lane has its own, lighter PAR rules (EV-044). CORRECTION: the first build attributed "PARs required for all members from May 4, 2026, fully enforced June 1, 2026" to this memo. Those dates are not in it — they are in the May 2026 Provider Bulletin B2600538, since read directly (EV-052), so the dates themselves are now verified; only the attribution was wrong.',
     confidence: 'Confirmed',
     retrieval: 'direct-read',
     requiresProfessionalVerification: false,
@@ -442,7 +442,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2026-12-15',
     notes:
-      'Rate reportedly DECREASED for 2026 from the prior year. Confirm directly with famli.colorado.gov before running payroll. Also confirm how the under-10 headcount is counted. Cross-checked 2026-09-27 against Patriot, Paychex and Jackson Lewis summaries: all three agree on 0.88% / 0.44% / 0.44% and the under-10 employer exemption.',
+      'Rate reportedly DECREASED for 2026 from the prior year. Confirm directly with famli.colorado.gov before running payroll. Also confirm how the under-10 headcount is counted. Cross-checked 2026-09-27 against Patriot, Paychex and Jackson Lewis summaries: all three agree on 0.88% / 0.44% / 0.44% and the under-10 employer exemption. HOWEVER a real September 2026 Colorado payslip (EV-055) shows the employee share withheld at 0.45%, which implies 0.90% total — the 2025 rate. Either the employer\'s payroll is stale or the 0.88% figure is wrong. Confirm at famli.colorado.gov before running payroll.',
   },
   {
     id: 'EV-019',
@@ -1066,7 +1066,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: false,
     recheckDate: '2027-05-01',
     notes:
-      'The deck is training material, not the rule itself; the binding text is the PT/OT Billing Manual it points to. It also states that services provided to school-age children under an IEP are paid by the school district, not fee-for-service — a boundary on the referral base.',
+      'The deck is training material, not the rule itself; the binding text is the PT/OT Billing Manual it points to. It also states that services provided to school-age children under an IEP are paid by the school district, not fee-for-service — a boundary on the referral base. UPDATE: two days after this deck, the May 2026 bulletin (EV-052) reported that from May 15, 2026 a physician signature on the outpatient plan of care is no longer required where an order or referral exists and the therapist documents delivery of the plan to the physician within 30 days of the initial evaluation.',
   },
   {
     id: 'EV-045',
@@ -1226,6 +1226,98 @@ export const evidence: Evidence[] = [
     recheckDate: '2026-10-15',
     notes:
       'The rate figures are read directly. The "85% of Medicare" explanation is from search summaries only and should be confirmed against HCPF\'s Medicaid Provider Rate Reductions fact sheet. Next download: 01_CO_Fee Schedule_Health First Colorado_07012026 v1.1.xlsx on the HCPF provider rates page.',
+  },
+  {
+    id: 'EV-052',
+    category: '02-Payers',
+    topic: 'May 2026 Provider Bulletin — pediatric LTHH PAR deadline, PAR timeframes, plan-of-care signature — READ DIRECTLY',
+    claim:
+      'Health First Colorado Provider Bulletin B2600538 (May 2026), read in full. (1) Pediatric LTHH: "Effective May 4, 2026, PARs are required for all new and existing members receiving Pediatric LTHH services, including PT, OT, ST, Skilled Nursing (RN/LPN) and CNA services"; "Beginning June 1, 2026, PAR compliance will be fully enforced. Services rendered without an approved PAR may be subject to claim denial or nonpayment, payment suspension and additional compliance actions." (2) CMS Interoperability rule changes from January 2026: pends for additional information cut from 10 business days to 7 calendar days; only one pend per PAR, after which a technical denial; expedited PARs get no pend at all (3-day turnaround); standard turnaround 7 calendar days; all PARs processed within 21 calendar days. (3) Outpatient therapy: from May 15, 2026 (Medical Services Board vote of March 13, 2026, rule 10 CCR 2505-10 § 8.200, aligned with 42 CFR 424.24(c)(5)) a physician signature on the plan of care is no longer required when there is an existing physician order or referral and the therapist documents that the plan was delivered to the physician\'s office within 30 days of the initial evaluation; applies to outpatient PT, OT, SLP and audiology. (4) From May 18, 2026 claims for providers with an expired licence on file deny (EOB 3385).',
+    source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
+    url: 'https://hcpf.colorado.gov/sites/hcpf/files/Bulletin%200526_B2600538.pdf',
+    document: 'Health First Colorado Provider Bulletin B2600538, May 2026 (stored at docs/sources/)',
+    publicationDate: '2026-05-01',
+    effectiveDate: '2026-05-04',
+    accessedDate: '2026-09-27',
+    section: 'Pages 3-4 (PAR timeframes, LTHH), page 14 (outpatient therapy)',
+    appliesTo: ['Authorization workflow', 'Revenue cycle', 'Documentation', 'Regulatory lane'],
+    interpretation:
+      'Three things for Blue Star. First, the 2026 pediatric LTHH dates the first build cited are now verified — from this bulletin, not from OM 25-037. Second, the PAR process is faster and less forgiving: one chance to answer a pend, seven days to do it, and a technical denial if anything is missing. Submitting complete packets the first time is now a revenue skill, in either lane. Third, and good news for the outpatient lane: the 90-day physician re-signature loop described in the therapy training (EV-044) has been loosened — an order plus proof the plan reached the physician within 30 days of evaluation now suffices. That removes one recurring piece of chasing per child.',
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-12-01',
+    notes:
+      'The expired-licence claim denial (EOB 3385) is a reminder that DORA licence renewals must be tracked in the payer portal, not just in HR — automation audit P-013.',
+  },
+  {
+    id: 'EV-053',
+    category: '02-Payers',
+    topic: 'Pediatric LTHH therapy PAR mechanics — Acentra / HCPF training, April 2026 — READ DIRECTLY',
+    claim:
+      'Acentra Health training "Pediatric Long-Term Home Health Therapies" (April 2026, 32 slides), read in full. LTHH is intermittent home health for chronic conditions beyond the 60-day acute period, billed per visit on revenue codes 0421 (PT), 0431 (OT), 0441 (ST), each "one visit up to 2.5 hours", by a licensed and certified Class A home care agency whose staff are not OIG-excluded and are in good standing with DORA. LTHH providers have a 10-day window after services begin to submit a PAR, or the dates are adjusted (10 CCR 2505-10 § 8.520.8.C.6.a). Every PAR must include the complete plan of care on the HCFA-485 or equivalent, created by an agency RN "or, when appropriate, by a physical, occupational or speech therapist", listing diagnoses, frequency and duration per discipline and the tasks per visit, signed by the attending physician before the final claim of the certification period; all supporting documentation within 60 days of PAR start. Units must be requested for the whole period (e.g. 2 visits a week for 26 weeks = 52 units). Turnaround: standard 7 calendar days, expedited 72 hours, rapid 1 business day; one 7-day pend only. Under-21 requests are reviewed under EPSDT. Reconsideration within 10 business days; peer-to-peer within 10 business days. A Change of Provider form transfers a member mid-PAR. Two agencies may serve one member only with documented coordination.',
+    source: 'Acentra Health on behalf of HCPF',
+    url: 'https://hcpf.colorado.gov/sites/hcpf/files/Pediatric%20Long-Term%20Home%20Health%20April%202026.pdf',
+    document: 'On behalf of Health First Colorado — Pediatric Long-Term Home Health Therapies (stored at docs/sources/)',
+    publicationDate: '2026-04-01',
+    effectiveDate: null,
+    accessedDate: '2026-09-27',
+    section: 'Whole deck',
+    appliesTo: ['Authorization workflow', 'Documentation', 'Regulatory lane', 'Operations'],
+    interpretation:
+      'The agency-lane authorization machine, in detail, from the vendor that runs it. Two points transfer to any lane: the 10-day post-start submission window and the single-pend rule mean the PAR packet must be ready before the first visit, not assembled afterwards; and a therapist may author the plan of care, so a therapy-only workflow is contemplated even here. The "licensed and certified Class A" phrasing on the reimbursable-services slide is HCPF restating that a state licence alone is not enough (EV-031).',
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-12-01',
+    notes:
+      'This is the document the first build had confused with OM 25-037. Unit arithmetic matters: request units for the full certification period up front, because revisions after expiry are refused.',
+  },
+  {
+    id: 'EV-054',
+    category: '03-Licensing',
+    topic: 'Early Intervention Colorado personnel standards — what a qualified EI physical therapist is — READ DIRECTLY',
+    claim:
+      'EI Colorado Personnel Standards (Colorado Department of Early Childhood; effective 07/01/2023, revised 6/24/2026; 36 pages), read directly. A Physical Therapist qualifies with (1) a Colorado state licence (DORA), (2) specialized training related to evaluation tools, screening and methods as required by the state, and (3) completion of EI Colorado\'s EI Provider Training — 13 online modules plus a final exam, to be completed before billing, with the certificate uploaded to the EI Provider Portal. Occupational therapists and speech-language pathologists have parallel standards. Providers must keep current credential documentation in the Provider Portal. Eligibility evaluations require two evaluators from different disciplines covering all five developmental domains. Separate trainings are required for telehealth delivery, for social-emotional evaluation (DC 0-5) and for Informed Opinion of Delay. The document contains no payment rates.',
+    source: 'Colorado Department of Early Childhood — Early Intervention Colorado',
+    url: 'https://dcfs.my.salesforce-sites.com/eicolorado/EI_About?p=About&s=Early-Intervention-Provider-Personnel-Standards&lang=en',
+    document: 'EI Colorado Provider Personnel Standards, 2026 updates (stored at docs/sources/)',
+    publicationDate: '2026-06-24',
+    effectiveDate: '2023-07-01',
+    accessedDate: '2026-09-27',
+    section: 'Personnel standards; qualified evaluators; PT/OT/SLP',
+    appliesTo: ['Regulatory lane', 'Clinician onboarding', 'Early Intervention'],
+    interpretation:
+      "Half of Q-014 answered: becoming a qualified EI physical therapist is a licence Ellen already holds, an evaluation-tools training, and a 13-module online course with an exam — administratively light. Whether Ellen has already done the EI Provider Training through her current employer is worth asking; if so, she may already be registered in the Provider Portal. What this document does NOT say is how a provider ORGANISATION contracts with the local EI program, or what EI pays per visit — the other half of Q-014, still open. Search summaries say the route is to connect with the local EI program (the former Community Centered Board) for the area served.",
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-01-01',
+    notes:
+      'The document names CDEC as the program home, confirming the older "Department of Education and Department of Human Services" wording in the home care agency rule (EV-047) is out of date but refers to the same program.',
+  },
+  {
+    id: 'EV-055',
+    category: '08-HR',
+    topic: 'A real Colorado payslip — payroll withholding rates observed',
+    claim:
+      'A Colorado employee payslip for a pay period ending September 11, 2026 (supplied by Scott; the individual and employer are deliberately not recorded here and the document is not stored in the repository) shows, on gross pay of $898.67: OASDI $55.72 (6.20%), Medicare $13.03 (1.45%), and "CO PFL (S) - COPFM" $4.04, which is 0.45% of gross. Hourly pay was $20.00; paid sick time accrued separately.',
+    source: 'Scott — a payslip supplied for reference (first-hand document; identity withheld)',
+    url: 'https://github.com/scottyfncodes/BlueStar',
+    document: 'Payslip, check date 2026-09-18 (not stored)',
+    publicationDate: '2026-09-18',
+    effectiveDate: '2026-09-11',
+    accessedDate: '2026-09-27',
+    section: 'Employee taxes',
+    appliesTo: ['Payroll', 'Fully loaded clinician cost'],
+    interpretation:
+      "A primary artefact, which beats any HR summary. The FICA employee shares match the federal rates exactly, which corroborates the 7.65% employer mirror in AS-004. The FAMLI line does not: 0.45% withheld implies a 0.90% total premium, whereas EV-018 reports 0.88% for 2026 (0.44% each side). One of them is wrong — either this employer's payroll table is a year stale, or the 0.88% figure is. It is a small number, but it is exactly the kind of discrepancy to settle at the source (famli.colorado.gov) before Blue Star's first payroll run. The payslip also shows what a compliant Colorado paystub must display: OASDI, Medicare, federal and state withholding, FAMLI, and sick-leave accrual.",
+    confidence: 'Strong evidence',
+    retrieval: 'user-reported',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-12-15',
+    notes:
+      'Personal data: the payslip itself was read and discarded; only the rate arithmetic is kept. If the upload was unintentional, nothing identifying has been retained.',
   },
 ];
 

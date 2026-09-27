@@ -61,13 +61,13 @@ export const unknownUnknowns: UnknownUnknown[] = [
   },
   {
     id: 'UU-003',
-    surprise: 'Prior authorisation for pediatric LTHH therapy restarted in July 2025 as a "fresh start" — every child re-reviewed.',
+    surprise: 'Prior authorisation for pediatric LTHH is universal since May 4, 2026 and fully enforced since June 1, 2026 — with one pend and seven days to answer it.',
     whyItMatters:
-      'OM 25-037, read directly (EV-004): therapy PARs restarted July 1, 2025 after a five-year pause, every member underwent a full medical necessity review by April 2026, and HCPF enforces with weekly tracking and payment withholding. A new entrant starts directly into the strictest authorisation regime this benefit has had. Authorisation competence is not a back-office nicety — it is the gate on revenue from day one. (The "May 4 / June 1, 2026" dates the first build cited are not in this memo and remain unverified.)',
+      'Verified from the May 2026 Provider Bulletin, read directly (EV-052): PARs are required for every new and existing pediatric LTHH member since May 4, 2026, and enforced since June 1, 2026 with claim denial, payment suspension and further compliance action. The process restarted July 1, 2025 as a "fresh start" (OM 25-037, EV-004) and the CMS interoperability rule has since made it faster and less forgiving: one pend per PAR, seven calendar days to answer, technical denial otherwise. A new entrant starts directly into the strictest authorisation regime this benefit has had. Authorisation competence is not a back-office nicety — it is the gate on revenue from day one, in either lane.',
     costImpact: 'Adds administrative labour per patient and creates denial risk on every visit.',
     timelineImpact: 'Lengthens the cash cycle: PAR approval must precede billable care.',
     dependency: 'T-031', owner: 'Scott',
-    evidenceIds: ['EV-004'], status: 'Open',
+    evidenceIds: ['EV-052', 'EV-004', 'EV-053'], status: 'Understood',
   },
   {
     id: 'UU-004',
@@ -143,11 +143,11 @@ export const unknownUnknowns: UnknownUnknown[] = [
     id: 'UU-011',
     surprise: 'Early Intervention services are excluded from home care agency licensing altogether.',
     whyItMatters:
-      'Rule 2.10(B)(9), read directly, says services provided by a qualified Early Intervention service provider are not home care agency activity (EV-047). Eleven of Ellen\'s twenty-five children are EI. That means a third lane exists: serve birth-to-three children under IFSPs with a whole team and no Class A licence, no Medicare, no moratorium. What it takes to become a qualified EI provider, and what EI pays, are the two things nobody has looked up (Q-014).',
+      'Rule 2.10(B)(9), read directly, says services provided by a qualified Early Intervention service provider are not home care agency activity (EV-047). Eleven of Ellen\'s twenty-five children are EI. That means a third lane exists: serve birth-to-three children under IFSPs with a whole team and no Class A licence, no Medicare, no moratorium. The personnel standard for a PT is now known and light — Colorado licence, evaluation-tools training, and a 13-module online course (EV-054). What EI pays, and how an organisation contracts with the local EI program, are still unknown (Q-014).',
     costImpact: 'Could remove licensure entirely for the EI slice of the market; revenue per visit unknown and possibly the lowest of the three lanes.',
     timelineImpact: 'Unknown — depends on the EI qualification process.',
     dependency: 'D-001', owner: 'Scott',
-    evidenceIds: ['EV-047', 'EV-041', 'EV-044'], status: 'Open',
+    evidenceIds: ['EV-047', 'EV-054', 'EV-041', 'EV-044'], status: 'Open',
   },
   {
     id: 'UU-012',
@@ -273,10 +273,10 @@ export const openQuestions: OpenQuestion[] = [
   },
   {
     id: 'Q-014',
-    question: 'How does a provider become a "qualified early intervention service provider" in Colorado, and what does Early Intervention pay per visit?',
+    question: 'HALF ANSWERED — the individual standard is known (EV-054). Remaining: how does a provider ORGANISATION contract with the local EI program, and what does Early Intervention pay per visit?',
     whyItMatters:
-      'Such providers are excluded from home care agency licensing by rule (EV-047). If qualification is straightforward, Blue Star could serve EI children with a team, lawfully, without a licence or Medicare — a lane the plan never had. The revenue side matters equally: EV-041 suggests EI rates have historically sat well below home health rates, and Medicaid is billed first for Medicaid-enrolled children.',
-    askWho: 'Early Intervention Colorado (Department of Early Childhood) and the Denver-area EI program; Ellen, who already treats EI children and knows who assigns them',
+      'Such providers are excluded from home care agency licensing by rule (EV-047). The personnel standard for a PT is a Colorado licence, evaluation-tools training and a 13-module online course (EV-054), so qualification is light. The revenue side and the organisational route are still unknown: EV-041 suggests EI rates have historically sat well below home health rates, Medicaid is billed first for Medicaid-enrolled children, and search summaries say providers connect with the local EI program (the former Community Centered Board) for the area they serve.',
+    askWho: 'The Denver-area EI program (Rocky Mountain Human Services) and EI Colorado at CDEC; Ellen — has she already completed the EI Provider Training through her employer, and is she in the EI Provider Portal?',
     estimatedCostRange: 'Free',
     category: '01-Regulatory', priority: 'Critical', blocksTaskIds: ['T-007', 'T-006'],
   },

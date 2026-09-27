@@ -149,7 +149,7 @@ export const decisions: Decision[] = [
         whatItIs:
           'Blue Star becomes a qualified Early Intervention service provider under Colorado\'s Part C program and delivers IFSP therapy in homes. Rule 2.10(B)(9) excludes such services from the home care agency definition entirely (EV-047), so no Class A licence and no Medicare certification apply, regardless of team size. Medicaid is billed first for IFSP therapy in the outpatient lane with modifier TL (EV-041, EV-044).',
         requires: [
-          'Whatever Early Intervention Colorado and the local EI program require to qualify a service provider — NOT YET RESEARCHED (Q-014)',
+          'Each therapist qualified under EI Colorado personnel standards: Colorado licence, evaluation-tools training, and the 13-module EI Provider Training with exam, certificate in the EI Provider Portal (EV-054, read directly). How Blue Star as an organisation contracts with the local EI program is still unresearched (Q-014)',
           'Health First Colorado outpatient enrollment for the Medicaid billing (EV-044)',
           'Knowledge of what EI pays per visit for non-Medicaid children and whether it tops up Medicaid (EV-041 suggests historically low rates)',
           'Acceptance that the population is birth to three only',
@@ -171,7 +171,7 @@ export const decisions: Decision[] = [
         reversibility: 'Easy',
       },
     ],
-    evidenceIds: ['EV-001', 'EV-003', 'EV-006', 'EV-007', 'EV-008', 'EV-009', 'EV-014', 'EV-031', 'EV-032', 'EV-033', 'EV-034', 'EV-035', 'EV-040', 'EV-041', 'EV-043', 'EV-044', 'EV-045', 'EV-046', 'EV-047', 'EV-048', 'EV-050', 'EV-051'],
+    evidenceIds: ['EV-001', 'EV-003', 'EV-006', 'EV-007', 'EV-008', 'EV-009', 'EV-014', 'EV-031', 'EV-032', 'EV-033', 'EV-034', 'EV-035', 'EV-040', 'EV-041', 'EV-043', 'EV-044', 'EV-045', 'EV-046', 'EV-047', 'EV-048', 'EV-050', 'EV-051', 'EV-052', 'EV-053', 'EV-054'],
     chosenOptionId: null,
     decidedOn: null,
     rationale: null,
