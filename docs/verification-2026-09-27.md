@@ -705,3 +705,47 @@ unknown on the agency-lane cost list (C-002).
 1. July 2026 Physician Fee Schedule (Excel) for the post-cut rates.
 2. The HCA fee schedule 2026/2027 Google Sheet above, downloaded.
 3. The Denver-area EI broker's provider application and rate sheet.
+
+---
+
+## Ninth addendum: the Class A licence fee
+
+You downloaded the Home Care Agencies fee schedule for 1 July 2026 to
+30 June 2027. Read directly. The last unknown on the agency-lane cost list
+is filled.
+
+| Item | Amount |
+|---|---|
+| Initial licence, Class A (medical) | $3,709.49 |
+| Initial licence, Class B (non-medical) | $2,720.30 |
+| Annual renewal base, Class A | $1,916.58 |
+| Per branch / per workstation | $247.30 / $61.83 |
+| Volume fee at 50 to 99 / 100+ annual admissions | $123.65 / $247.30 |
+| Medicaid- or Medicare-certified discount | $100 off the base renewal |
+| Accreditation discount | 10% off the base renewal |
+| Change of ownership | same as initial, $3,709.49 |
+| Provisional licence | 15% of the initial fee per term |
+| Revisit for an uncorrected deficiency | 100% of the applicable fee, each time |
+
+Three things to take from it:
+
+- **The fee was never the barrier.** Under $4,000 to apply and under $2,000 a
+  year to keep. The barrier in the agency lane is Medicare certification, the
+  nursing requirement and the moratorium, not CDPHE's price.
+- **The timeline has one fixed point.** A complete application must be in at
+  least 90 days before the intended start date, before any survey time.
+- **Two traps.** A renewal 90 days late invalidates the licence outright and
+  forces a fresh application. A repeat inspection for the same deficiency
+  costs a full licence fee every time.
+
+C-002 is now $3,709.49 and a new line C-007 carries the annual renewal. The
+capital model's "unpriced required lines" count drops by one. None of this
+applies in the outpatient or Early Intervention lanes.
+
+### Still missing
+
+1. July 2026 Physician Fee Schedule (Excel) for the post-cut outpatient rates.
+2. The Denver-area EI broker's provider application and rate sheet.
+
+Every regulatory and rate document on the original list has now been read
+from the source, except the July 2026 outpatient schedule.

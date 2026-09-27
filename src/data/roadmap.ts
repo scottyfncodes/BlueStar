@@ -303,7 +303,7 @@ export const tasks: RoadmapTask[] = [
     estimatedDurationDays: null,
     costRefIds: ['C-002'],
     evidenceIds: ['EV-001', 'EV-014'],
-    blockedBy: 'Duration genuinely unknown — CDPHE licensure timeline was not established',
+    blockedBy: 'Duration still unknown beyond one fixed point: CDPHE requires the complete application at least 90 days before the intended start date (EV-058)',
   },
   {
     id: 'T-021',

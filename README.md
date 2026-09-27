@@ -43,8 +43,8 @@ moratorium notice, HCPF's October 2025 rate-reduction bulletin, OM 25-037,
 CDPHE's 2026 fee transition sheet, the January and April 2026 Physician Fee
 Schedules, the May 2026 Provider Bulletin, Acentra's pediatric LTHH training,
 the EI Colorado personnel standards, the Early Intervention rule 8 CCR 1405-1
-and both licensing statute sections (25-27.5-102 and -103). Twenty evidence
-records now carry
+both licensing statute sections (25-27.5-102 and -103) and the CDPHE home
+care agency fee schedule. Twenty-one evidence records now carry
 `retrieval: 'direct-read'`, the modelling
 rate AS-001 was corrected from $143.02 to $140.16, and the outpatient per-unit
 rates (AS-032 to AS-034) are filled — the dashboard now compares both lanes.
@@ -67,7 +67,7 @@ the system. See decision D-001, unknowns UU-007 to UU-010, and roadmap T-008.
 src/
   types.ts            Domain model — Evidence, Assumption, Decision, CostItem, …
   data/               The knowledge base (plain TypeScript, no database)
-    evidence.ts       56 records with source, URL, dates, confidence, retrieval
+    evidence.ts       57 records with source, URL, dates, confidence, retrieval
     assumptions.ts    Every number the financial model uses
     decisions.ts      Decision log — options, consequences, reversibility
     roadmap.ts        11 phases, tasks as a dependency graph

@@ -25,7 +25,7 @@ export const decisions: Decision[] = [
         whatItIs:
           'Obtain a CDPHE Class A home care agency license, enroll as a home health provider with Health First Colorado, and bill the pediatric long-term home health benefit per visit.',
         requires: [
-          'CDPHE Class A license — letter of intent, application, fees, policies, survey',
+          'CDPHE Class A license — letter of intent, then a complete application at least 90 days before start-up, $3,709.49 initial fee and about $1,917 a year to renew (EV-058, read directly), policies, survey',
           'MEDICARE CERTIFICATION on top of the state license: accreditation survey (ACHC, CHAP or Joint Commission), Medicare enrollment, and good standing with CMS — HCPF requires all of it before a home health agency can bill Medicaid (EV-031)',
           'SKILLED NURSING as a service line, because Medicare will not certify a therapy-only agency (EV-032). Note the state licence itself does NOT require nursing — a therapy-only Class A agency is allowed by rule (EV-048) — but the state licence alone cannot bill the Medicaid home health benefit',
           'A physical business office in Colorado (rule 5.1), fingerprint checks for every owner (statutorily, anyone holding 50% or more — EV-057) and the administrator, and an administrator with two years of healthcare administration experience including one supervisory year in home care plus 24 training hours in year one (EV-048) — Ellen plausibly qualifies',
@@ -172,7 +172,7 @@ export const decisions: Decision[] = [
         reversibility: 'Easy',
       },
     ],
-    evidenceIds: ['EV-001', 'EV-003', 'EV-006', 'EV-007', 'EV-008', 'EV-009', 'EV-014', 'EV-031', 'EV-032', 'EV-033', 'EV-034', 'EV-035', 'EV-040', 'EV-041', 'EV-043', 'EV-044', 'EV-045', 'EV-046', 'EV-047', 'EV-048', 'EV-050', 'EV-051', 'EV-052', 'EV-053', 'EV-054', 'EV-056', 'EV-057'],
+    evidenceIds: ['EV-001', 'EV-003', 'EV-006', 'EV-007', 'EV-008', 'EV-009', 'EV-014', 'EV-031', 'EV-032', 'EV-033', 'EV-034', 'EV-035', 'EV-040', 'EV-041', 'EV-043', 'EV-044', 'EV-045', 'EV-046', 'EV-047', 'EV-048', 'EV-050', 'EV-051', 'EV-052', 'EV-053', 'EV-054', 'EV-056', 'EV-057', 'EV-058'],
     chosenOptionId: null,
     decidedOn: null,
     rationale: null,

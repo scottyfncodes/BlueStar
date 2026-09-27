@@ -1342,6 +1342,29 @@ export const evidence: Evidence[] = [
     notes:
       'Subsection (1.5) was repealed effective July 1, 2024. The Early Intervention exclusion still names the departments of education and human services; the program now sits in the Department of Early Childhood (EV-054, EV-056), and (6.3) points to its statute, section 26.5-3-402.',
   },
+  {
+    id: 'EV-058',
+    category: '03-Licensing',
+    topic: 'CDPHE home care agency licence fees, 7/1/2026 – 6/30/2027 — READ DIRECTLY',
+    claim:
+      'CDPHE "Home Care Agencies 7/1/2026 - 6/30/2027 Fee Schedule" (Google Sheet, downloaded by Scott as .xlsx), read directly. Initial licence application: Class A (medical) $3,709.49; Class B (non-medical) $2,720.30 — a Letter of Intent first, then a complete application with fees at least 90 calendar days before the anticipated start-up date. Annual renewal base fee: Class A $1,916.58; Class B $1,638.36; plus $247.30 per branch and $61.83 per workstation; plus an additional volume fee of $123.65 at 50-99 annual admissions or $247.30 at 100+. Discounts off the base renewal fee only: $100 for a Medicare- or Medicaid-certified agency; 10% for accreditation with deeming authority. Late renewal: 10% (6-29 days), 50% (30-59 days), 75% (60-89 days); at 90 days the licence is invalid and the agency must cease operation and reapply. Change of ownership: same as an initial fee ($3,709.49 Class A), filed 60 days ahead. Change of name or address $92.74; adding a branch $247.30; adding a workstation $61.83. Conditional licence (enforcement) $1,938.29. Provisional licence 15% of the initial fee per term. Revisit fee 100% of the applicable initial or renewal fee, on the second and each later inspection for the same deficiency.',
+    source: 'Colorado Department of Public Health & Environment (CDPHE)',
+    url: 'https://docs.google.com/spreadsheets/d/1EF7K8FcNJvaQYSSc78JNXxYODNvYrzhiv_u5hlyIaE0/',
+    document: 'Home Care Agencies (HCA/HHA) Fee Schedule 2026/2027 (stored at docs/sources/CDPHE_HomeCareAgency_FeeSchedule_2026-2027.xlsx)',
+    publicationDate: '2026-03-01',
+    effectiveDate: '2026-07-01',
+    accessedDate: '2026-09-27',
+    section: 'Whole sheet',
+    appliesTo: ['Startup cost', 'Operating burn', 'Licensing', 'Timeline'],
+    interpretation:
+      "Cost line C-002 is filled: $3,709.49 to apply for a Class A licence, about $1,917 a year to keep it (less $100 if Medicaid-certified, less 10% if accredited). Small against a clinician's salary, so the fee was never the barrier — the timeline is: the application must be complete at least 90 days before the intended start date, on top of whatever CDPHE takes to survey. Two operational traps worth knowing: a renewal missed by 90 days invalidates the licence outright, and a repeat inspection for an uncorrected deficiency costs a full licence fee each time. In the outpatient and Early Intervention lanes none of this applies.",
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: false,
+    recheckDate: '2027-03-01',
+    notes:
+      'Fees cited in the sheet at four decimal places (e.g. 3709.4912); rounded to cents here. Next year\'s schedule publishes by March 1, 2027 for July 1, 2027.',
+  },
 ];
 
 export const evidenceById = new Map(evidence.map((e) => [e.id, e]));
