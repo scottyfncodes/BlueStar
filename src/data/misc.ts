@@ -164,7 +164,7 @@ export const unknownUnknowns: UnknownUnknown[] = [
 export const openQuestions: OpenQuestion[] = [
   {
     id: 'Q-001',
-    question: 'Can an entity employ licensed therapists to treat children in their homes, billing the outpatient PT/OT benefit, WITHOUT a CDPHE home care agency licence?',
+    question: 'Can an entity employ licensed therapists to treat children in their homes, billing the outpatient PT/OT benefit, WITHOUT a CDPHE home care agency licence? And does the individual exclusion in 25-27.5-102(3)(b)(III) survive Ellen practising through an LLC?',
     whyItMatters:
       'Governs licensure, timeline, capital requirement, insurance minimums and the revenue mechanism. Every other number depends on it. It is the single highest-value question in the plan.',
     askWho: 'Colorado healthcare attorney, and CDPHE Health Facilities in writing. Frame it around C.R.S. 25-27.5-103 and its exemption for an individual acting alone (EV-034): does the exemption survive an LLC, and what exactly ends it?',

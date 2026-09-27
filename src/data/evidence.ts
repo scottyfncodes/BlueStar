@@ -88,7 +88,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2027-07-01',
     notes:
-      'The rule mirrors the statutory definition in C.R.S. 25-27.5-102 (rule 4.1(E) cites it). "Manages and offers, directly or by contract" is the operative phrase for an LLC with employed therapists. Section 102 of the statute itself is still unread.',
+      'The rule mirrors the statutory definition in C.R.S. 25-27.5-102(3)(a), now also read in full (EV-057) and identical in wording. "Manages and offers, directly or by contract" is the operative phrase for an LLC with employed therapists.',
   },
 
   // -------------------------------------------------------------------------
@@ -823,7 +823,7 @@ export const evidence: Evidence[] = [
     category: '01-Regulatory',
     topic: 'Home care agency licensing statute and its exemptions',
     claim:
-      '6 CCR 1011-1 Chapter 26, Rule 2.10(B), read directly: "Home care agency" does not include (1) organizations providing only housekeeping; (2) community and rural health networks making public-health home visits; (3) "an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors"; (4) outpatient rehabilitation agencies and comprehensive outpatient rehabilitation facilities certified under Title 18 or 19 of the Social Security Act; (5) HCPF consumer-directed attendant programs; (6) licensed dialysis centres providing in-home dialysis; (7) a facility otherwise licensed by the Department, subject to 25-27.5-103(3); (8) a home care placement agency; (9) services provided by a qualified early intervention service provider overseen jointly by the Department of Education and the Department of Human Services; (10) PACE programs. The rule cites the statutory definition in C.R.S. 25-27.5-102; the statute section itself has not been read.',
+      '6 CCR 1011-1 Chapter 26, Rule 2.10(B), read directly: "Home care agency" does not include (1) organizations providing only housekeeping; (2) community and rural health networks making public-health home visits; (3) "an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors"; (4) outpatient rehabilitation agencies and comprehensive outpatient rehabilitation facilities certified under Title 18 or 19 of the Social Security Act; (5) HCPF consumer-directed attendant programs; (6) licensed dialysis centres providing in-home dialysis; (7) a facility otherwise licensed by the Department, subject to 25-27.5-103(3); (8) a home care placement agency; (9) services provided by a qualified early intervention service provider overseen jointly by the Department of Education and the Department of Human Services; (10) PACE programs. C.R.S. 25-27.5-102(3)(b), supplied by Scott and read in full on 2026-09-27, carries the same ten exclusions in the same words (EV-057).',
     source: 'Code of Colorado Regulations — 6 CCR 1011-1 Chapter 26, Rule 2.10(B) (stored at docs/sources/)',
     url: 'https://www.sos.state.co.us/CCR/GenerateRulePdf.do?ruleVersionId=12016&fileName=6+CCR+1011-1+Chapter+26',
     document: '6 CCR 1011-1 Chapter 26 — Home Care Agencies, Rule 2.10(B), effective 2025-07-01',
@@ -839,7 +839,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2027-07-01',
     notes:
-      'Exclusion (4) is a Medicare-certified rehabilitation agency or CORF — a specific federal category, not any practice that bills outpatient codes. Exclusion (9), the Early Intervention provider, is new to this system and is recorded separately as EV-047. The earlier citation of 25-27.5-103(1)(b)(III) was wrong; 103(1)(b) is the civil-penalty clause (EV-045).',
+      'Exclusion (4) is a Medicare-certified rehabilitation agency or CORF — a specific federal category, not any practice that bills outpatient codes. Exclusion (9), the Early Intervention provider, is recorded separately as EV-047. Statute and rule now both read directly and identical on this point; the correct statutory citation for the individual exclusion is 25-27.5-102(3)(b)(III).',
   },
   {
     id: 'EV-035',
@@ -1318,6 +1318,29 @@ export const evidence: Evidence[] = [
     recheckDate: '2027-04-14',
     notes:
       'The rule defines "qualified personnel" by reference to state-recognised licensing and the personnel standards (EV-054). It says nothing about home care agency licensing; the exclusion of EI providers from that licence sits in the CDPHE rule (EV-047). Ask the Denver-area broker for its provider application and current purchase-of-service rate schedule.',
+  },
+  {
+    id: 'EV-057',
+    category: '01-Regulatory',
+    topic: 'C.R.S. 25-27.5-102 — statutory definitions, READ DIRECTLY',
+    claim:
+      'C.R.S. 25-27.5-102 (2025 edition), read in full. (3)(a) defines "home care agency" as any sole proprietorship, partnership, association, corporation, government entity, not-for-profit agency, or any other legal or commercial entity that manages and offers, directly or by contract, skilled home health services or personal care services to a home care consumer in the consumer\'s home. (3)(b) lists ten exclusions, identical in wording to rule 2.10(B): including (III) an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors; (IV) outpatient rehabilitation agencies and CORFs certified under Title XVIII or XIX; and (IX) services provided by a qualified early intervention service provider. (1) "Certified home care agency" means one certified by CMS or by HCPF. (5.3) "Manager or administrator" is anyone who controls and supervises day-to-day operations. (5.5) "Owner" means a shareholder, partner, LLC member, sole proprietor or similar with at least a fifty-percent ownership interest. (6.3) "Qualified early intervention service provider" has the meaning in section 26.5-3-402. (7) "Skilled home health services" expressly includes occupational therapy, physical therapy and speech-language pathology services.',
+    source: 'Colorado Revised Statutes, 2025 (text supplied by Scott from Justia)',
+    url: 'https://law.justia.com/codes/colorado/title-25/health-care/article-27-5/section-25-27-5-102/',
+    document: 'C.R.S. 25-27.5-102 (stored at docs/sources/CRS_25-27.5-102_2025.txt)',
+    publicationDate: null,
+    effectiveDate: '2024-07-01',
+    accessedDate: '2026-09-27',
+    section: 'Whole section',
+    appliesTo: ['Regulatory lane', 'Entity structure', 'Licensing', 'Early Intervention'],
+    interpretation:
+      "Three things settle. First, the CDPHE rule reproduces the statute exactly, so the exclusions are statutory, not merely regulatory — a stronger footing for the individual and Early Intervention lanes. Second, 'owner' is defined at fifty percent: if Scott and Ellen each hold half of Blue Star, both are owners for the fingerprinting requirement in the agency lane (rule 4.2(D), EV-002); a 51/49 split would leave one of them outside the definition. Third, the definition of a home care agency turns on an ENTITY that 'manages and offers, directly or by contract' — which is exactly why the individual exclusion is written for a person acting alone, and why the question of Ellen practising through an LLC belongs to counsel: the LLC is a 'legal or commercial entity', and the moment it offers her services it fits (3)(a) unless an exclusion applies.",
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: true,
+    recheckDate: '2027-07-01',
+    notes:
+      'Subsection (1.5) was repealed effective July 1, 2024. The Early Intervention exclusion still names the departments of education and human services; the program now sits in the Department of Early Childhood (EV-054, EV-056), and (6.3) points to its statute, section 26.5-3-402.',
   },
 ];
 

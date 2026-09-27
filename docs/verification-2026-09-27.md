@@ -650,3 +650,35 @@ Q-014 is narrowed to the broker's rate sheet and application.
 2. The Denver-area EI broker's provider application and rate sheet.
 3. C.R.S. 25-27.5-102.
 4. The home care agency fee schedule 2026/2027 page.
+
+---
+
+## Seventh addendum: the statutory definitions (C.R.S. 25-27.5-102)
+
+You pasted section 102. Read in full and stored. It matches the CDPHE rule
+word for word on the definition of a home care agency and its ten
+exclusions, which means the "individual acting alone" and Early Intervention
+exclusions are statutory, not merely regulatory. The correct citation for
+the individual exclusion is 25-27.5-102(3)(b)(III).
+
+Two things the rule did not spell out:
+
+- **"Owner" is defined at fifty percent.** If you and Ellen each hold half of
+  Blue Star, you are both owners for the agency-lane fingerprinting
+  requirement. A 51/49 split would put one of you outside the definition.
+  That is a detail for the attorney and CPA conversation about entity
+  structure (T-010), not a reason to choose a split.
+- **The definition turns on an entity that "manages and offers" services.**
+  An LLC is a "legal or commercial entity". The moment it offers Ellen's
+  services it fits the definition unless an exclusion applies, and the
+  individual exclusion is written for a person acting alone. That is exactly
+  the question to put to counsel, now with the precise wording in hand.
+
+Both licensing statute sections and the rule are now read directly. The
+regulatory picture is complete except for the fee amount.
+
+### Still missing
+
+1. July 2026 Physician Fee Schedule (Excel) for the post-cut rates.
+2. The Denver-area EI broker's provider application and rate sheet.
+3. The home care agency fee schedule 2026/2027 page.
