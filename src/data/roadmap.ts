@@ -185,7 +185,7 @@ export const tasks: RoadmapTask[] = [
     phase: 0,
     title: 'Look up the outpatient PT/OT per-unit rates and price a 30- and 60-minute visit',
     detail:
-      'DONE 2026-09-27: Scott supplied the January 2026 Physician Fee Schedule and it was read directly (EV-050). 97530 $34.97/unit, 97110 $32.14/unit, PT evaluation $87.52, speech session $72.01. A 60-minute visit is $139.88 and a 30-minute visit $69.94 at 97530. AS-032 to AS-034 filled; the lane comparison is on the dashboard. Remaining: read the July 1, 2026 schedule to apply the 2% cut.',
+      'DONE 2026-09-27: Scott supplied the January and April 2026 Physician Fee Schedules and both were read directly (EV-050, EV-051). Current: 97530 $30.37/unit, 97110 $25.15/unit, PT evaluation $85.57, speech session $65.37 — after a targeted April 1, 2026 cut of 13-22% on treatment codes. A 60-minute visit is $121.48 and a 30-minute visit $60.74 at 97530. AS-032 to AS-034 filled; the lane comparison is on the dashboard. Remaining: the July 1, 2026 schedule (Excel) for the further 2%.',
     dependsOn: [],
     owner: 'Scott',
     status: 'Done',

@@ -120,12 +120,12 @@ export function Dashboard({ go }: { go: (v: string) => void }) {
           )}
         </div>
         <Callout tone="warn" title="Read this with two caveats">
-          {lanes.note} The outpatient figures use the January 2026 schedule, which predates the July
-          2026 2% cut, and assume 97530 for every unit; 97110 pays about 8% less. Every other dollar
-          figure on this page still uses the home health rate.
+          {lanes.note} The outpatient figures use the April 2026 schedule, which cut treatment codes
+          13-22% and still predates the July 2026 2% cut, and assume 97530 for every unit; 97110 pays
+          about 17% less. Every other dollar figure on this page still uses the home health rate.
         </Callout>
         <div style={{ marginTop: 10 }}>
-          <EvidenceRefs ids={['EV-050', 'EV-044', 'EV-007']} />
+          <EvidenceRefs ids={['EV-051', 'EV-050', 'EV-044', 'EV-007']} />
         </div>
       </Card>
 

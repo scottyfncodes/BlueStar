@@ -1202,7 +1202,30 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: false,
     recheckDate: '2026-10-15',
     notes:
-      'Read from the PDF Scott supplied (unzipped). Download the July 1, 2026 physician fee schedule to confirm the post-cut figures. Evaluations pay well relative to treatment units — every new child starts with an $87.52 evaluation on top of the visit.',
+      'Read from the PDF Scott supplied (unzipped). SUPERSEDED FOR CURRENT RATES by EV-051: the April 1, 2026 schedule cut the treatment codes far more than 2% (97530 to $30.37, 97110 to $25.15). Keep this record as the October 2025 baseline. Evaluations pay well relative to treatment units — every new child starts with an evaluation on top of the visit.',
+  },
+  {
+    id: 'EV-051',
+    category: '02-Payers',
+    topic: 'Outpatient therapy rates cut on April 1, 2026 — Physician Fee Schedule, READ DIRECTLY',
+    claim:
+      'Health First Colorado Physician Fee Schedule, rates effective April 1, 2026 (40 pages, 2,881 codes, column headed "Total Allowable Amount 04-01-2026 Rates"), read directly. Timed PT/OT codes, per 15-minute unit: 97110 $25.15 (was $32.14, -21.7%); 97112 $27.98 (was $33.55, -16.6%); 97116 $25.15 (was $25.72); 97140 $23.73 (was $29.98, -20.8%); 97530 $30.37 (was $34.97, -13.2%); 97533 $53.48 (was $57.36); 97535 $28.04 (was $28.77); 97150 $15.21. Evaluations: PT 97161-97163 $85.57 (was $87.52); 97164 $59.20; OT 97165-97167 $87.89. Speech: 92507 $65.37 per session (was $72.01, -9.2%); 92523 $194.68; 92526 $72.27. 97755 $32.69. The anesthesia conversion factor fell from $21.11 to $17.33 (-17.9%) on the same schedule. Search summaries of HCPF budget material and an April 27, 2026 CPR report attribute the change to a state budget action that reduced most fee-for-service rates to 85% of Medicare from April 1, 2026.',
+    source: 'Colorado Department of Health Care Policy & Financing (HCPF)',
+    url: 'https://hcpf.colorado.gov/sites/hcpf/files/01_CO_Fee%20Schedule_Health%20First%20Colorado_04012026%20v1.0.pdf',
+    document: 'Health First Colorado Physician Fee Schedule, Rates Effective April 1, 2026, v1.0 (stored at docs/sources/)',
+    publicationDate: '2026-04-01',
+    effectiveDate: '2026-04-01',
+    accessedDate: '2026-09-27',
+    section: 'Pages 27 (speech) and 33 (physical medicine)',
+    appliesTo: ['Visit economics', 'Revenue model', 'Rate risk', 'Path comparison'],
+    interpretation:
+      "The third rate cut in seven months, and by far the largest for this business. The treatment codes a pediatric home visit lives on lost 13-22% in one step; evaluations lost about 2%. Recomputed at 97530: a 60-minute visit is $121.48 (87% of the $140.16 home health rate), a 30-minute visit $60.74 (43%), and Ellen's mix averages $80.99 a visit — about 58% of home health gross for the same schedule. The pattern is now unmistakable: October 2025 (-1.6%), April 2026 (targeted, to 85% of Medicare), July 2026 (-2.0%, EV-046, not yet reflected here). Anything Blue Star builds in the outpatient lane must survive rates that move down by double digits on a quarter's notice. The July 2026 schedule (published as an Excel file) should carry the further 2%: expect 97530 near $29.76 and 97110 near $24.65.",
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: false,
+    recheckDate: '2026-10-15',
+    notes:
+      'The rate figures are read directly. The "85% of Medicare" explanation is from search summaries only and should be confirmed against HCPF\'s Medicaid Provider Rate Reductions fact sheet. Next download: 01_CO_Fee Schedule_Health First Colorado_07012026 v1.1.xlsx on the HCPF provider rates page.',
   },
 ];
 

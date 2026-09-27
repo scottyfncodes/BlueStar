@@ -494,3 +494,57 @@ therapist's economics differ sharply by lane. That bears on D-004.
 3. C.R.S. 25-27.5-102.
 4. The HCA fee schedule 2026/2027 page.
 5. Provider Bulletin B2600538 (May 2026) for the pediatric LTHH PAR dates.
+
+---
+
+## Fourth addendum: the April 2026 schedule, and it is not a 2% story
+
+You sent the Physician Fee Schedule effective 1 April 2026. It lists 2,881
+codes, and the therapy treatment codes on it were cut hard, not trimmed:
+
+| Code | Jan 2026 (Oct 2025 rates) | Apr 2026 | Change |
+|---|---|---|---|
+| 97110 Therapeutic exercise | $32.14 | **$25.15** | -21.7% |
+| 97530 Therapeutic activities | $34.97 | **$30.37** | -13.2% |
+| 97140 Manual therapy | $29.98 | **$23.73** | -20.8% |
+| 97112 Neuromuscular re-education | $33.55 | **$27.98** | -16.6% |
+| 97161–97163 PT evaluation | $87.52 | **$85.57** | -2.2% |
+| 92507 Speech session | $72.01 | **$65.37** | -9.2% |
+| 92523 Speech evaluation | $197.61 | **$194.68** | -1.5% |
+
+Search summaries of HCPF's budget material and an April 2026 CPR news report
+say this was a state budget action setting most fee-for-service rates to 85%
+of Medicare. That explanation is from summaries, not a document; the rates
+themselves are read directly.
+
+### The lane comparison, recomputed
+
+| Visit | Outpatient (97530) | Home health | Ratio |
+|---|---|---|---|
+| 60-minute EI visit | $121.48 | $140.16 | 87% |
+| 30-minute visit | $60.74 | $140.16 | 43% |
+| Weighted, Ellen's mix | $80.99 | $140.16 | 58% |
+| Gross per week, 33 visits | $2,673 | $4,625 | 58% |
+
+At 97110 instead of 97530, subtract about 17%. The July 2026 2% cut is still
+not in these figures; the July schedule is published as an Excel file
+(`01_CO_Fee Schedule_Health First Colorado_07012026 v1.1.xlsx` on the HCPF
+provider rates page) and is the one remaining download for this question.
+
+### What this means
+
+- **Three cuts in nine months:** October 2025 (-1.6%), April 2026 (targeted,
+  13–22% on the codes you would bill), July 2026 (-2.0%). Evaluations were
+  spared; treatment minutes were not. Any outpatient plan has to survive
+  double-digit rate moves on a quarter's notice.
+- **The lane gap widened.** In the January figures the outpatient lane earned
+  about two-thirds of home health on Ellen's mix; on April figures it is
+  58%. The 60-minute visit still holds up (87%); the 30-minute visit is now
+  under half.
+- **Evaluations are relatively more valuable** than they were, since they
+  were cut 2% while treatment was cut 13–22%.
+- **Speech took a 9% hit** on its per-session rate, widening the gap with the
+  home health speech rate ($152.37) to more than 2×.
+
+The register (AS-032 to AS-034), the dashboard card, the lane-comparison tests
+and the unknowns are all updated to the April figures.

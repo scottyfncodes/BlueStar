@@ -51,13 +51,13 @@ export const unknownUnknowns: UnknownUnknown[] = [
   },
   {
     id: 'UU-002',
-    surprise: 'Colorado Medicaid pediatric therapy rates went DOWN twice in nine months.',
+    surprise: 'Colorado Medicaid therapy rates went DOWN three times in nine months — once by double digits.',
     whyItMatters:
-      'The pediatric PT home health rate fell from $145.31 to $143.02 in October 2025 (-1.6%) and again to $140.16 on July 1, 2026 (-2.0%, HB 26-1410, EV-046) — read directly off the FY2026-27 schedule (EV-007). The first step: Business plans routinely assume reimbursement rises with inflation. Here it did the opposite, and now we know why: in September 2025 the Governor declared a revenue shortfall and HCPF took back the 1.6% increase the legislature had granted for FY2025-26, effective October 1, 2025 (EV-037). Margin has to come from operating efficiency, any plan that needs a rate increase to work is not a plan, and Colorado can cut mid-year on about a month\'s notice.',
+      'The pediatric PT home health rate fell from $145.31 to $143.02 in October 2025 (-1.6%) and again to $140.16 on July 1, 2026 (-2.0%, HB 26-1410, EV-046) — read directly off the FY2026-27 schedule (EV-007). In between, on April 1, 2026, the OUTPATIENT treatment codes were cut to about 85% of Medicare: 97110 lost 22% and 97530 13% in one step (EV-051). The first step: Business plans routinely assume reimbursement rises with inflation. Here it did the opposite, and now we know why: in September 2025 the Governor declared a revenue shortfall and HCPF took back the 1.6% increase the legislature had granted for FY2025-26, effective October 1, 2025 (EV-037). Margin has to come from operating efficiency, any plan that needs a rate increase to work is not a plan, and Colorado can cut mid-year on about a month\'s notice.',
     costImpact: 'Reduces revenue per visit and compresses margin on every future visit.',
     timelineImpact: 'None directly, but it lengthens time to break-even.',
     dependency: 'AS-001', owner: 'Scott',
-    evidenceIds: ['EV-007', 'EV-006', 'EV-037', 'EV-046'], status: 'Understood',
+    evidenceIds: ['EV-007', 'EV-006', 'EV-037', 'EV-046', 'EV-051'], status: 'Understood',
   },
   {
     id: 'UU-003',
@@ -121,13 +121,13 @@ export const unknownUnknowns: UnknownUnknown[] = [
   },
   {
     id: 'UU-009',
-    surprise: 'In the outpatient lane a 60-minute visit pays about what home health pays. A 30-minute visit pays about half.',
+    surprise: 'In the outpatient lane a 60-minute visit pays about 87% of home health. A 30-minute visit pays 43%.',
     whyItMatters:
-      'Read directly from the January 2026 physician fee schedule (EV-050): 97530 pays $34.97 a unit and 97110 $32.14, before the July 2026 2% cut. Under the 8-minute rule (EV-044) a 60-minute visit bills 4 units — $139.88 at 97530, within a dollar of the $140.16 home health rate — while a 30-minute visit bills 2 units, $69.94. On Ellen\'s actual mix (11 of 33 weekly visits are 60-minute EI visits) the outpatient lane grosses about two-thirds of what the home health lane would for the identical schedule. And the visit-mix lever flips: the long EI visit, a capacity drain under the flat rate, is the best-paid visit here, and a caseload of 30-minute visits is the thin one.',
-    costImpact: 'About -34% gross revenue on the current schedule versus the (currently closed) agency lane; near parity on 60-minute visits, roughly half on 30-minute visits.',
-    timelineImpact: 'None — the number is now known. The July 2026 schedule should be read to apply the 2% cut.',
+      'Read directly from the April 2026 physician fee schedule (EV-051): 97530 pays $30.37 a unit and 97110 $25.15, after a targeted cut that took 13-22% off the treatment codes on April 1, 2026 (the January schedule had $34.97 and $32.14, EV-050). Under the 8-minute rule (EV-044) a 60-minute visit bills 4 units — $121.48 at 97530 against the $140.16 home health rate — while a 30-minute visit bills 2 units, $60.74. On Ellen\'s actual mix (11 of 33 weekly visits are 60-minute EI visits) the outpatient lane grosses about 58% of what the home health lane would for the identical schedule. And the visit-mix lever flips: the long EI visit, a capacity drain under the flat rate, is the best-paid visit here, and a caseload of 30-minute visits is the thin one. The July 2026 2% cut is not yet reflected.',
+    costImpact: 'About -42% gross revenue on the current schedule versus the (currently closed) agency lane; 87% of home health on 60-minute visits, 43% on 30-minute visits.',
+    timelineImpact: 'None — the number is now known. Read the July 2026 schedule to apply the further 2%.',
     dependency: 'AS-032', owner: 'Scott',
-    evidenceIds: ['EV-050', 'EV-044', 'EV-007'], status: 'Understood',
+    evidenceIds: ['EV-051', 'EV-050', 'EV-044', 'EV-007'], status: 'Understood',
   },
   {
     id: 'UU-010',
@@ -239,8 +239,8 @@ export const openQuestions: OpenQuestion[] = [
     id: 'Q-010',
     question: 'ANSWERED 2026-09-27 — What does Health First Colorado pay per 15-minute unit, and what is a 30- and 60-minute visit worth? Remaining: confirm the post-July-2026 figures.',
     whyItMatters:
-      'Answered from the January 2026 physician fee schedule, read directly (EV-050, AS-032, AS-033): 97530 $34.97/unit, 97110 $32.14/unit, PT evaluation $87.52; a 60-minute visit is $139.88 and a 30-minute visit $69.94 at 97530. What remains is the July 1, 2026 schedule, which should carry the 2% cut (EV-046) — expected 97530 about $34.27.',
-    askWho: 'Nobody — download the July 1, 2026 Physician Fee Schedule from the HCPF provider rates page and check 97530, 97110 and 97161.',
+      'Answered from the April 2026 physician fee schedule, read directly (EV-051, AS-032, AS-033): 97530 $30.37/unit, 97110 $25.15/unit, PT evaluation $85.57; a 60-minute visit is $121.48 and a 30-minute visit $60.74 at 97530. What remains is the July 1, 2026 schedule, which should carry the further 2% cut (EV-046) — expected 97530 about $29.76.',
+    askWho: 'Nobody — download 01_CO_Fee Schedule_Health First Colorado_07012026 v1.1.xlsx from the HCPF provider rates page and check 97530, 97110 and 97161.',
     estimatedCostRange: 'Free — ten minutes',
     category: '02-Payers', priority: 'Medium', blocksTaskIds: [],
   },

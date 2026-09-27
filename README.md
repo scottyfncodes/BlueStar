@@ -40,8 +40,8 @@ under `docs/sources/` and read directly — the FY2026-27 Home Health Fee Schedu
 HCPF's therapy specialty training deck, C.R.S. 25-27.5-103, the home care agency
 rule 6 CCR 1011-1 Chapter 26 (effective 2025-07-01), the Federal Register HHA
 moratorium notice, HCPF's October 2025 rate-reduction bulletin, OM 25-037,
-CDPHE's 2026 fee transition sheet, and the January 2026 Physician Fee Schedule.
-Fourteen evidence records now carry `retrieval: 'direct-read'`, the modelling
+CDPHE's 2026 fee transition sheet, and the January and April 2026 Physician Fee
+Schedules. Fifteen evidence records now carry `retrieval: 'direct-read'`, the modelling
 rate AS-001 was corrected from $143.02 to $140.16, and the outpatient per-unit
 rates (AS-032 to AS-034) are filled — the dashboard now compares both lanes.
 
@@ -63,7 +63,7 @@ the system. See decision D-001, unknowns UU-007 to UU-010, and roadmap T-008.
 src/
   types.ts            Domain model — Evidence, Assumption, Decision, CostItem, …
   data/               The knowledge base (plain TypeScript, no database)
-    evidence.ts       50 records with source, URL, dates, confidence, retrieval
+    evidence.ts       51 records with source, URL, dates, confidence, retrieval
     assumptions.ts    Every number the financial model uses
     decisions.ts      Decision log — options, consequences, reversibility
     roadmap.ts        11 phases, tasks as a dependency graph
