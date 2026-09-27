@@ -143,11 +143,11 @@ export const unknownUnknowns: UnknownUnknown[] = [
     id: 'UU-011',
     surprise: 'Early Intervention services are excluded from home care agency licensing altogether.',
     whyItMatters:
-      'Rule 2.10(B)(9), read directly, says services provided by a qualified Early Intervention service provider are not home care agency activity (EV-047). Eleven of Ellen\'s twenty-five children are EI. That means a third lane exists: serve birth-to-three children under IFSPs with a whole team and no Class A licence, no Medicare, no moratorium. The personnel standard for a PT is now known and light — Colorado licence, evaluation-tools training, and a 13-module online course (EV-054). What EI pays, and how an organisation contracts with the local EI program, are still unknown (Q-014).',
+      'Rule 2.10(B)(9), read directly, says services provided by a qualified Early Intervention service provider are not home care agency activity (EV-047). Eleven of Ellen\'s twenty-five children are EI. That means a third lane exists: serve birth-to-three children under IFSPs with a whole team and no Class A licence, no Medicare, no moratorium. The personnel standard for a PT is now known and light — Colorado licence, evaluation-tools training, and a 13-module online course (EV-054) — and the route is known from the EI rule: register in the EI Provider Database and contract with the area\'s Certified EI Service Broker, which assigns children (EV-056). Medicaid EI children are billed to Medicaid at the outpatient per-unit rates; only the broker\'s rate for non-Medicaid children is still unknown (Q-014).',
     costImpact: 'Could remove licensure entirely for the EI slice of the market; revenue per visit unknown and possibly the lowest of the three lanes.',
     timelineImpact: 'Unknown — depends on the EI qualification process.',
     dependency: 'D-001', owner: 'Scott',
-    evidenceIds: ['EV-047', 'EV-054', 'EV-041', 'EV-044'], status: 'Open',
+    evidenceIds: ['EV-047', 'EV-054', 'EV-056', 'EV-041', 'EV-044'], status: 'Understood',
   },
   {
     id: 'UU-012',
@@ -273,10 +273,10 @@ export const openQuestions: OpenQuestion[] = [
   },
   {
     id: 'Q-014',
-    question: 'HALF ANSWERED — the individual standard is known (EV-054). Remaining: how does a provider ORGANISATION contract with the local EI program, and what does Early Intervention pay per visit?',
+    question: 'MOSTLY ANSWERED — Remaining: what purchase-of-service rate does the Denver-area Early Intervention broker pay for non-Medicaid children, and what is its provider application process?',
     whyItMatters:
-      'Such providers are excluded from home care agency licensing by rule (EV-047). The personnel standard for a PT is a Colorado licence, evaluation-tools training and a 13-module online course (EV-054), so qualification is light. The revenue side and the organisational route are still unknown: EV-041 suggests EI rates have historically sat well below home health rates, Medicaid is billed first for Medicaid-enrolled children, and search summaries say providers connect with the local EI program (the former Community Centered Board) for the area they serve.',
-    askWho: 'The Denver-area EI program (Rocky Mountain Human Services) and EI Colorado at CDEC; Ellen — has she already completed the EI Provider Training through her employer, and is she in the EI Provider Portal?',
+      'Such providers are excluded from home care agency licensing by rule (EV-047). The personnel standard for a PT is light (EV-054). The organisational route is now known from the EI rule (EV-056): register in the EI Provider Database and contract with the Certified Early Intervention Service Broker for the service area, which assigns children and is the provider of record. For Medicaid-enrolled EI children the therapy is billed to Medicaid at the outpatient per-unit rates (AS-032), so that revenue is already known; the broker\'s own rate applies only to non-Medicaid children and uncovered services, and the rule leaves it to each broker to set from local usual-and-customary practice. That rate sheet is what is still missing.',
+    askWho: 'The Denver-area Certified EI Service Broker (Rocky Mountain Human Services) — provider application and current purchase-of-service rates; Ellen — has she already completed the EI Provider Training through her employer, and is she in the EI Provider Database?',
     estimatedCostRange: 'Free',
     category: '01-Regulatory', priority: 'Critical', blocksTaskIds: ['T-007', 'T-006'],
   },

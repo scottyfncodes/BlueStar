@@ -442,7 +442,7 @@ export const evidence: Evidence[] = [
     requiresProfessionalVerification: true,
     recheckDate: '2026-12-15',
     notes:
-      'Rate reportedly DECREASED for 2026 from the prior year. Confirm directly with famli.colorado.gov before running payroll. Also confirm how the under-10 headcount is counted. Cross-checked 2026-09-27 against Patriot, Paychex and Jackson Lewis summaries: all three agree on 0.88% / 0.44% / 0.44% and the under-10 employer exemption. HOWEVER a real September 2026 Colorado payslip (EV-055) shows the employee share withheld at 0.45%, which implies 0.90% total — the 2025 rate. Either the employer\'s payroll is stale or the 0.88% figure is wrong. Confirm at famli.colorado.gov before running payroll.',
+      'Rate reportedly DECREASED for 2026 from the prior year. Confirm directly with famli.colorado.gov before running payroll. Also confirm how the under-10 headcount is counted. Cross-checked 2026-09-27 against Patriot, Paychex and Jackson Lewis summaries: all three agree on 0.88% / 0.44% / 0.44% and the under-10 employer exemption. Confirm the 2026 rate at famli.colorado.gov before running payroll.',
   },
   {
     id: 'EV-019',
@@ -1297,27 +1297,27 @@ export const evidence: Evidence[] = [
       'The document names CDEC as the program home, confirming the older "Department of Education and Department of Human Services" wording in the home care agency rule (EV-047) is out of date but refers to the same program.',
   },
   {
-    id: 'EV-055',
-    category: '08-HR',
-    topic: 'A real Colorado payslip — payroll withholding rates observed',
+    id: 'EV-056',
+    category: '01-Regulatory',
+    topic: 'How Early Intervention providers are contracted and paid — 8 CCR 1405-1, READ DIRECTLY',
     claim:
-      'A Colorado employee payslip for a pay period ending September 11, 2026 (supplied by Scott; the individual and employer are deliberately not recorded here and the document is not stored in the repository) shows, on gross pay of $898.67: OASDI $55.72 (6.20%), Medicare $13.03 (1.45%), and "CO PFL (S) - COPFM" $4.04, which is 0.45% of gross. Hourly pay was $20.00; paid sick time accrued separately.',
-    source: 'Scott — a payslip supplied for reference (first-hand document; identity withheld)',
-    url: 'https://github.com/scottyfncodes/BlueStar',
-    document: 'Payslip, check date 2026-09-18 (not stored)',
-    publicationDate: '2026-09-18',
-    effectiveDate: '2026-09-11',
+      'Early Intervention Colorado Program rules, 8 CCR 1405-1 (Department of Early Childhood; entire rule effective April 14, 2023; 53 pages), read directly. One entity per service area — normally the Community Centered Board — is designated the Certified Early Intervention Service Broker (5.108). The broker establishes a registry of qualified early intervention service providers who have active records in the Early Intervention Provider Database, from which services are purchased; it may provide services directly or subcontract to other qualified providers, and it is the provider of record for all services it contracts (5.108(A)). The broker sets purchase-of-service rates for contracted providers, based on the usual and customary practices of the local community, in writing and consistently applied, with an audit trail; the Department may cap any rate, and rate changes need 15 days\' notice (5.106, 5.108(B)). Funding hierarchy (5.107): families pay nothing out of pocket; private insurance is accessed first with written consent; Medicaid is billed with the appropriate Medicaid codes when the EI provider bills Medicaid; Part C federal funds are the payer of last resort. A qualified provider may bill Medicaid or a participating private carrier directly; using the broker for billing is voluntary, and a broker may charge a contracted agency a documented billing-management fee that cannot depend on collection (5.108(B)(7)). Reimbursement from the private-insurance trust must be accepted as payment in full. Brokers may only purchase services from providers meeting the Department\'s qualifications (5.106(A)(1)).',
+    source: 'Code of Colorado Regulations — 8 CCR 1405-1, Early Intervention Colorado Program (stored at docs/sources/)',
+    url: 'https://www.sos.state.co.us/CCR/GenerateRulePdf.do?ruleVersionId=10764',
+    document: '8 CCR 1405-1 Early Intervention Rules and Regulations, effective 2023-04-14',
+    publicationDate: '2023-04-14',
+    effectiveDate: '2023-04-14',
     accessedDate: '2026-09-27',
-    section: 'Employee taxes',
-    appliesTo: ['Payroll', 'Fully loaded clinician cost'],
+    section: 'Rules 5.103 (definitions), 5.106, 5.107, 5.108',
+    appliesTo: ['Regulatory lane', 'Early Intervention', 'Revenue model', 'Referral strategy'],
     interpretation:
-      "A primary artefact, which beats any HR summary. The FICA employee shares match the federal rates exactly, which corroborates the 7.65% employer mirror in AS-004. The FAMLI line does not: 0.45% withheld implies a 0.90% total premium, whereas EV-018 reports 0.88% for 2026 (0.44% each side). One of them is wrong — either this employer's payroll table is a year stale, or the 0.88% figure is. It is a small number, but it is exactly the kind of discrepancy to settle at the source (famli.colorado.gov) before Blue Star's first payroll run. The payslip also shows what a compliant Colorado paystub must display: OASDI, Medicare, federal and state withholding, FAMLI, and sick-leave accrual.",
-    confidence: 'Strong evidence',
-    retrieval: 'user-reported',
-    requiresProfessionalVerification: false,
-    recheckDate: '2026-12-15',
+      "The organisational half of Q-014, answered in structure though not in dollars. To serve EI children Blue Star (or Ellen) registers in the EI Provider Database, meets the personnel standards (EV-054), and contracts with the broker for the service area — for Denver, the local EI program. The broker is the gatekeeper: it assigns children, sets the purchase-of-service rate for the state-funded portion, and is the provider of record. For a Medicaid-enrolled child the therapy is billed to Medicaid with Medicaid codes — that is, at the outpatient per-unit rates already in AS-032 — and a provider may bill directly rather than through the broker. So for Ellen's Medicaid EI children the revenue is the outpatient figure ($121.48 for a 60-minute visit at 97530); the broker's own rate matters only for non-Medicaid children and for uncovered services. What the rule does not contain is any number: the Denver broker's rate sheet is the one remaining piece.",
+    confidence: 'Confirmed',
+    retrieval: 'direct-read',
+    requiresProfessionalVerification: true,
+    recheckDate: '2027-04-14',
     notes:
-      'Personal data: the payslip itself was read and discarded; only the rate arithmetic is kept. If the upload was unintentional, nothing identifying has been retained.',
+      'The rule defines "qualified personnel" by reference to state-recognised licensing and the personnel standards (EV-054). It says nothing about home care agency licensing; the exclusion of EI providers from that licence sits in the CDPHE rule (EV-047). Ask the Denver-area broker for its provider application and current purchase-of-service rate schedule.',
   },
 ];
 

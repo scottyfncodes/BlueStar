@@ -551,9 +551,9 @@ and the unknowns are all updated to the April figures.
 
 ---
 
-## Fifth addendum: the PAR dates verified, an easier plan-of-care rule, the EI standard, and a payslip
+## Fifth addendum: the PAR dates verified, an easier plan-of-care rule, and the EI standard
 
-Four more documents read directly (the second copy of the April fee schedule
+Three more documents read directly (the second copy of the April fee schedule
 was identical to the one already stored).
 
 ### May 2026 Provider Bulletin (B2600538)
@@ -597,17 +597,9 @@ program or what EI pays per visit. Those remain open.
 
 ### The payslip
 
-The pay stub you uploaded is for a named individual at a named employer, at
-$20 an hour, so it is not Ellen's PT pay and I have not stored it or recorded
-who it belongs to. If the upload was unintentional, nothing identifying has
-been kept. It was still useful as a primary artefact:
-
-- OASDI 6.20% and Medicare 1.45% withheld exactly, which corroborates the
-  7.65% employer mirror in the payroll burden assumption.
-- **The FAMLI line was withheld at 0.45%**, which implies a 0.90% total
-  premium. Every HR summary says 0.88% for 2026. One of them is wrong, and a
-  payslip is stronger evidence than a summary. Settle it at famli.colorado.gov
-  before Blue Star's first payroll.
+A payslip was uploaded alongside these documents and, at your instruction,
+disregarded. It is not stored, nothing from it is recorded in the knowledge
+base, and the record briefly made from it has been removed.
 
 ### Still missing
 
@@ -615,4 +607,46 @@ been kept. It was still useful as a primary artefact:
 2. How an organisation contracts with the Denver-area EI program, and EI pay.
 3. C.R.S. 25-27.5-102.
 4. The home care agency fee schedule 2026/2027 page.
-5. FAMLI 2026 rate, straight from famli.colorado.gov.
+
+---
+
+## Sixth addendum: the Early Intervention rule (8 CCR 1405-1)
+
+The rule PDF you sent this time is the Early Intervention Colorado program
+rule, not the home care agency rule. Read in full. It answers the
+organisational half of Q-014.
+
+- **Who you contract with.** One Certified Early Intervention Service Broker
+  per service area, normally the Community Centered Board. It keeps a
+  registry of qualified providers drawn from the EI Provider Database, may
+  deliver services itself or subcontract, assigns children, and is the
+  provider of record for everything it contracts. For Denver that is the
+  local EI program.
+- **How Medicaid children are paid.** The rule's funding hierarchy: families
+  pay nothing; private insurance first, with consent; then Medicaid, billed
+  with Medicaid codes by the EI provider; federal Part C money last. A
+  qualified provider may bill Medicaid directly rather than through the
+  broker. So for a Medicaid-enrolled EI child, the revenue is the outpatient
+  per-unit figure already in the register: about $121 for a 60-minute visit.
+- **How the rest is paid.** The broker sets its own purchase-of-service rate
+  for the state-funded portion, from local usual-and-customary practice,
+  written down and applied consistently, capped by the Department. The rule
+  contains no numbers. The Denver broker's rate sheet is the one piece still
+  missing, and it only matters for non-Medicaid children and uncovered
+  services.
+- **Fees.** A broker may charge a contracted agency a documented fee for
+  managing billing, but the fee cannot depend on collections.
+
+Put together with the earlier documents, the Early Intervention lane now
+looks like this: a licence-free way (EV-047) to serve birth-to-three children
+with a team, entered by a light personnel standard (EV-054) plus a broker
+contract (EV-056), paid at outpatient Medicaid rates for Medicaid children
+(EV-051) and at a broker-set rate otherwise. UU-011 is marked understood;
+Q-014 is narrowed to the broker's rate sheet and application.
+
+### Still missing
+
+1. July 2026 Physician Fee Schedule (Excel) for the post-cut rates.
+2. The Denver-area EI broker's provider application and rate sheet.
+3. C.R.S. 25-27.5-102.
+4. The home care agency fee schedule 2026/2027 page.

@@ -41,8 +41,9 @@ HCPF's therapy specialty training deck, C.R.S. 25-27.5-103, the home care agency
 rule 6 CCR 1011-1 Chapter 26 (effective 2025-07-01), the Federal Register HHA
 moratorium notice, HCPF's October 2025 rate-reduction bulletin, OM 25-037,
 CDPHE's 2026 fee transition sheet, the January and April 2026 Physician Fee
-Schedules, the May 2026 Provider Bulletin, Acentra's pediatric LTHH training and
-the EI Colorado personnel standards. Eighteen evidence records now carry
+Schedules, the May 2026 Provider Bulletin, Acentra's pediatric LTHH training,
+the EI Colorado personnel standards and the Early Intervention rule
+8 CCR 1405-1. Nineteen evidence records now carry
 `retrieval: 'direct-read'`, the modelling
 rate AS-001 was corrected from $143.02 to $140.16, and the outpatient per-unit
 rates (AS-032 to AS-034) are filled — the dashboard now compares both lanes.
