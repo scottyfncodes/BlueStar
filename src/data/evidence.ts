@@ -1174,12 +1174,12 @@ export const evidence: Evidence[] = [
     section: 'Application types and applicable schedule',
     appliesTo: ['Startup cost', 'Licensing'],
     interpretation:
-      'Useful only for sequencing: an application filed after July 1, 2026 pays 2026/2027 fees. The amount itself is on the linked "Home Care Agencies (HCA/HHA) - Fee Schedule 2026/2027" page, which is the document to download next if the agency lane is ever pursued.',
+      'Useful only for sequencing: an application filed after July 1, 2026 pays 2026/2027 fees. The spreadsheet version of this sheet (also read directly) carries the hyperlinks the PDF lost: the "Home Care Agencies (HCA/HHA) - Fee Schedule 2026/2027" is a Google Sheet at https://docs.google.com/spreadsheets/d/1EF7K8FcNJvaQYSSc78JNXxYODNvYrzhiv_u5hlyIaE0/ and the combined 2025/2026 HCA/HCPA schedule at https://docs.google.com/spreadsheets/d/1DegT82UDVUwDbEgOGjFlvdAajpaRdHTcS_1PisTuK6I/. Both were unreachable from this session (docs.google.com is blocked at the proxy); they are the documents to download next if the agency lane is ever pursued.',
     confidence: 'Confirmed',
     retrieval: 'direct-read',
     requiresProfessionalVerification: false,
     recheckDate: '2027-03-01',
-    notes: 'Not a fee schedule. Cost line C-002 remains null.',
+    notes: 'Not a fee schedule. Cost line C-002 remains null. Both the PDF and the .xlsx of this index are stored at docs/sources/.',
   },
   {
     id: 'EV-050',

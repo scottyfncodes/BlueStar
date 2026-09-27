@@ -35,7 +35,7 @@ export const costs: CostItem[] = [
     item: 'CDPHE home care agency license — application and initial fees',
     low: null, typical: null, high: null, actualQuote: null,
     kind: 'ASSUMPTION',
-    source: 'UNKNOWN — rule 4.4 delegates amounts to 6 CCR 1011-1 Chapter 2 Part 2.12; the HCA fee schedule 2026/2027 page has not been read',
+    source: 'UNKNOWN — rule 4.4 delegates amounts to 6 CCR 1011-1 Chapter 2 Part 2.12; the HCA fee schedule 2026/2027 is a Google Sheet (link in EV-049) not yet read',
     evidenceIds: ['EV-001', 'EV-048', 'EV-049'],
     required: 'Required', frequency: 'One-time',
     driver: 'Facility type and CDPHE fee schedule',

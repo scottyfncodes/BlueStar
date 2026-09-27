@@ -682,3 +682,26 @@ regulatory picture is complete except for the fee amount.
 1. July 2026 Physician Fee Schedule (Excel) for the post-cut rates.
 2. The Denver-area EI broker's provider application and rate sheet.
 3. The home care agency fee schedule 2026/2027 page.
+
+---
+
+## Eighth addendum: the fee transition sheet as a spreadsheet
+
+The Excel version of CDPHE's fee transition guidance carries the hyperlinks
+the PDF dropped. The home care agency fee schedules are Google Sheets:
+
+- Home Care Agencies (HCA/HHA), Fee Schedule 2026/2027:
+  https://docs.google.com/spreadsheets/d/1EF7K8FcNJvaQYSSc78JNXxYODNvYrzhiv_u5hlyIaE0/
+- Home Care Agencies and Placement Agencies, Fee Schedule 2025/2026:
+  https://docs.google.com/spreadsheets/d/1DegT82UDVUwDbEgOGjFlvdAajpaRdHTcS_1PisTuK6I/
+
+Google Docs is blocked from this session as well, so I could not open them.
+Open the first one in a browser, use File, Download, and send it as .xlsx or
+PDF. It should contain the Class A initial licence fee, which is the last
+unknown on the agency-lane cost list (C-002).
+
+### Still missing
+
+1. July 2026 Physician Fee Schedule (Excel) for the post-cut rates.
+2. The HCA fee schedule 2026/2027 Google Sheet above, downloaded.
+3. The Denver-area EI broker's provider application and rate sheet.
