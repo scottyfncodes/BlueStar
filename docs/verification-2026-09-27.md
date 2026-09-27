@@ -334,3 +334,87 @@ Two things the direct read added:
 2. **C.R.S. 25-27.5-102**, the definitions, for the exact wording of the
    individual exclusion.
 3. Everything else on the earlier list, unchanged.
+
+---
+
+## Second addendum: five more documents read directly
+
+You uploaded the home care agency rule (6 CCR 1011-1 Chapter 26, effective
+1 July 2025), the Federal Register moratorium notice, HCPF's October 2025
+rate-reduction bulletin, OM 25-037, and CDPHE's 2026 fee transition sheet.
+Thirteen evidence records now rest on a direct read. Three findings are new.
+
+### 1. The state licence does not require nursing. Medicare does.
+
+The rule contemplates a therapy-only Class A agency in plain words: "other
+healthcare services shall be under the supervision and direction of a
+physician, registered nurse, **or other licensed healthcare professional**"
+(6.5), and when a non-nursing service is the only one ordered, that
+professional does the initial assessment (6.7). So a licensed Class A therapy
+agency is lawful in Colorado. The plan had merged two different things:
+
+| | State Class A licence | Medicaid home health enrollment |
+|---|---|---|
+| Who requires it | CDPHE | HCPF, via Medicare certification |
+| Nursing required | No | Yes (federal definition) |
+| Under the moratorium | No | Yes |
+| What it lets you bill | Outpatient per-unit rates, with employees, lawfully | The $140.16 flat per-visit rate |
+
+A Class A licence without Medicare is a middle path nobody had named: employ
+therapists, treat in homes lawfully, bill outpatient rates. Whether the licence
+is worth it at outpatient revenue is the question. Recorded as UU-012.
+
+### 2. Early Intervention providers are excluded from licensing entirely
+
+Rule 2.10(B)(9): a home care agency "does not include services provided by a
+qualified early intervention service provider." Eleven of Ellen's twenty-five
+children are EI. That is a third lane, licence-free at any team size, for the
+birth-to-three population. Two things nobody has looked up: how a provider
+becomes "qualified" with Early Intervention Colorado, and what EI pays per
+visit (an older HCPF memo suggests well below home health). Added as option E
+on D-001, unknown UU-011 and question Q-014, and folded into your referral
+conversations (T-006).
+
+### 3. What a Class A agency must actually have
+
+From the rule, read directly:
+
+- **A physical business office in Colorado** capable of day-to-day business
+  (5.1). D-003 is decided by regulation in the agency lane. Whether a home
+  office counts is the remaining question for CDPHE (Q-006, reworded).
+- **An administrator** who is a licensed healthcare professional or has health
+  administration experience, with two years of healthcare administration
+  including one supervisory year in home care, plus 24 training hours in year
+  one and 12 a year after (6.4). Ellen plausibly qualifies.
+- **Fingerprint checks** for every owner and administrator, so you as well as
+  Ellen (4.2(D)).
+- **$500K / $3M liability insurance, or a surety bond in lieu** (4.2(B)).
+- **A list of contiguous counties** you will serve (4.2(C)).
+- **Fees** set by a separate schedule the rule points to; the transition sheet
+  you sent is only an index of which schedule applies. C-002 stays unknown.
+
+### Corrections and confirmations
+
+- **OM 25-037 is not what the first build said it was.** It is the RN/CNA
+  go-live memo. It confirms therapy PARs restarted 1 July 2025 as a "fresh
+  start" with every child re-reviewed by April 2026, and it shows HCPF's
+  enforcement ladder ending in payment withholding. The "4 May / 1 June 2026"
+  dates the first build attributed to it are not in it; they came from
+  summaries of some other document and are now marked unverified.
+- **The moratorium notice, read in full**, adds: applications received before
+  13 May 2026 are exempt; when it lifts, anyone applying within six months gets
+  the strictest screening tier; states decide for Medicaid; and CMS names "low
+  start-up costs" as what makes home health attractive to fraud.
+- **The October 2025 bulletin** confirms the 1.6% rollback exactly as
+  summarised, and shows that targeted cuts can be much larger: pediatric
+  behavioral therapy codes were cut up to about 48% in one month.
+- **Class A definitions, the insurance minimum, and the "individual acting
+  alone" exclusion** are all now read directly from the rule.
+
+### Still missing, in order
+
+1. Physician Fee Schedule (1 Jan and 1 Apr 2026) for the per-unit rates.
+2. Early Intervention Colorado provider qualification and payment (Q-014).
+3. C.R.S. 25-27.5-102, the statutory definitions.
+4. The HCA fee schedule 2026/2027 page itself, for the Class A amount.
+5. Whatever HCPF document carries the 2026 pediatric LTHH PAR dates.

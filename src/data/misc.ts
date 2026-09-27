@@ -61,9 +61,9 @@ export const unknownUnknowns: UnknownUnknown[] = [
   },
   {
     id: 'UU-003',
-    surprise: 'Prior authorisation enforcement for pediatric LTHH went fully live in June 2026.',
+    surprise: 'Prior authorisation for pediatric LTHH therapy restarted in July 2025 as a "fresh start" — every child re-reviewed.',
     whyItMatters:
-      'PARs are now required for all new AND EXISTING pediatric LTHH members, enforced since June 1, 2026. A new entrant is starting directly into the strictest authorisation regime this benefit has had. Authorisation competence is not a back-office nicety — it is the gate on revenue from day one.',
+      'OM 25-037, read directly (EV-004): therapy PARs restarted July 1, 2025 after a five-year pause, every member underwent a full medical necessity review by April 2026, and HCPF enforces with weekly tracking and payment withholding. A new entrant starts directly into the strictest authorisation regime this benefit has had. Authorisation competence is not a back-office nicety — it is the gate on revenue from day one. (The "May 4 / June 1, 2026" dates the first build cited are not in this memo and remain unverified.)',
     costImpact: 'Adds administrative labour per patient and creates denial risk on every visit.',
     timelineImpact: 'Lengthens the cash cycle: PAR approval must precede billable care.',
     dependency: 'T-031', owner: 'Scott',
@@ -133,11 +133,31 @@ export const unknownUnknowns: UnknownUnknown[] = [
     id: 'UU-010',
     surprise: 'A therapist working entirely alone is expressly exempt from home care agency licensing.',
     whyItMatters:
-      'The definitions section of the licensing statute (25-27.5-102) excludes from "home care agency" an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors (EV-034); the licence requirement and its $10,000-per-violation penalty are in section 103, read in full (EV-045). That is exactly the first phase of the Founder Ramp — Ellen, alone, at $0 owner compensation. It means a lawful first paid visit may not require any facility licence at all. The catch is the word "individual": whether the exemption covers Ellen practising through Blue Star LLC, and it certainly ends the moment a second clinician is engaged, are questions for counsel. It is an on-ramp, not a destination.',
+      'Rule 2.10(B)(3), read directly, excludes from "home care agency" an individual who is not employed by or affiliated with a home care agency and who acts alone, without employees or contractors (EV-034); the licence requirement and its $10,000-per-violation penalty are in statute section 103, read in full (EV-045). That is exactly the first phase of the Founder Ramp — Ellen, alone, at $0 owner compensation. It means a lawful first paid visit may not require any facility licence at all. The catch is the word "individual": whether the exemption covers Ellen practising through Blue Star LLC, and it certainly ends the moment a second clinician is engaged, are questions for counsel. It is an on-ramp, not a destination.',
     costImpact: 'Could remove licensure cost and timeline from the launch phase entirely.',
     timelineImpact: 'Could compress time to first revenue to the length of Medicaid provider enrollment.',
     dependency: 'D-001', owner: 'Attorney',
     evidenceIds: ['EV-034', 'EV-045', 'EV-003'], status: 'Open',
+  },
+  {
+    id: 'UU-011',
+    surprise: 'Early Intervention services are excluded from home care agency licensing altogether.',
+    whyItMatters:
+      'Rule 2.10(B)(9), read directly, says services provided by a qualified Early Intervention service provider are not home care agency activity (EV-047). Eleven of Ellen\'s twenty-five children are EI. That means a third lane exists: serve birth-to-three children under IFSPs with a whole team and no Class A licence, no Medicare, no moratorium. What it takes to become a qualified EI provider, and what EI pays, are the two things nobody has looked up (Q-014).',
+    costImpact: 'Could remove licensure entirely for the EI slice of the market; revenue per visit unknown and possibly the lowest of the three lanes.',
+    timelineImpact: 'Unknown — depends on the EI qualification process.',
+    dependency: 'D-001', owner: 'Scott',
+    evidenceIds: ['EV-047', 'EV-041', 'EV-044'], status: 'Open',
+  },
+  {
+    id: 'UU-012',
+    surprise: 'The state licence does not require nursing. Medicare does. The plan had merged the two.',
+    whyItMatters:
+      'The home care agency rule, read directly, contemplates therapy-only Class A agencies: other healthcare services may be supervised by a licensed healthcare professional, and the initial assessment may be done by that professional when it is the only service ordered (EV-048). So a licensed Class A therapy agency is lawful in Colorado. What it cannot do is bill the Medicaid home health benefit, because HCPF requires Medicare certification for that (EV-031) and Medicare requires nursing (EV-032). A Class A licence without Medicaid home health enrollment would let Blue Star operate with employees in the home lawfully, billing outpatient rates — which may or may not be worth the licence.',
+    costImpact: 'Adds a middle path: licence cost and administrator overhead without Medicare, at outpatient revenue.',
+    timelineImpact: 'State licensure timeline only, without the accreditation and Medicare enrollment steps.',
+    dependency: 'D-001', owner: 'Attorney + CDPHE',
+    evidenceIds: ['EV-048', 'EV-031', 'EV-032'], status: 'Open',
   },
 ];
 
@@ -187,8 +207,8 @@ export const openQuestions: OpenQuestion[] = [
   },
   {
     id: 'Q-006',
-    question: 'Does a licensed home care agency need a physical business location in Colorado?',
-    whyItMatters: 'Converts office space from an optional overhead into a mandatory cost, changing the burn model and D-003.',
+    question: 'Does a home office satisfy rule 5.1\'s requirement that a licensed home care agency have "a physical business office capable of conducting day-to-day business" in Colorado?',
+    whyItMatters: 'The requirement itself is now confirmed (EV-048, read directly); what remains is whether a residence counts. If not, office space becomes a mandatory cost in the agency lane, changing the burn model and D-003.',
     askWho: 'CDPHE Health Facilities', estimatedCostRange: 'Free to ask',
     category: '03-Licensing', priority: 'High', blocksTaskIds: ['T-020'],
   },
@@ -250,6 +270,15 @@ export const openQuestions: OpenQuestion[] = [
     askWho: 'Ellen (clinical view); live Colorado PTA postings for pay',
     estimatedCostRange: 'Free',
     category: '08-HR', priority: 'Medium', blocksTaskIds: [],
+  },
+  {
+    id: 'Q-014',
+    question: 'How does a provider become a "qualified early intervention service provider" in Colorado, and what does Early Intervention pay per visit?',
+    whyItMatters:
+      'Such providers are excluded from home care agency licensing by rule (EV-047). If qualification is straightforward, Blue Star could serve EI children with a team, lawfully, without a licence or Medicare — a lane the plan never had. The revenue side matters equally: EV-041 suggests EI rates have historically sat well below home health rates, and Medicaid is billed first for Medicaid-enrolled children.',
+    askWho: 'Early Intervention Colorado (Department of Early Childhood) and the Denver-area EI program; Ellen, who already treats EI children and knows who assigns them',
+    estimatedCostRange: 'Free',
+    category: '01-Regulatory', priority: 'Critical', blocksTaskIds: ['T-007', 'T-006'],
   },
 ];
 

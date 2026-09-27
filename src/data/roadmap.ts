@@ -115,7 +115,7 @@ export const tasks: RoadmapTask[] = [
     phase: 0,
     title: 'Ask CDPHE Health Facilities the same question in writing',
     detail:
-      'Independently of counsel, put the licensure question to CDPHE in writing. A written regulator response is evidence an attorney opinion cannot substitute for, and it is free.',
+      'Independently of counsel, put the licensure question to CDPHE in writing. A written regulator response is evidence an attorney opinion cannot substitute for, and it is free. Cite rule 2.10(B)(3) (individual acting alone) and 2.10(B)(9) (Early Intervention provider) and ask whether a home office satisfies rule 5.1.',
     dependsOn: [],
     owner: 'Scott',
     status: 'Not started',
@@ -157,7 +157,7 @@ export const tasks: RoadmapTask[] = [
     phase: 0,
     title: 'Talk to 10 referral sources',
     detail:
-      'Pediatricians, children\'s hospital discharge planners, early intervention coordinators and specialty clinics. Establish what they need, what frustrates them about current providers, and whether they require a single multi-discipline partner — which directly informs D-004.',
+      'Pediatricians, children\'s hospital discharge planners, early intervention coordinators and specialty clinics. Establish what they need, what frustrates them about current providers, and whether they require a single multi-discipline partner — which directly informs D-004. Include the local Early Intervention program specifically: ask how a provider becomes a qualified EI service provider and what it pays (EV-047, Q-014).',
     dependsOn: [],
     owner: 'Scott',
     status: 'Not started',
@@ -324,7 +324,7 @@ export const tasks: RoadmapTask[] = [
     phase: 2,
     title: 'Bind professional and general liability insurance',
     detail:
-      'If the agency lane, the Class A regulatory minimum is $500K per occurrence / $3M aggregate — a floor, not a preference. Get three quotes.',
+      'If the agency lane, the Class A regulatory minimum is $500K per occurrence / $3M aggregate, or a surety bond in lieu (rule 4.2(B), read directly) — a floor, not a preference. Get three quotes.',
     dependsOn: ['T-011'],
     owner: 'Scott',
     status: 'Not started',
